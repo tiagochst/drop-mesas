@@ -1,0 +1,60 @@
+#include "definicoes.h"
+
+char *SIndiv = "individuos.txt";
+char *SEspec = "especies.txt";
+char *SCaptu_fix = "capturas_fix.dat";
+char *SCaptu_var = "capturas_var.dat";
+
+FILE *FIndiv;
+FILE *FEspec;
+FILE *FCaptu_fix;
+FILE *FCaptu_var;
+
+int main() {
+  int menu, m2;
+
+  FEspec = open_file(SEspec);
+  FIndiv = open_file(SIndiv);
+  FCaptu_fix = open_file_bin(SCaptu_fix);
+  FCaptu_var = open_file_bin(SCaptu_var);
+
+  while(( menu=print_menu(0) )) {
+   
+    m2=print_menu(menu);
+    if(m2 == 0) continue;
+
+    if(menu == 1) {
+      if(m2 == 1) especie_insere();
+      if(m2 == 2) especie_le();
+      if(m2 == 3) especie_atualiza();
+      if(m2 == 4) especie_deleta();
+    }
+    
+    if(menu == 2) {
+      if(m2 == 1) individuo_insere();
+      if(m2 == 2) individuo_le();
+      if(m2 == 3) individuo_atualiza();
+      if(m2 == 4) individuo_deleta();
+    }
+    if(menu == 3){      
+      if(m2 == 1) captura_insere();
+      if(m2 == 2) captura_le();      
+      if(m2 == 3) captura_atualiza();       
+      if(m2 == 4) captura_deleta();
+    }
+    if(menu == 4){
+      if(m2 == 1) historico_monitoramento();
+      if(m2 == 2) ultima_captura();
+      if(m2 == 3) ultima_captura_peso();
+      if(m2 == 4) caminho_especie();
+    }
+  }
+  
+  fclose(FCaptu_fix);
+  fclose(FCaptu_var);
+  fclose(FEspec);
+  fclose(FIndiv);
+  system("clear");
+
+  return 0;
+}
