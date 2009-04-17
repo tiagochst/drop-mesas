@@ -46,7 +46,7 @@ int lista_busca_vazio(FILE *fp, int sz) {
 }
 
 /* INSERCAO DE BURACOS NA LISTA LIGADA */
-void lista_insere(FILE *fp, int sz, int pos) {
+int lista_insere(FILE *fp, int sz, int pos) {
   Lista x,y;
   int save, next;
 
@@ -78,12 +78,12 @@ void lista_insere(FILE *fp, int sz, int pos) {
     /* este e o proximo podem se juntar */
     if(pos + SZ_REG + sz == x.next) {
       lista_escreve(fp, x.sz+sz+y.sz+2*SZ_REG, x.prev, y.next);
-      return;
+      return OK;
     }
     else {
       lista_escreve(fp, x.sz+sz+SZ_REG, x.prev, x.next);
       /* modifica o no seguinte ao novo */
-      if(x.next == -1) return;
+      if(x.next == -1) return OK;
       fseek(fp, x.next, SEEK_SET);
       lista_escreve(fp, y.sz, pos, y.next);
     }
@@ -95,7 +95,13 @@ void lista_insere(FILE *fp, int sz, int pos) {
     fseek(fp, pos, SEEK_SET);
     lista_escreve(fp, sz+y.sz+SZ_REG, save, y.next);
   }
-  else {
+  else { /* caso sem união alguma */
+    if(sz < SZ_REG) {
+      /* registro pequeno demais, deve ser tratado fora das listas ligadas */
+      fseek(fp, pos, SEEK_SET);
+      return FAIL;
+    }
+
     lista_escreve(fp, x.sz, x.prev, pos);
 
     /* cria o no novo */
@@ -103,10 +109,12 @@ void lista_insere(FILE *fp, int sz, int pos) {
     lista_escreve(fp, sz, save, x.next);
 
     /* modifica o no seguinte ao novo */
-    if(x.next == -1) return;
+    if(x.next == -1) return OK;
     fseek(fp, x.next, SEEK_SET);
     lista_escreve(fp, y.sz, pos, y.next);
   }
+
+  return OK;
 }
 
 /* REMOVE UM BURACO DA LISTA LIGADA */

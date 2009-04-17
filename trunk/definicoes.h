@@ -19,6 +19,9 @@
 #define VAZIO '*'
 #define USADO '#'
 
+#define OK   (1)
+#define FAIL (-1)
+
 /** variaveis extern **/
 extern FILE *FIndiv;
 extern FILE *FEspec;
@@ -103,7 +106,7 @@ int individuo_conta_caracteres(Individuo X);
 void lista_escreve(FILE *fp, int sz, int prev, int next);
 int lista_le(FILE *fp, Lista *x);
 int lista_busca_vazio(FILE *fp, int sz);
-void lista_insere(FILE *fp, int sz, int pos);
+int lista_insere(FILE *fp, int sz, int pos);
 void lista_remove(FILE *fp);
 
 void historico_monitoramento();

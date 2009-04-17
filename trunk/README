@@ -6,7 +6,9 @@ Talvez algumas revisões se façam necessárias.
 [FEITO] É preciso modificar especies.c para igualar ao individuos.c
 
 Falta consertar BUG - quando removemos registro muito pequeno (menor que SZ_REG), não pode-se inserir o buraco na lista ligada. (o cabeçalho da lista ligada ultrapassa o espaço do registro)
-- uma idéia: pegar o registro seguinte e reescrevê-lo no buraco, e definindo seu tamanho como X.sz + buraco.sz (gerando fragmentação interna) - o caso do buraco ser anterior ao EOF resolve-se se conseguirmos fazer um buraco infinito no fim do arquivo
+[FEITO] - uma idéia: pegar o registro seguinte e reescrevê-lo no buraco, e definindo seu tamanho como X.sz + buraco.sz (gerando fragmentação interna)
+- falta fazer a mesma modificação para o *_atualiza()
+- o caso do buraco ser anterior ao EOF resolve-se se conseguirmos fazer um buraco infinito no fim do arquivo
 
 [FEITO] consultas.c completamente obsoleto. É preciso convertê-lo aos novos padrões.
 
