@@ -5,7 +5,8 @@ Talvez algumas revisões se façam necessárias.
 
 [FEITO] É preciso modificar especies.c para igualar ao individuos.c
 
-Falta concertar BUG - quando removemos registro muito pequeno (menor que SZ_REG), não pode-se inserir o buraco na lista ligada. (o cabeçalho da lista ligada ultrapassa o espaço do registro)
+Falta consertar BUG - quando removemos registro muito pequeno (menor que SZ_REG), não pode-se inserir o buraco na lista ligada. (o cabeçalho da lista ligada ultrapassa o espaço do registro)
+- uma idéia: pegar o registro seguinte e reescrevê-lo no buraco, e definindo seu tamanho como X.sz + buraco.sz (gerando fragmentação interna) - o caso do buraco ser anterior ao EOF resolve-se se conseguirmos fazer um buraco infinito no fim do arquivo
 
 [FEITO] consultas.c completamente obsoleto. É preciso convertê-lo aos novos padrões.
 
@@ -14,7 +15,16 @@ Falta concertar BUG - quando removemos registro muito pequeno (menor que SZ_REG)
 
 É preciso modularizar também capturas.c
 
-Temos que ver o que será necessário desse arquivo.
+[FEITO] Temos que ver o que será necessário desse arquivo.
+
+
++ 17/abr/2009 - 00:13
+
+Temos que destruir a parte de registro variável do arquivo capturas.c
+
+Falta uma idéia para "unir" o último buraco do arquivo com o EOF, formando um "buraco de tamanho infinito".
+
+Verificar se isso é tudo que temos que mexer da estrutura do lab 01.
 
 
 ++
