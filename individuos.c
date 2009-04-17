@@ -85,8 +85,8 @@ void individuo_le() {
 }
 
 void individuo_deleta() {
-  int id, n, sz;
-  Individuo X;
+  int id, n, sz, save, szY;
+  Individuo X, Y;
   system("clear");
 
   puts("** DELECAO INDIVIDUO **");
@@ -102,7 +102,18 @@ void individuo_deleta() {
     individuo_write(stdout, X, 1);
     if(!Pergunta("Confirma exclusao?")) return;
 
-    lista_insere(FIndiv, sz, (int)ftell(FIndiv));
+    if(lista_insere(FIndiv, sz, (int)ftell(FIndiv)) == FAIL) {
+      /* registro muito pequeno para a lista ligada */
+
+      /* vai para o registro seguinte */
+      individuo_read(FIndiv, &save, NULL);
+      Y = individuo_read(FIndiv, NULL, &szY);
+
+      /* volta para a posicao do anterior e reescreve Y */
+      fseek(FIndiv, save, SEEK_SET);
+      fprintf(FIndiv, "%c%04d\n", USADO, sz+szY+SZ_REG);
+      individuo_write(FIndiv, Y, 0);
+    }
 
     fseek(FIndiv, 0, SEEK_SET);
     fscanf(FIndiv, " %d", &n);

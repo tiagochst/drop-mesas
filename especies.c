@@ -89,8 +89,8 @@ void especie_le() {
 }
 
 void especie_deleta() {
-  int id, n, sz;
-  Especie X;
+  int id, n, sz, save, szY;
+  Especie X, Y;
   system("clear");
 
   puts("** DELECAO ESPECIE **");
@@ -106,7 +106,18 @@ void especie_deleta() {
     especie_write(stdout, X, 1);
     if(!Pergunta("Confirma exclusao?")) return;
 
-    lista_insere(FEspec, sz, (int)ftell(FEspec));
+    if(lista_insere(FEspec, sz, (int)ftell(FEspec)) == FAIL) {
+      /* registro muito pequeno para a lista ligada */
+
+      /* vai para o registro seguinte */
+      especie_read(FEspec, &save, NULL);
+      Y = especie_read(FEspec, NULL, &szY);
+
+      /* volta para a posicao do anterior e reescreve Y */
+      fseek(FEspec, save, SEEK_SET);
+      fprintf(FEspec, "%c%04d\n", USADO, sz+szY+SZ_REG);
+      especie_write(FEspec, Y, 0);
+    }
 
     fseek(FEspec, 0, SEEK_SET);
     fscanf(FEspec, " %d", &n);
