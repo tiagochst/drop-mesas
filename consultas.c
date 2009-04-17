@@ -61,9 +61,7 @@ void ultima_captura(){
    se o peso esta dentro do pedido */
 void ultima_captura_peso() {
   int idE, idI,n1,n2,data, peso;
-  char c;
   Captura C,Cc;
-  Lista aux;
   Individuo X;
 
   system("clear");
@@ -78,15 +76,11 @@ void ultima_captura_peso() {
   fseek(FIndiv, 0, SEEK_SET);
   fscanf(FIndiv, " %d", &n1);
   while(n1--) {
-    fscanf(FIndiv, " %c", &c);
-    if(c == VAZIO) {
-      lista_le(FIndiv, &aux);
-      fseek(FIndiv, aux.sz - 6, SEEK_CUR);
+    X = individuo_read(FIndiv, NULL, NULL);
+
+    if(X.idI == -1) {
       n1++; continue;
     }
-
-    fscanf(FIndiv, " %*d");
-    X = individuo_read(FIndiv, NULL, NULL);
     if(X.idE == idE) {
       idI = X.idI;
 
@@ -134,9 +128,7 @@ void ultima_captura_peso() {
    e enfim procuramos pelo registro dessa especie, onde
    esta salvo o caminho da foto */
 void caminho_especie() {
-  int idI, idE, n;
-  char c;
-  Lista aux;
+  int idI, idE;
   Individuo X;
   Especie Y;
 
