@@ -1,13 +1,20 @@
 + 16/abr/2009 - 00:04
 
-individuos.c "pronto".
+[FEITO] individuos.c "pronto".
 Talvez algumas revisões se façam necessárias.
 
 [FEITO] É preciso modificar especies.c para igualar ao individuos.c
 
 Falta concertar BUG - quando removemos registro muito pequeno (menor que SZ_REG), não pode-se inserir o buraco na lista ligada. (o cabeçalho da lista ligada ultrapassa o espaço do registro)
 
-consultas.c completamente obsoleto. É preciso convertê-lo aos novos padrões.
+[FEITO] consultas.c completamente obsoleto. É preciso convertê-lo aos novos padrões.
+
+
++ 16/abr/2009 - 21:21
+
+É preciso modularizar também capturas.c
+
+Temos que ver o que será necessário desse arquivo.
 
 
 ++
