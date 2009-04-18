@@ -85,8 +85,10 @@ int captura_conta_bytes(Captura X);
 
 int especie_busca(int id, Especie *K);
 void especie_insere();
+void especie_insere_(Especie X);
 void especie_le();
 void especie_deleta();
+void especie_deleta_(int sz);
 void especie_atualiza();
 Especie especie_read(FILE *fin, int *_save, int *_sz);
 Especie especie_read_(FILE *fin);
@@ -95,8 +97,10 @@ int especie_conta_caracteres(Especie X);
 
 int individuo_busca(int id, Individuo *K);
 void individuo_insere();
+void individuo_insere_(Individuo X);
 void individuo_le();
 void individuo_deleta();
+void individuo_deleta_(int sz);
 void individuo_atualiza();
 Individuo individuo_read(FILE* fin, int *_save, int *_sz);
 Individuo individuo_read_(FILE *fin);

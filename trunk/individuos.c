@@ -25,7 +25,7 @@ int individuo_busca(int id, Individuo *K) {
 
 void individuo_insere() {
   Individuo X;
-  int n, sz, Ssz;
+  int n;
   system("clear");
 
   puts("** INSERE INDIVIDUO **");
@@ -36,6 +36,17 @@ void individuo_insere() {
     Pause();
     return;
   }
+
+  individuo_insere_(X);
+
+  fseek(FIndiv, 0, SEEK_SET);
+  fscanf(FIndiv, " %d", &n);
+  fseek(FIndiv, 0, SEEK_SET);
+  fprintf(FIndiv, "%03d", n+1);
+}
+
+void individuo_insere_(Individuo X) {
+  int sz,Ssz;
 
   sz = individuo_conta_caracteres(X);
   Ssz = lista_busca_vazio(FIndiv, sz);
@@ -55,11 +66,6 @@ void individuo_insere() {
 
   if(Ssz - sz > SZ_LISTA)
     lista_insere(FIndiv, Ssz-sz-SZ_REG, ftell(FIndiv));
-
-  fseek(FIndiv, 0, SEEK_SET);
-  fscanf(FIndiv, " %d", &n);
-  fseek(FIndiv, 0, SEEK_SET);
-  fprintf(FIndiv, "%03d", n+1);
 }
 
 void individuo_le() {
@@ -85,8 +91,8 @@ void individuo_le() {
 }
 
 void individuo_deleta() {
-  int id, n, sz, save, szY;
-  Individuo X, Y;
+  int id, n, sz;
+  Individuo X;
   system("clear");
 
   puts("** DELECAO INDIVIDUO **");
@@ -102,18 +108,7 @@ void individuo_deleta() {
     individuo_write(stdout, X, 1);
     if(!Pergunta("Confirma exclusao?")) return;
 
-    if(lista_insere(FIndiv, sz, (int)ftell(FIndiv)) == FAIL) {
-      /* registro muito pequeno para a lista ligada */
-
-      /* vai para o registro seguinte */
-      individuo_read(FIndiv, &save, NULL);
-      Y = individuo_read(FIndiv, NULL, &szY);
-
-      /* volta para a posicao do anterior e reescreve Y */
-      fseek(FIndiv, save, SEEK_SET);
-      fprintf(FIndiv, "%c%04d\n", USADO, sz+szY+SZ_REG);
-      individuo_write(FIndiv, Y, 0);
-    }
+    individuo_deleta_(sz);
 
     fseek(FIndiv, 0, SEEK_SET);
     fscanf(FIndiv, " %d", &n);
@@ -122,8 +117,26 @@ void individuo_deleta() {
   }
 }
 
+void individuo_deleta_(int sz) {
+  int save, szY;
+  Individuo Y;
+
+  if(lista_insere(FIndiv, sz, (int)ftell(FIndiv)) == FAIL) {
+    /* registro muito pequeno para a lista ligada */
+
+    /* vai para o registro seguinte */
+    individuo_read(FIndiv, &save, NULL);
+    Y = individuo_read(FIndiv, NULL, &szY);
+
+    /* volta para a posicao do anterior e reescreve Y */
+    fseek(FIndiv, save, SEEK_SET);
+    fprintf(FIndiv, "%c%04d\n", USADO, sz+szY+SZ_REG);
+    individuo_write(FIndiv, Y, 0);
+  }
+}
+
 void individuo_atualiza() {
-  int id, sz, Ssz;
+  int id, sz;
   Individuo X;
   system("clear");
 
@@ -137,7 +150,7 @@ void individuo_atualiza() {
     Pause();
   }
   else {
-    lista_insere(FIndiv, sz, (int)ftell(FIndiv));
+    individuo_deleta_(sz);
 
     printf("ID do Individuo: ");
     printf("%d\n", X.idI);
@@ -149,21 +162,8 @@ void individuo_atualiza() {
     printf("%c\n", X.sexo);
     muda_char(&X.sexo);
 
-
     /* insere de volta */
-    sz = individuo_conta_caracteres(X);
-    Ssz = lista_busca_vazio(FIndiv, sz);
-    if(Ssz == -1) {
-      fseek(FIndiv, 0, SEEK_END);
-      Ssz = sz;
-    }
-    else lista_remove(FIndiv);
-    if(Ssz - sz > SZ_LISTA) fprintf(FIndiv, "%c%04d\n", USADO, sz);
-    else fprintf(FIndiv, "%c%04d\n", USADO, Ssz);
-    individuo_write(FIndiv, X, 0);
-
-    if(Ssz - sz > SZ_LISTA)
-      lista_insere(FIndiv, Ssz-sz-SZ_REG, ftell(FIndiv));
+    individuo_insere_(X);
   }
 }
 
@@ -173,15 +173,6 @@ Individuo individuo_read(FILE* fin, int *_save, int *_sz) {
   Lista L;
   int jump, save;
   char c;
-
-  if(fin == stdin) {
-    puts("*************");
-    puts("*************");
-    puts("** WARNING **");
-    puts("*************");
-    puts("*************");
-    return individuo_read_(fin);
-  }
 
   save = (int)ftell(fin);
 

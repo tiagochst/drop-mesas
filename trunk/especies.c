@@ -25,7 +25,7 @@ int especie_busca(int id, Especie *K) {
 
 void especie_insere() {
   Especie X;
-  int n, sz, Ssz;
+  int n;
   system("clear");
 
   puts("** INSERE ESPECIE **");
@@ -36,6 +36,18 @@ void especie_insere() {
     Pause();
     return;
   }
+
+  especie_insere_(X);
+
+  /* Atualiza a quantidade de registros */
+  fseek(FEspec, 0, SEEK_SET);
+  fscanf(FEspec, " %d", &n);
+  fseek(FEspec, 0, SEEK_SET);
+  fprintf(FEspec, "%03d", n+1);
+}
+
+void especie_insere_(Especie X) {
+  int sz,Ssz;
 
   sz = especie_conta_caracteres(X);
   Ssz = lista_busca_vazio(FEspec, sz);
@@ -57,12 +69,6 @@ void especie_insere() {
 
   if(Ssz - sz > SZ_LISTA)
     lista_insere(FEspec, Ssz-sz-SZ_REG, ftell(FEspec));
-
-  /* Atualiza a quantidade de registros */
-  fseek(FEspec, 0, SEEK_SET);
-  fscanf(FEspec, " %d", &n);
-  fseek(FEspec, 0, SEEK_SET);
-  fprintf(FEspec, "%03d", n+1);
 }
 
 /*LE todas as especies existentes e imprime na saida padrao*/
@@ -89,8 +95,8 @@ void especie_le() {
 }
 
 void especie_deleta() {
-  int id, n, sz, save, szY;
-  Especie X, Y;
+  int id, n, sz;
+  Especie X;
   system("clear");
 
   puts("** DELECAO ESPECIE **");
@@ -106,18 +112,7 @@ void especie_deleta() {
     especie_write(stdout, X, 1);
     if(!Pergunta("Confirma exclusao?")) return;
 
-    if(lista_insere(FEspec, sz, (int)ftell(FEspec)) == FAIL) {
-      /* registro muito pequeno para a lista ligada */
-
-      /* vai para o registro seguinte */
-      especie_read(FEspec, &save, NULL);
-      Y = especie_read(FEspec, NULL, &szY);
-
-      /* volta para a posicao do anterior e reescreve Y */
-      fseek(FEspec, save, SEEK_SET);
-      fprintf(FEspec, "%c%04d\n", USADO, sz+szY+SZ_REG);
-      especie_write(FEspec, Y, 0);
-    }
+    especie_deleta_(sz);
 
     fseek(FEspec, 0, SEEK_SET);
     fscanf(FEspec, " %d", &n);
@@ -126,8 +121,26 @@ void especie_deleta() {
   }
 }
 
+void especie_deleta_(int sz) {
+  int save, szY;
+  Especie Y;
+
+  if(lista_insere(FEspec, sz, (int)ftell(FEspec)) == FAIL) {
+    /* registro muito pequeno para a lista ligada */
+
+    /* vai para o registro seguinte */
+    especie_read(FEspec, &save, NULL);
+    Y = especie_read(FEspec, NULL, &szY);
+
+    /* volta para a posicao do anterior e reescreve Y */
+    fseek(FEspec, save, SEEK_SET);
+    fprintf(FEspec, "%c%04d\n", USADO, sz+szY+SZ_REG);
+    especie_write(FEspec, Y, 0);
+  }
+}
+
 void especie_atualiza() {
-  int id, sz, Ssz;
+  int id, sz;
   Especie X;
   system("clear");
 
@@ -141,8 +154,7 @@ void especie_atualiza() {
     Pause();
   }
   else {
-    /* apaga o registro */
-    lista_insere(FEspec, sz, (int)ftell(FEspec));
+    especie_deleta_(sz);
 
     printf("ID: ");
     printf("%d\n", X.id);
@@ -164,19 +176,7 @@ void especie_atualiza() {
     muda_string(X.descr);
 
     /* insere de volta */
-    sz = especie_conta_caracteres(X);
-    Ssz = lista_busca_vazio(FEspec, sz);
-    if(Ssz == -1) {
-      fseek(FEspec, 0, SEEK_END);
-      Ssz = sz;
-    }
-    else lista_remove(FEspec);
-    if(Ssz - sz > SZ_LISTA) fprintf(FEspec, "%c%04d\n", USADO, sz);
-    else fprintf(FEspec, "%c%04d\n", USADO, Ssz);
-    especie_write(FEspec, X, 0);
-
-    if(Ssz - sz > SZ_LISTA)
-      lista_insere(FEspec, Ssz-sz-SZ_REG, ftell(FEspec));
+    especie_insere_(X);
   }
 }
 
@@ -187,15 +187,6 @@ Especie especie_read(FILE* fin, int *_save, int *_sz) {
   Lista L;
   int jump, save;
   char c;
-
-  if(fin == stdin) {
-    puts("*************");
-    puts("*************");
-    puts("** WARNING **");
-    puts("*************");
-    puts("*************");
-    return especie_read_(fin);
-  }
 
   save = (int)ftell(fin);
 
