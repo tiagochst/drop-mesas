@@ -25,7 +25,6 @@ int especie_busca(int id, Especie *K) {
 
 void especie_insere() {
   Especie X;
-  int n;
   system("clear");
 
   puts("** INSERE ESPECIE **");
@@ -40,10 +39,7 @@ void especie_insere() {
   especie_insere_(X);
 
   /* Atualiza a quantidade de registros */
-  fseek(FEspec, 0, SEEK_SET);
-  fscanf(FEspec, " %d", &n);
-  fseek(FEspec, 0, SEEK_SET);
-  fprintf(FEspec, "%03d", n+1);
+  muda_n(FEspec, +1);
 }
 
 void especie_insere_(Especie X) {
@@ -95,7 +91,7 @@ void especie_le() {
 }
 
 void especie_deleta() {
-  int id, n, sz;
+  int id, sz;
   Especie X;
   system("clear");
 
@@ -114,10 +110,7 @@ void especie_deleta() {
 
     especie_deleta_(sz);
 
-    fseek(FEspec, 0, SEEK_SET);
-    fscanf(FEspec, " %d", &n);
-    fseek(FEspec, 0, SEEK_SET);
-    fprintf(FEspec, "%03d", n-1);
+    muda_n(FEspec, -1);
   }
 }
 

@@ -25,7 +25,6 @@ int individuo_busca(int id, Individuo *K) {
 
 void individuo_insere() {
   Individuo X;
-  int n;
   system("clear");
 
   puts("** INSERE INDIVIDUO **");
@@ -39,10 +38,7 @@ void individuo_insere() {
 
   individuo_insere_(X);
 
-  fseek(FIndiv, 0, SEEK_SET);
-  fscanf(FIndiv, " %d", &n);
-  fseek(FIndiv, 0, SEEK_SET);
-  fprintf(FIndiv, "%03d", n+1);
+  muda_n(FIndiv, +1);
 }
 
 void individuo_insere_(Individuo X) {
@@ -91,7 +87,7 @@ void individuo_le() {
 }
 
 void individuo_deleta() {
-  int id, n, sz;
+  int id, sz;
   Individuo X;
   system("clear");
 
@@ -110,10 +106,7 @@ void individuo_deleta() {
 
     individuo_deleta_(sz);
 
-    fseek(FIndiv, 0, SEEK_SET);
-    fscanf(FIndiv, " %d", &n);
-    fseek(FIndiv, 0, SEEK_SET);
-    fprintf(FIndiv, "%03d", n-1);
+    muda_n(FIndiv, -1);
   }
 }
 
