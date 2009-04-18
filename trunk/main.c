@@ -18,8 +18,12 @@ int main() {
   FCaptu_fix = open_file_bin(SCaptu_fix);
   FCaptu_var = open_file_bin(SCaptu_var);
 
-  while(( menu=print_menu(0) )) {
-   
+  m2 = 0;
+  while(1) {
+    if(m2 == 0)
+      if(!( menu = print_menu(0) ))
+	break;
+
     m2=print_menu(menu);
     if(m2 == 0) continue;
 

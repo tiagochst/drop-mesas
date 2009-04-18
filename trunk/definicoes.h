@@ -66,6 +66,7 @@ void Pause();
 int Pergunta(char *s);
 FILE *open_file(char *s);
 FILE *open_file_bin(char *s);
+void muda_n(FILE *fp, int var);
 
 void captura_insere();
 void captura_insere_fix(Captura X);

@@ -162,3 +162,12 @@ FILE *open_file_bin(char *s) {
 
   return fp;
 }
+
+void muda_n(FILE *fp, int var) {
+  int n;
+
+  fseek(fp, 0, SEEK_SET);
+  fscanf(fp, " %d", &n);
+  fseek(fp, 0, SEEK_SET);
+  fprintf(fp, "%03d", n+var);
+}
