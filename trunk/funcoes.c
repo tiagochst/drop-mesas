@@ -157,7 +157,7 @@ FILE *open_file_bin(char *s) {
 
   if(fp == NULL) {
     fp = fopen(s, "w+b");
-    fwrite(&zero,sizeof(int),1,fp);
+    fwrite(&zero, sizeof(int), 1, fp);
   }
 
   return fp;
@@ -170,4 +170,14 @@ void muda_n(FILE *fp, int var) {
   fscanf(fp, " %d", &n);
   fseek(fp, 0, SEEK_SET);
   fprintf(fp, "%03d", n+var);
+}
+
+void muda_n_bin(FILE *fp, int var) {
+  int n;
+
+  fseek(fp, 0, SEEK_SET);
+  fread(&n, sizeof(int), 1, fp);
+  n += var;
+  fseek(fp, 0, SEEK_SET);
+  fwrite(&n, sizeof(int), 1, fp);
 }

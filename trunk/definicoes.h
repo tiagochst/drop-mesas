@@ -25,8 +25,7 @@
 /** variaveis extern **/
 extern FILE *FIndiv;
 extern FILE *FEspec;
-extern FILE *FCaptu_fix;
-extern FILE *FCaptu_var;
+extern FILE *FCaptu;
 
 /** estruturas **/
 typedef struct {
@@ -67,22 +66,16 @@ int Pergunta(char *s);
 FILE *open_file(char *s);
 FILE *open_file_bin(char *s);
 void muda_n(FILE *fp, int var);
+void muda_n_bin(FILE *fp, int var);
 
 void captura_insere();
-void captura_insere_fix(Captura X);
-void captura_insere_var(Captura X);
+void captura_insere_(Captura X);
 void captura_atualiza();
-void captura_atualiza_fix(int id);
 void captura_le();
-void captura_le_fix();
-void captura_le_var();
 void captura_deleta();
-int captura_deleta_fix(int id);
-Captura captura_read(FILE *fin, int print);
+Captura captura_read(FILE *fin);
+Captura captura_read_(FILE *fin);
 void captura_write(FILE *fout, Captura X, int print);
-Captura captura_read_var(FILE *fin);
-void captura_write_var(FILE *fout, Captura X);
-int captura_conta_bytes(Captura X);
 
 int especie_busca(int id, Especie *K);
 void especie_insere();
