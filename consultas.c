@@ -4,19 +4,22 @@
    tamanho fixo) por registros de captura do individuo
    do ID fornecido pelo usuario */
 void historico_monitoramento(){
-  int id,n;
-  Captura aux;  
+  int n, id;
+  Captura aux;
   system("clear");
 
-  printf("Digite o ID do individuo: ");
-  scanf("%d",&id);
+  puts("** HISTÓRICO DE MONITORAMENTO **");
+  printf("\n");
 
-  fseek(FCaptu_fix, 0, SEEK_SET);
-  fread(&n, sizeof(int), 1, FCaptu_fix);
+  printf("Digite o ID do indivíduo: ");
+  scanf(" %d", &id);
+
+  fseek(FCaptu, 0, SEEK_SET);
+  fread(&n, sizeof(int), 1, FCaptu);
   while(n--){
-    fread(&aux, sizeof(Captura), 1, FCaptu_fix);
+    aux = captura_read(FCaptu);
     if(aux.id == -1) n++;
-    else if(aux.id == id) captura_write(stdout,aux,1);    
+    else if(aux.id == id) captura_write(stdout, aux, 1);
   }
 
   Pause();
@@ -26,31 +29,32 @@ void historico_monitoramento(){
    mas para determinar a ultima captura, armazena-se a
    data da captura mais recente e o registro dessa captura */
 void ultima_captura(){
-  int id,n,pos,data;
-  Captura aux;  
+  int n, id,pos,data;
+  Captura aux;
   system("clear");
 
   printf("Digite o ID do individuo: ");
-  scanf("%d",&id);
+  scanf(" %d", &id);
 
-  fseek(FCaptu_fix, 0, SEEK_SET);
-  fread(&n, sizeof(int), 1, FCaptu_fix);
+  fseek(FCaptu, 0, SEEK_SET);
+  fread(&n, sizeof(int), 1, FCaptu);
 
   data = 0;
   while(n--){
-    fread(&aux,sizeof(Captura),1,FCaptu_fix);
+    aux = captura_read(FCaptu);
     if(aux.id == -1) n++;
     else if(aux.id == id && aux.data >  data){
-      pos = ftell(FCaptu_fix) - sizeof(Captura);
+      pos = ftell(FCaptu) - sizeof(Captura);
       data = aux.data;
     }
   }
 
-  if(!data) printf("Nao ha registros desse individuo\n");
+  if(!data) printf("Nao ha registros de captura desse individuo\n");
   else{
-    fseek(FCaptu_fix,pos,SEEK_SET);
-    fread(&aux,sizeof(Captura),1,FCaptu_fix);
-    captura_write(stdout,aux,1);
+    printf("O ultimo registro desse individuo data de %d:\n", data);
+    fseek(FCaptu, pos, SEEK_SET);
+    aux = captura_read(FCaptu);
+    captura_write(stdout, aux, 1);
   }
   Pause();
 }
@@ -87,11 +91,12 @@ void ultima_captura_peso() {
       /* achou um idI */
       printf("O individuo %d pertence aa especie %d\n", idI, idE);
 
-      fseek(FCaptu_fix, 0, SEEK_SET);
-      fread(&n2,sizeof(int),1,FCaptu_fix);
+      fseek(FCaptu, 0, SEEK_SET);
+      fread(&n2, sizeof(int), 1, FCaptu);
       data = -1;
       while(n2--){
-	fread(&C,sizeof(Captura),1,FCaptu_fix);
+	C = captura_read(FCaptu);
+
 	if(C.id == -1) n2++;
 	else if(C.id == idI && C.data >  data){
 	  Cc = C;
@@ -99,7 +104,7 @@ void ultima_captura_peso() {
 	}
       }
 
-      if(data == -1) printf("Nao ha registros desse individuo\n");
+      if(data == -1) printf("Nao ha registros de captura desse individuo\n");
       else{
 	if(Cc.peso < peso)
 	  printf("O peso na ultima captura deste individuo foi abaixo do minimo\n");

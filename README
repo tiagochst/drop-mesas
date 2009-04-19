@@ -15,16 +15,22 @@ Falta consertar BUG - quando removemos registro muito pequeno (menor que SZ_REG)
 
 + 16/abr/2009 - 21:21
 
-É preciso modularizar também capturas.c
+[FEITO] É preciso modularizar também capturas.c
 
 [FEITO] Temos que ver o que será necessário desse arquivo.
 
 
 + 17/abr/2009 - 00:13
 
-Temos que destruir a parte de registro variável do arquivo capturas.c
+[FEITO] Temos que destruir a parte de registro variável do arquivo capturas.c
 
 Falta uma idéia para "unir" o último buraco do arquivo com o EOF, formando um "buraco de tamanho infinito".
+- tive uma idéia de inserir desde a criação do arquivo um buraco de tamanho X, no começo do arquivo. Este tamanho é o máximo que o arquivo pode ocupar.
+
+
++ 18/abr/2009 - 01:49
+
+No capturas.c tem que implementar uma lista ligada simples nos buracos. (registro fixo)
 
 Verificar se isso é tudo que temos que mexer da estrutura do lab 01.
 

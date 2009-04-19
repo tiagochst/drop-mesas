@@ -4,53 +4,38 @@
    Le os valores da entrada padrao e insere no arquivo
    de tamanho fixo  */
 void captura_insere(){
-  Captura X; 
+  Captura X;
   system("clear");
 
   puts("** INSERE CAPTURA **");
-  X = captura_read(stdin,1); 
+  X = captura_read_(stdin);
 
-  captura_insere_fix(X); 
-  
-  captura_insere_var(X); 
+  captura_insere_(X);
 }
 
-void captura_insere_fix(Captura X){
-  int i,n;
+void captura_insere_(Captura X){
+  int n;
   Captura aux;
-  
-  fseek(FCaptu_fix, 0, SEEK_SET);
 
-  fread(&n,sizeof(int),1,FCaptu_fix);
-  for(i=0;i<n;i++){
-    fread(&aux,sizeof(Captura),1,FCaptu_fix);
+  fseek(FCaptu, 0, SEEK_SET);
+
+  fread(&n, sizeof(int), 1, FCaptu);
+  while(n--) {
+    aux = captura_read(FCaptu);
     if(aux.id == -1){
-      fseek(FCaptu_fix,-sizeof(Captura),SEEK_CUR);
+      fseek(FCaptu, -sizeof(Captura), SEEK_CUR);
       break;
     }
-  }  
-  fwrite(&X,sizeof(Captura),1,FCaptu_fix);
-  fseek(FCaptu_fix,0,SEEK_SET);
-  n++;
-  
-  fwrite(&n,sizeof(int),1,FCaptu_fix);
-}
+  }
 
-void captura_insere_var(Captura X){
-  int n;
+  fwrite(&X, sizeof(Captura), 1, FCaptu);
 
-  fseek(FCaptu_var, 0, SEEK_SET);
-  fread(&n,sizeof(int),1,FCaptu_var);
-  fseek(FCaptu_var,0,SEEK_SET);
-  n++;
-  fwrite(&n,sizeof(int),1,FCaptu_var);
-
-  fseek(FCaptu_var,0,SEEK_END);
-  captura_write_var(FCaptu_var, X);
+  muda_n_bin(FCaptu, +1);
 }
 
 void captura_atualiza(){
-  int id;
+  int id, i,n;
+  Captura aux;
 
   system("clear");
 
@@ -58,23 +43,14 @@ void captura_atualiza(){
   printf("Digite o ID: ");
   scanf(" %d", &id);
 
-  captura_atualiza_fix(id);
-}
-
-void captura_atualiza_fix(int id){
-  int i,j,n, pos_var;
-  Captura aux,aux2, auxsave;
+  fseek(FCaptu, 0, SEEK_SET);
+  fread(&n, sizeof(int), 1, FCaptu);
   
-  fseek(FCaptu_fix, 0, SEEK_SET);
-  fread(&n,sizeof(int),1,FCaptu_fix);
-  
-  for(i=0;i<n;i++){
-    fread(&aux,sizeof(Captura),1,FCaptu_fix);
+  for(i=0 ; i<n ; i++){
+    aux = captura_read(FCaptu);
 
     if(aux.id == -1) i--;
     else if(aux.id == id){
-      auxsave = aux;
-
       printf("ID: ");
       printf("%d\n", aux.id);
       muda_int(&aux.id);
@@ -94,168 +70,80 @@ void captura_atualiza_fix(int id){
       printf("%s\n", aux.local);
       muda_string(aux.local);
 
-      fseek(FCaptu_fix,-sizeof(Captura),SEEK_CUR);
-      fwrite(&aux,sizeof(Captura),1,FCaptu_fix);
-
-      /* remove e insere no arquivo de tamanho variavel */
-      fseek(FCaptu_var, sizeof(int), SEEK_SET);
-      for(j=0 ; j<n ; j++){
-	pos_var = (int)ftell(FCaptu_var);
-	aux2 = captura_read_var(FCaptu_var);
-	if((aux2.id == auxsave.id) &&
-	   (aux2.comprimento == auxsave.comprimento) &&
-	   (aux2.largura == auxsave.largura) &&
-	   (aux2.peso == auxsave.peso) &&
-	   (aux2.data == auxsave.data) &&
-	   (strcmp(aux2.local, auxsave.local)==0)) {
-	  fseek(FCaptu_var, pos_var, SEEK_SET);
-	  aux2.id = -1;
-
-	  captura_write_var(FCaptu_var, aux2);
-	  break;
-	}
-      }
-
-      fseek(FCaptu_var,0,SEEK_END);
-      captura_write_var(FCaptu_var, aux);
+      fseek(FCaptu, -sizeof(Captura), SEEK_CUR);
+      fwrite(&aux, sizeof(Captura), 1, FCaptu);
 
       return;
     }
   }
-  printf("Nao encontradas capturas do individuo de ID %d\n", id);
+
+  printf("Nao foram encontradas capturas do individuo de ID %d\n", id);
+  Pause();
 }
 
 void captura_le(){
-  char c;
+  int n;
+  Captura aux;
   system("clear");
-  
+
   puts("** LEITURA CAPTURAS **");
   printf("\n");
-  
-  printf("Voce deseja ler do arquivo de tamanho (F)ixo ou do arquivo de tamanho (V)ariavel: ");
-  while(scanf(" %c",&c) == 1 && tolower(c)!='f' && tolower(c)!='v');
 
-  if(tolower(c) == 'f') captura_le_fix();
-  if(tolower(c) == 'v') captura_le_var();
-}
-
-void captura_le_fix(){
-  int n;
-  Captura aux;
-  
-  system("clear");
- 
-  puts("** LEITURA CAPTURAS FIXO **");
-  printf("\n");
-
-  fseek(FCaptu_fix, 0, SEEK_SET);
-  fread(&n,sizeof(int),1,FCaptu_fix);
+  fseek(FCaptu, 0, SEEK_SET);
+  fread(&n, sizeof(int), 1, FCaptu);
   while(n--){
-    fread(&aux,sizeof(Captura),1,FCaptu_fix);
+    aux = captura_read(FCaptu);
     if(aux.id == -1) n++;
-    else captura_write(stdout,aux,1);
-    
+    else captura_write(stdout, aux, 1);
   }
-  Pause();
-}  
 
-void captura_le_var(){
-  int n;
-  Captura aux;
-  
-  system("clear");
- 
-  puts("** LEITURA CAPTURAS VARIAVEL **");
-  printf("\n");
-
-  fseek(FCaptu_var, 0, SEEK_SET);
-  fread(&n,sizeof(int),1,FCaptu_var);
-  while(n--){
-    aux = captura_read_var(FCaptu_var);
-    if(aux.id == -1) n++;
-    else captura_write(stdout,aux,1);
-  }
   Pause();
 }
 
 void captura_deleta(){
-  int id;
-  
+  int id, n;
+  Captura aux;
+
   system("clear");
 
   puts("** DELECAO CAPTURA **");
-  printf("Digite o ID do individuo a ser deletado: ");
+  printf("Digite o ID do individuo capturado a ser deletado: ");
   scanf(" %d", &id);
 
-  captura_deleta_fix(id);
-}
+  fseek(FCaptu, 0, SEEK_SET);
+  fread(&n, sizeof(int), 1, FCaptu);
+  while(n--) {
+    aux = captura_read(FCaptu);
+    if(aux.id == -1) n++;
+    else if(aux.id == id) {
+      captura_write(stdout, aux, 1);
 
-int captura_deleta_fix(int id){
-  int i,n,pos_var;
-  char c;
-  Captura aux, aux2;
+      if(Pergunta("Voce deseja apagar este registro?")) {
+	fseek(FCaptu, -sizeof(Captura), SEEK_CUR);
+	aux.id = -1;
+	fwrite(&aux, sizeof(Captura), 1, FCaptu);
 
-  fseek(FCaptu_var, 0, SEEK_SET);
-  fread(&n,sizeof(int),1,FCaptu_var);
+	/* reduz o número de registros no cabeçalho */
+	muda_n_bin(FCaptu, -1);
 
-  for(i=0 ; i<n ; i++){
-    pos_var = (int)ftell(FCaptu_var);
-
-    aux = captura_read_var(FCaptu_var);
-
-    if(aux.id == -1) i--;
-    if(aux.id == id){
-      captura_write(stdout,aux,1);
-
-      printf("Voce deseja apagar esse registro (y/n)?");
-      while(scanf("%c", &c)==1 && tolower(c)!='y' && tolower(c)!='n');
-      if(tolower(c)=='n') continue;
-
-      /* reduz o numero de registros nos 2 arquivos */
-      fseek(FCaptu_fix, 0, SEEK_SET);
-      fread(&n,sizeof(int), 1, FCaptu_fix);
-      n--;
-
-      fseek(FCaptu_fix, 0, SEEK_SET);
-      fwrite(&n, sizeof(int), 1, FCaptu_fix);
-      fseek(FCaptu_var, 0, SEEK_SET);
-      fwrite(&n, sizeof(int), 1, FCaptu_var);
-
-      /* para o registro variavel */
-      fseek(FCaptu_var, pos_var, SEEK_SET);
-      aux2 = aux;
-      aux2.id = -1;
-
-      captura_write_var(FCaptu_var, aux2);
-
-
-      /* para o registro fixo */
-      /* precisa achar o registro, e entao apagar */
-      fseek(FCaptu_fix, sizeof(int), SEEK_SET);
-      while(1) {
-	fread(&aux2, sizeof(Captura), 1, FCaptu_fix);
-	if((aux2.id == aux.id) &&
-	   (aux2.comprimento == aux.comprimento) &&
-	   (aux2.largura == aux.largura) &&
-	   (aux2.peso == aux.peso) &&
-	   (aux2.data == aux.data) &&
-	   (strcmp(aux2.local, aux.local)==0)) break;
+	return;
       }
-      fseek(FCaptu_fix, -sizeof(Captura), SEEK_CUR);
-
-      aux.id = -1;
-      fwrite(&aux, sizeof(Captura), 1, FCaptu_fix);
     }
-
-    fseek(FCaptu_var, pos_var+captura_conta_bytes(aux), SEEK_SET);
   }
-    
-  return 0;
+
+  printf("Nao foram encontradas capturas do individuo de ID %d\n", id);
+  Pause();
 }
 
-
-Captura captura_read(FILE *fin, int print) {
+Captura captura_read(FILE *fin) {
   Captura X;
+  fread(&X, sizeof(Captura), 1, fin);
+  return X;
+}
+
+Captura captura_read_(FILE *fin) {
+  Captura X;
+  int print = (fin==stdin)?(1):(0);
 
   if(print) printf("ID: ");
   fscanf(fin, " %d", &X.id);
@@ -288,40 +176,4 @@ void captura_write(FILE *fout, Captura X, int print) {
   fprintf(fout, "%s\n", X.local);
 
   if(print) printf("\n");
-}
-
-Captura captura_read_var(FILE *fin) {
-  Captura X;
-  int tam;
-
-  fread(&X.id, sizeof(int), 1, fin);
-  fread(&X.comprimento, sizeof(int), 1, fin);
-  fread(&X.largura, sizeof(int), 1, fin);
-  fread(&X.peso, sizeof(int), 1, fin);
-  fread(&X.data, sizeof(int), 1, fin);
-
-  fread(&tam, sizeof(int), 1, fin);
-  fread(X.local, sizeof(char), tam, fin);
-  X.local[tam]='\0';
-
-  return X;
-}
-
-void captura_write_var(FILE *fout, Captura X) {
-  int tam = strlen(X.local);
-
-  fwrite(&X.id, sizeof(int), 1, fout);
-  fwrite(&X.comprimento, sizeof(int), 1, fout);
-  fwrite(&X.largura, sizeof(int), 1, fout);
-  fwrite(&X.peso, sizeof(int), 1, fout);
-  fwrite(&X.data, sizeof(int), 1, fout);
-
-  fwrite(&tam, sizeof(int), 1, fout);
-  fwrite(X.local, sizeof(char), tam, fout);
-}
-
-int captura_conta_bytes(Captura X) {
-  return (5*sizeof(int)
-	  + sizeof(int)
-	  + strlen(X.local)*sizeof(char));
 }

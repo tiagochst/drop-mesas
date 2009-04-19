@@ -2,21 +2,18 @@
 
 char *SIndiv = "individuos.txt";
 char *SEspec = "especies.txt";
-char *SCaptu_fix = "capturas_fix.dat";
-char *SCaptu_var = "capturas_var.dat";
+char *SCaptu = "capturas.dat";
 
 FILE *FIndiv;
 FILE *FEspec;
-FILE *FCaptu_fix;
-FILE *FCaptu_var;
+FILE *FCaptu;
 
 int main() {
   int menu, m2;
 
   FEspec = open_file(SEspec);
   FIndiv = open_file(SIndiv);
-  FCaptu_fix = open_file_bin(SCaptu_fix);
-  FCaptu_var = open_file_bin(SCaptu_var);
+  FCaptu = open_file_bin(SCaptu);
 
   m2 = 0;
   while(1) {
@@ -54,8 +51,7 @@ int main() {
     }
   }
   
-  fclose(FCaptu_fix);
-  fclose(FCaptu_var);
+  fclose(FCaptu);
   fclose(FEspec);
   fclose(FIndiv);
   system("clear");
