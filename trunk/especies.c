@@ -186,7 +186,7 @@ Especie especie_read(FILE* fin, int *_save, int *_sz) {
   fscanf(fin, " %c", &c);
   if(c == VAZIO) {
     lista_le(fin, &L);
-    fseek(fin, L.sz - 6, SEEK_CUR);
+    fseek(fin, L.sz - SZ_REG + 1, SEEK_CUR);
 
     X.id = -1;
     return X;
@@ -212,15 +212,15 @@ Especie especie_read_(FILE *fin) {
   if(print) printf("ID: ");
   fscanf(fin, " %d", &X.id);
   if(print) printf("Caminho da foto: ");
-  fscanf(fin, " %s", X.camin);
+  fscanf(fin, " %[^\n]", X.camin);
   if(print) printf("Data: ");
   fscanf(fin, " %d", &X.data);
   if(print) printf("Nome cientifico: ");
-  fscanf(fin, " %s", X.nomec);
+  fscanf(fin, " %[^\n]", X.nomec);
   if(print) printf("Nome popular: ");
-  fscanf(fin, " %s", X.nomep);
+  fscanf(fin, " %[^\n]", X.nomep);
   if(print) printf("Descricao: ");
-  fscanf(fin, " %s", X.descr);
+  fscanf(fin, " %[^\n]", X.descr);
 
   return X;
 }

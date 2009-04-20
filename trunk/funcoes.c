@@ -84,7 +84,6 @@ int print_menu(int x) {
     return 0;
   }
 
-  ;
   while(scanf(" %d", &in)!=1 || in<0 || in>max) {
     puts("Entrada incorreta. Digite novamente");
     __fpurge(stdin);
@@ -96,7 +95,7 @@ void muda_string(char *s) {
   if(!Pergunta("Deseja alterar este valor?")) return;
 
   printf("Digite o novo valor: ");
-  scanf(" %s", s);
+  scanf(" %[^\n]", s);
 }
 
 void muda_int(int *i) {
@@ -133,7 +132,8 @@ FILE *open_file(char *s) {
   if(fp == NULL) {
     fp = fopen(s, "w+");
     fprintf(fp, "%03d\n", 0); /* numero de registros */
-    lista_escreve(fp, SZ_REG, -1, -1); /* no cabeca */
+    lista_escreve(fp, SZ_REG, -1, SZ_CAB+SZ_LISTA+1); /* no cabeca */
+    lista_escreve(fp, 999999, SZ_CAB, -1);
   }
 
   return fp;
