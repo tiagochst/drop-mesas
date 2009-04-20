@@ -96,7 +96,7 @@ int lista_insere(FILE *fp, int sz, int pos) {
     lista_escreve(fp, sz+y.sz+SZ_REG, save, y.next);
   }
   else { /* caso sem união alguma */
-    if(sz < SZ_REG) {
+    if(sz <= SZ_LISTA-SZ_REG) {
       /* registro pequeno demais, deve ser tratado fora das listas ligadas */
       fseek(fp, pos, SEEK_SET);
       return FAIL;
