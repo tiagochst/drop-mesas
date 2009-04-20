@@ -1,14 +1,14 @@
 + 16/abr/2009 - 00:04
 
 [FEITO] individuos.c "pronto".
-Talvez algumas revisões se façam necessárias.
+[FEITO] Talvez algumas revisões se façam necessárias.
 
 [FEITO] É preciso modificar especies.c para igualar ao individuos.c
 
-Falta consertar BUG - quando removemos registro muito pequeno (menor que SZ_REG), não pode-se inserir o buraco na lista ligada. (o cabeçalho da lista ligada ultrapassa o espaço do registro)
+[FEITO] Falta consertar BUG - quando removemos registro muito pequeno (menor que SZ_REG), não pode-se inserir o buraco na lista ligada. (o cabeçalho da lista ligada ultrapassa o espaço do registro)
 [FEITO] - uma idéia: pegar o registro seguinte e reescrevê-lo no buraco, e definindo seu tamanho como X.sz + buraco.sz (gerando fragmentação interna)
 [FEITO] - falta fazer a mesma modificação para o *_atualiza()
-- o caso do buraco ser anterior ao EOF resolve-se se conseguirmos fazer um buraco infinito no fim do arquivo
+[FEITO] - o caso do buraco ser anterior ao EOF resolve-se se conseguirmos fazer um buraco infinito no fim do arquivo
 
 [FEITO] consultas.c completamente obsoleto. É preciso convertê-lo aos novos padrões.
 
@@ -24,8 +24,8 @@ Falta consertar BUG - quando removemos registro muito pequeno (menor que SZ_REG)
 
 [FEITO] Temos que destruir a parte de registro variável do arquivo capturas.c
 
-Falta uma idéia para "unir" o último buraco do arquivo com o EOF, formando um "buraco de tamanho infinito".
-- tive uma idéia de inserir desde a criação do arquivo um buraco de tamanho X, no começo do arquivo. Este tamanho é o máximo que o arquivo pode ocupar.
+[FEITO] Falta uma idéia para "unir" o último buraco do arquivo com o EOF, formando um "buraco de tamanho infinito".
+[FEITO] - tive uma idéia de inserir desde a criação do arquivo um buraco de tamanho X, no começo do arquivo. Este tamanho é o máximo que o arquivo pode ocupar.
 
 
 + 18/abr/2009 - 01:49
@@ -33,6 +33,11 @@ Falta uma idéia para "unir" o último buraco do arquivo com o EOF, formando um 
 No capturas.c tem que implementar uma lista ligada simples nos buracos. (registro fixo)
 
 Verificar se isso é tudo que temos que mexer da estrutura do lab 01.
+
+
++ 20/abr/2009 - 00:27
+
+É bom começar com o relatório, já escrevendo alguns dos caminhos que tomamos.
 
 
 ++
