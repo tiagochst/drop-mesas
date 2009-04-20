@@ -156,7 +156,7 @@ Captura captura_read_(FILE *fin) {
   if(print) printf("Data de Captura: ");
   fscanf(fin, " %d", &X.data);
   if(print) printf("Local de Captura: ");
-  fscanf(fin, " %s", X.local);
+  fscanf(fin, " %[^\n]", X.local);
 
   return X;
 }

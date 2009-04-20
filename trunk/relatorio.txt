@@ -1,0 +1,15 @@
+- Modificações na estrutura montada para o Lab 1
+
+Corrigimos um bug que ocorria no caso de exclusão de um registro cujo tamanho era inferior ao tamanho do cabeçalho da lista ligada.
+O cabeçalho da lista ligada ultrapassava o tamanho do registro apagado, e destruía informações do registro seguinte.
+A correção do bug procedeu da seguinte forma:
+1. Inicialmente buscamos por buracos vizinhos, de forma que possamos efetuar união de buracos.
+2. Caso não hajam buracos vizinhos, encontramos o registro seguinte ao atual no arquivo, o reescrevemos no buraco que seria gerado, e virtualmente definimos que seu espaço ocupado é (sz+PROX.sz+SZ_REG), sendo sz o tamanho do registro apagado. Desta forma geramos fragmentação interna.
+3. Finalmente, para o caso de não haver próximo registro, ou seja, se estivermos no EOF, decidimos que seria mais adequado gerar, no momento da criação do arquivo, um buraco de tamanho "infinito". Todos os registros iriam ocupá-lo à medida que forem criados e definimos o tamanho desse registro "infinito" como o espaço máximo que o arquivo irá ocupar. Enfim, este caso se reduz ao caso 1.
+
+Modularizamos melhor as funções e as constantes, de forma a tornar mais simples a atualização e manutenção do programa.
+
+Agora os campos de tipo string podem conter espaços.
+Para tanto, substituímos fscanf(fin, " %s", ...); por fscanf(fin, " %[^\n]", ...);
+
+Modificamos o menu para tornar prático a execução das funções do programa.
