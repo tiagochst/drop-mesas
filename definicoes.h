@@ -3,18 +3,16 @@
 
 /** includes **/
 #include <stdio.h>
+#include <stdio_ext.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
 #include <math.h>
 
 /** defines **/
-#define SZ_LISTA (13)
-#define SZ_1 (4)
-#define SZ_2 (SZ_LISTA)
-#define SZ_CAB (SZ_1 + SZ_2)
-
-#define SZ_REG (7)
+#define SZ_CAB (4)
+#define SZ_LISTA (21)
+#define SZ_REG (9)
 
 #define VAZIO '*'
 #define USADO '#'
@@ -65,6 +63,7 @@ void Pause();
 int Pergunta(char *s);
 FILE *open_file(char *s);
 FILE *open_file_bin(char *s);
+void reg_escreve(FILE *fp, int sz);
 void muda_n(FILE *fp, int var);
 void muda_n_bin(FILE *fp, int var);
 

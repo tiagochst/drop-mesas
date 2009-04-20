@@ -16,7 +16,7 @@ int especie_busca(int id, Especie *K) {
     }
   }
 
-  if(k == -1) return -1;
+  if(k == -1) return FAIL;
   if(K != NULL) *K = X;
 
   fseek(FEspec, save, SEEK_SET);
@@ -58,8 +58,8 @@ void especie_insere_(Especie X) {
   }
 
   /*Coloca no arquivo o cabeçalho, indicando que está usado */
-  if(Ssz - sz > SZ_LISTA) fprintf(FEspec, "%c%04d\n", USADO, sz);
-  else fprintf(FEspec, "%c%04d\n", USADO, Ssz);
+  if(Ssz - sz > SZ_LISTA) reg_escreve(FEspec, sz);
+  else reg_escreve(FEspec, Ssz);
 
   especie_write(FEspec, X, 0); /*Escreve as  informações de X*/
 
@@ -127,7 +127,7 @@ void especie_deleta_(int sz) {
 
     /* volta para a posicao do anterior e reescreve Y */
     fseek(FEspec, save, SEEK_SET);
-    fprintf(FEspec, "%c%04d\n", USADO, sz+szY+SZ_REG);
+    reg_escreve(FEspec, sz+szY+SZ_REG);
     especie_write(FEspec, Y, 0);
   }
 }
