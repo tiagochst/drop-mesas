@@ -3,14 +3,14 @@
 /* ESCREVE EM UM ARQUIVO UM REGISTRO DE LISTA */
 void lista_escreve(FILE *fp, int sz, int prev, int next) {
   fprintf(fp, "%c", VAZIO);
-  fprintf(fp, "%04d %03d %03d\n", sz, prev, next);
+  fprintf(fp, "%06d %06d %06d\n", sz, prev, next);
 }
 
 /* LE DE UM ARQUIVO UM REGISTRO DE LISTA */
 int lista_le(FILE *fp, Lista *x) {
   if(fscanf(fp, " %d %d %d", &(x->sz), &(x->prev), &(x->next))==3)
-    return 1;
-  return 0;
+    return OK;
+  return FAIL;
 }
 
 /* BUSCA UM BURACO DE NO MINIMO sz BYTES */
@@ -21,7 +21,7 @@ int lista_busca_vazio(FILE *fp, int sz) {
   char c;
   int aux, no_cabeca = 1;
 
-  fseek(fp, SZ_1, SEEK_SET);
+  fseek(fp, SZ_CAB, SEEK_SET);
   while(1) {
     fscanf(fp, " %c", &c);
     if(c == USADO) {
@@ -30,19 +30,19 @@ int lista_busca_vazio(FILE *fp, int sz) {
       continue;
     }
 
-    if(lista_le(fp, &x)!=1) break;
+    if(lista_le(fp, &x)==FAIL) break;
     if(x.sz >= sz && !no_cabeca) {
       fseek(fp, -SZ_LISTA, SEEK_CUR);
       return x.sz;
     }
 
-    if(x.next == -1) return -1;
+    if(x.next == -1) return FAIL;
     fseek(fp, x.next, SEEK_SET);
 
     no_cabeca = 0;
   }
 
-  return -1;
+  return FAIL;
 }
 
 /* INSERCAO DE BURACOS NA LISTA LIGADA */
@@ -51,7 +51,7 @@ int lista_insere(FILE *fp, int sz, int pos) {
   int save, next;
 
   /* BUSCA NO ANTERIOR AO NOVO */
-  next = SZ_1;
+  next = SZ_CAB;
   while(next < pos && next != -1) {
     fseek(fp, next+1, SEEK_SET);
     lista_le(fp, &x);

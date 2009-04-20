@@ -55,8 +55,8 @@ void individuo_insere_(Individuo X) {
     lista_remove(FIndiv);
   }
 
-  if(Ssz - sz > SZ_LISTA) fprintf(FIndiv, "%c%04d\n", USADO, sz);
-  else fprintf(FIndiv, "%c%04d\n", USADO, Ssz);
+  if(Ssz - sz > SZ_LISTA) reg_escreve(FIndiv, sz);
+  else reg_escreve(FIndiv, Ssz);
 
   individuo_write(FIndiv, X, 0);
 
@@ -123,7 +123,7 @@ void individuo_deleta_(int sz) {
 
     /* volta para a posicao do anterior e reescreve Y */
     fseek(FIndiv, save, SEEK_SET);
-    fprintf(FIndiv, "%c%04d\n", USADO, sz+szY+SZ_REG);
+    reg_escreve(FIndiv, sz+szY+SZ_REG);
     individuo_write(FIndiv, Y, 0);
   }
 }
@@ -172,7 +172,7 @@ Individuo individuo_read(FILE* fin, int *_save, int *_sz) {
   fscanf(fin, " %c", &c);
   if(c == VAZIO) {
     lista_le(fin, &L);
-    fseek(fin, L.sz - 6, SEEK_CUR);
+    fseek(fin, L.sz - SZ_REG + 1, SEEK_CUR);
 
     X.idI = -1;
     return X;

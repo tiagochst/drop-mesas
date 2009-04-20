@@ -84,42 +84,30 @@ int print_menu(int x) {
     return 0;
   }
 
-  scanf(" %d", &in);
-  while(in<0 || in>max) {
+  ;
+  while(scanf(" %d", &in)!=1 || in<0 || in>max) {
     puts("Entrada incorreta. Digite novamente");
-    scanf(" %d", &in);
+    __fpurge(stdin);
   }
   return in;
 }
 
 void muda_string(char *s) {
-  char c;
-
-  printf("Deseja alterar este valor? (y/n) ");
-  while(scanf("%c", &c)==1 && tolower(c)!='y' && tolower(c)!='n');
-  if(tolower(c)=='n') return;
+  if(!Pergunta("Deseja alterar este valor?")) return;
 
   printf("Digite o novo valor: ");
   scanf(" %s", s);
 }
 
 void muda_int(int *i) {
-  char c;
-
-  printf("Deseja alterar este valor? (y/n) ");
-  while(scanf("%c", &c)==1 && tolower(c)!='y' && tolower(c)!='n');
-  if(tolower(c)=='n') return;
+  if(!Pergunta("Deseja alterar este valor?")) return;
 
   printf("Digite o novo valor: ");
   scanf(" %d", i);
 }
 
 void muda_char(char *x) {
-  char c;
-
-  printf("Deseja alterar este valor? (y/n) ");
-  while(scanf("%c", &c)==1 && tolower(c)!='y' && tolower(c)!='n');
-  if(tolower(c)=='n') return;
+  if(!Pergunta("Deseja alterar este valor?")) return;
 
   printf("Digite o novo valor: ");
   scanf(" %c", x);
@@ -161,6 +149,11 @@ FILE *open_file_bin(char *s) {
   }
 
   return fp;
+}
+
+void reg_escreve(FILE *fp, int sz) {
+  fprintf(fp, "%c", USADO);
+  fprintf(fp, "%06d\n", sz);
 }
 
 void muda_n(FILE *fp, int var) {
