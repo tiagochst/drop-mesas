@@ -24,6 +24,8 @@
 extern FILE *FIndiv;
 extern FILE *FEspec;
 extern FILE *FCaptu;
+extern FILE *FListSec;
+extern FILE *FListPrim;
 
 /** estruturas **/
 typedef struct {
@@ -62,7 +64,7 @@ void muda_char(char *x);
 void Pause();
 int Pergunta(char *s);
 FILE *open_file(char *s);
-FILE *open_file_bin(char *s);
+FILE *open_file_bin(char *s, int valor);
 void reg_escreve(FILE *fp, int sz);
 void muda_n(FILE *fp, int var);
 void muda_n_bin(FILE *fp, int var);
