@@ -139,12 +139,13 @@ FILE *open_file(char *s) {
   return fp;
 }
 
-FILE *open_file_bin(char *s, int valor) {
+FILE *open_file_bin(char *s) {
+  int zero = 0;
   FILE *fp = fopen(s, "r+b");
 
   if(fp == NULL) {
     fp = fopen(s, "w+b");
-    fwrite(&valor, sizeof(int), 1, fp);
+    fwrite(&zero, sizeof(int), 1, fp);
   }
 
   return fp;

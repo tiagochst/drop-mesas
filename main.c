@@ -3,21 +3,21 @@
 char *SIndiv = "individuos.txt";
 char *SEspec = "especies.txt";
 char *SCaptu = "capturas.dat";
-char *SListSec = "lista_inv_sec.dat";
-char *SListPrim = "lista_inv_prim.dat";
+char *SInvPrim = "inv_primario.dat";
+char *SInvSec = "inv_secundario.dat";
 
 FILE *FIndiv;
 FILE *FEspec;
 FILE *FCaptu;
-FILE *FListSec;
-FILE *FListPrim;
+FILE *FInvPrim;
+FILE *FInvSec;
 
 int main() {
   int menu, m2;
 
   FEspec = open_file(SEspec);
   FIndiv = open_file(SIndiv);
-  FCaptu = open_file_bin(SCaptu, 0);
+  FCaptu = open_file_bin(SCaptu);
 
   m2 = 0;
   while(1) {

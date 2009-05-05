@@ -8,6 +8,7 @@
 #include <ctype.h>
 #include <string.h>
 #include <math.h>
+#include "conjunto.h"
 
 /** defines **/
 #define SZ_CAB (4)
@@ -19,13 +20,6 @@
 
 #define OK   (1)
 #define FAIL (-1)
-
-/** variaveis extern **/
-extern FILE *FIndiv;
-extern FILE *FEspec;
-extern FILE *FCaptu;
-extern FILE *FListSec;
-extern FILE *FListPrim;
 
 /** estruturas **/
 typedef struct {
@@ -56,6 +50,23 @@ typedef struct {
   int sz, prev, next;
 } Lista;
 
+typedef struct {
+  int chave;
+  int next;
+} ListaInv_Prim;
+
+typedef struct {
+  char s[30];
+  int ind1;
+} ListaInv_Sec;
+
+/** variaveis extern **/
+extern FILE *FIndiv;
+extern FILE *FEspec;
+extern FILE *FCaptu;
+extern FILE *FInvPrim;
+extern FILE *FInvSec;
+
 /** prototipos das funcoes **/
 int print_menu(int x);
 void muda_string(char *s);
@@ -64,7 +75,7 @@ void muda_char(char *x);
 void Pause();
 int Pergunta(char *s);
 FILE *open_file(char *s);
-FILE *open_file_bin(char *s, int valor);
+FILE *open_file_bin(char *s);
 void reg_escreve(FILE *fp, int sz);
 void muda_n(FILE *fp, int var);
 void muda_n_bin(FILE *fp, int var);
@@ -112,5 +123,13 @@ void historico_monitoramento();
 void ultima_captura();
 void ultima_captura_peso();
 void caminho_especie();
+
+void lista_inv_start(char *prim, char *sec);
+void lista_inv_end();
+void lista_inv_insere(char *s, int id);
+void lista_inv_insere_(char *s, int id);
+int lista_inv_Sec_busca(char *s);
+int lista_inv_Prim_insere(int id);
+void lista_inv_Sec_insere(char *s, int iout);
 
 #endif
