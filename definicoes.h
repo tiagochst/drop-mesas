@@ -127,7 +127,7 @@ void caminho_especie();
 void lista_inv_start(char *prim, char *sec);
 void lista_inv_end();
 void lista_inv_insere(char *s, int id);
-void lista_inv_insere_(char *s, int id);
+int lista_inv_insere_(char *s, int id);
 int lista_inv_Sec_busca(char *s);
 int lista_inv_Prim_insere(int k, int id);
 int lista_inv_Sec_insere(char *s, int ind1);
