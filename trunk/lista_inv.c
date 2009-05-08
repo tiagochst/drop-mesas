@@ -6,6 +6,7 @@ ListaInv_Prim *LIPrim;
 ListaInv_Sec *LISec;
 int N_LIPrim;
 int N_LISec;
+int avail_list_LIPrim;
 
 void lista_inv_start(char *prim, char *sec) {
   int n;
@@ -73,11 +74,17 @@ void lista_inv_insere(char *s, int id) {
   conj_destroy(c);
 }
 
-void lista_inv_insere_(char *s, int id) {
-  int k = lista_inv_Sec_busca(s);
+int lista_inv_insere_(char *s, int id) {
+  int aux, k;
+
+  k = lista_inv_Sec_busca(s);
+  aux = lista_inv_Prim_insere(k, id);
+
   if(k == FAIL)
-    lista_inv_Sec_insere(s, id);
-  lista_inv_Prim_insere(k, id);
+    if(lista_inv_Sec_insere(s, aux) == FAIL)
+      return FAIL;
+
+  return OK;
 }
 
 int lista_inv_Sec_busca(char *s) {
@@ -96,7 +103,35 @@ int lista_inv_Sec_busca(char *s) {
 }
 
 int lista_inv_Prim_insere(int k, int id) {
-  return FAIL;
+  int pos;
+  ListaInv_Prim *aux;
+
+  if(avail_list_LIPrim == FAIL) {
+    /* nao tem buraco, dar realloc no LIPrim */
+    aux = (ListaInv_Prim*) realloc(LIPrim, (N_LIPrim+1)*sizeof(ListaInv_Prim));
+    if(aux == NULL) return FAIL;
+    LIPrim = aux;
+    
+    pos = N_LIPrim++;
+  }
+  else {
+    pos = avail_list_LIPrim;
+    avail_list_LIPrim = LIPrim[pos].next;
+  }
+
+  LIPrim[pos].chave = id;
+  if(k == FAIL) {
+    /* insere um novo */
+    LIPrim[pos].next = -1;
+  }
+  else {
+    /* basta alterar a lista ligada */
+    LIPrim[pos].next = LIPrim[k].next;
+    LIPrim[k].next = pos;
+  }
+
+  /* e devolve a posicao */
+  return pos;
 }
 
 int lista_inv_Sec_insere(char *s, int ind1) {
