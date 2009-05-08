@@ -129,7 +129,8 @@ void lista_inv_end();
 void lista_inv_insere(char *s, int id);
 void lista_inv_insere_(char *s, int id);
 int lista_inv_Sec_busca(char *s);
-int lista_inv_Prim_insere(int id);
-void lista_inv_Sec_insere(char *s, int iout);
+int lista_inv_Prim_insere(int k, int id);
+int lista_inv_Sec_insere(char *s, int ind1);
+int ListaInv_Sec_cmp(const void *i, const void *j);
 
 #endif
