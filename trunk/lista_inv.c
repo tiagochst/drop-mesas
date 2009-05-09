@@ -53,10 +53,6 @@ void lista_inv_end(char *prim, char *sec) {
   free(LISec);
 }
 
-int strcmp_(void *a, void *b) {
-	return strcmp((char*)a, (char*)b);
-}
-
 void lista_inv_insere(char *s, int id) {
   conjunto *c = conj_init(), *i;
   char *tok;
@@ -85,6 +81,40 @@ int lista_inv_insere_(char *s, int id) {
       return FAIL;
 
   return OK;
+}
+
+void lista_inv_busca(char *s) {
+  conjunto *c = conj_init(), *ans = conj_init(), *i, *aux;
+  char *tok;
+  int k;
+
+  /* insere em 'ans' todos IDs de especies */
+
+  /* separa a string s em tokens */
+  tok = strtok(s, delimiters);
+  while(tok != NULL) {
+    conj_insere(c, (void*)tok, strcmp_);
+    tok = strtok(NULL, delimiters);
+  }
+
+  for(i=c->next ; i!=NULL ; i=i->next) {
+    k = lista_inv_Sec_busca((char*)i->i);
+
+    /* gera lista de IDs relacionados */
+    aux = conj_init();
+    while(k != FAIL) {
+      conj_insere(aux, (void*)LIPrim[k].chave, intcmp_);
+      k = LIPrim[k].next;
+    }
+
+    ans = conj_interseccao(ans, aux, intcmp_);
+    conj_destroy(aux);
+  }
+
+  /* itera em 'ans' fazendo algo */
+
+  conj_destroy(ans);
+  conj_destroy(c);
 }
 
 int lista_inv_Sec_busca(char *s) {
@@ -135,21 +165,27 @@ int lista_inv_Prim_insere(int k, int id) {
 }
 
 int lista_inv_Sec_insere(char *s, int ind1) {
+  int i;
   ListaInv_Sec *aux = (ListaInv_Sec *) realloc(LISec, (N_LISec+1)*sizeof(ListaInv_Sec)); 
   if(aux == NULL) return FAIL;
 
   LISec = aux;
   N_LISec++;
 
-  strcpy(LISec[N_LISec-1].s, s);
-  LISec[N_LISec-1].ind1 = ind1;
-  qsort(LISec, N_LISec, sizeof(ListaInv_Sec), ListaInv_Sec_cmp);
+  for(i=N_LISec-1 ; i>0 && strcmp(s, LISec[i-1].s)>0 ; i--) {
+    LISec[i] = LISec[i-1];
+    /*strcpy(LISec[i].s, LISec[i-1].s);
+    LISec[i].ind1 = LISec[i-1].ind1;*/
+  }
+  strcpy(LISec[i].s, s);
+  LISec[i].ind1 = ind1;
 
   return OK;
 }
-
+/*
 int ListaInv_Sec_cmp(const void *i, const void *j) {
   ListaInv_Sec *a = (ListaInv_Sec *)i;
   ListaInv_Sec *b = (ListaInv_Sec *)j;
   return strcmp(a->s, b->s);
 }
+*/

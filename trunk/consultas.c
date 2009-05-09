@@ -160,3 +160,13 @@ void caminho_especie() {
   Pause();
   return;
 }
+
+void busca_especie_descricao() {
+  char s[200];
+  system("clear");
+
+  printf("Digite as palavras a pesquisar: ");
+  scanf(" %[^\n]", s);
+
+  lista_inv_busca(s);
+}
