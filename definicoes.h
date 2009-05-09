@@ -79,6 +79,8 @@ FILE *open_file_bin(char *s);
 void reg_escreve(FILE *fp, int sz);
 void muda_n(FILE *fp, int var);
 void muda_n_bin(FILE *fp, int var);
+int strcmp_(void *a, void *b);
+int intcmp_(void *a, void *b);
 
 void captura_insere();
 void captura_insere_(Captura X);
@@ -123,6 +125,7 @@ void historico_monitoramento();
 void ultima_captura();
 void ultima_captura_peso();
 void caminho_especie();
+void busca_especie_descricao();
 
 void lista_inv_start(char *prim, char *sec);
 void lista_inv_end();

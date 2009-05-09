@@ -75,10 +75,12 @@ int print_menu(int x) {
     puts("* 4. Dado um individuo, exibir o caminho do arquivo de imagem *");
     puts("*     de sua especie                                          *");
     puts("*                                                             *");
+    puts("* 5. buscar especies pela descrição                           *");
+    puts("*                                                             *");
     puts("* 0. menu principal                                           *");
     puts("***************************************************************");
 
-    max = 4;
+    max = 5;
   }
   else {
     return 0;
@@ -173,4 +175,12 @@ void muda_n_bin(FILE *fp, int var) {
   n += var;
   fseek(fp, 0, SEEK_SET);
   fwrite(&n, sizeof(int), 1, fp);
+}
+
+int strcmp_(void *a, void *b) {
+  return strcmp((char*)a, (char*)b);
+}
+
+int intcmp_(void *a, void *b) {
+  return *(int*)a - *(int*)b;
 }

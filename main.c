@@ -52,6 +52,7 @@ int main() {
       if(m2 == 2) ultima_captura();
       if(m2 == 3) ultima_captura_peso();
       if(m2 == 4) caminho_especie();
+      if(m2 == 5) busca_especie_descricao();
     }
   }
   
