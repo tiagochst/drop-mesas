@@ -5,7 +5,7 @@ int especie_busca(int id, Especie *K) {
   Especie X;
 
   fseek(FEspec, 0, SEEK_SET);
-  fscanf(FEspec, " %d", &n);
+  fscanf(FEspec, "%d", &n);
   for(i=0,k=-1 ; i<n ; i++) {
     X = especie_read(FEspec, &save, &sz);
 
@@ -35,7 +35,8 @@ void especie_insere() {
     Pause();
     return;
   }
-
+  
+  
   especie_insere_(X);
 
   /* Atualiza a quantidade de registros */
@@ -56,12 +57,18 @@ void especie_insere_(Especie X) {
     /* remove da lista ligada */
     lista_remove(FEspec);
   }
+  
+  /*Insere no indice os dados da especie*/
+  indice_insere(X.id,ftell(FEspec));
+  
 
   /*Coloca no arquivo o cabeçalho, indicando que está usado */
   if(Ssz - sz > SZ_LISTA) reg_escreve(FEspec, sz);
   else reg_escreve(FEspec, Ssz);
-
-  especie_write(FEspec, X, 0); /*Escreve as  informações de X*/
+   
+  
+  /*Escreve as  informações de X no arquivo*/
+  especie_write(FEspec, X, 0); 
 
   if(Ssz - sz > SZ_LISTA)
     lista_insere(FEspec, Ssz-sz-SZ_REG, ftell(FEspec));
@@ -98,6 +105,8 @@ void especie_deleta() {
   puts("** DELECAO ESPECIE **");
   printf("Digite o ID da especie a ser deletada: ");
   scanf(" %d", &id);
+  
+  
 
   sz = especie_busca(id, &X);
   if(sz == -1) {
@@ -109,7 +118,7 @@ void especie_deleta() {
     if(!Pergunta("Confirma exclusao?")) return;
 
     especie_deleta_(sz);
-
+    indice_deleta(id);
     muda_n(FEspec, -1);
   }
 }
