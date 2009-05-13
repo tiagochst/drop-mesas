@@ -22,6 +22,11 @@
 #define FAIL (-1)
 
 /** estruturas **/
+typedef struct{
+	int id;
+	int offset;
+}Indice_Prim;
+
 typedef struct {
   int id;
   char camin[256];
@@ -66,6 +71,7 @@ extern FILE *FEspec;
 extern FILE *FCaptu;
 extern FILE *FInvPrim;
 extern FILE *FInvSec;
+extern FILE *FIndEspec;
 
 /** prototipos das funcoes **/
 int print_menu(int x);
@@ -126,6 +132,12 @@ void ultima_captura();
 void ultima_captura_peso();
 void caminho_especie();
 void busca_especie_descricao();
+
+void indice_start(char *s);
+void indice_end(char *s);
+void indice_insere(int offset, int id);
+void indice_deleta(int id);
+int indice_busca(int id);
 
 void lista_inv_start(char *prim, char *sec);
 void lista_inv_end();
