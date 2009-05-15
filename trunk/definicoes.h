@@ -90,6 +90,7 @@ void muda_n(FILE *fp, int var);
 void muda_n_bin(FILE *fp, int var);
 int strcmp_(void *a, void *b);
 int intcmp_(void *a, void *b);
+void toupper_(char *s);
 
 void captura_insere();
 void captura_insere_(Captura X);
