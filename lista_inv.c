@@ -63,7 +63,7 @@ void lista_inv_insere(char *s, int id) {
 	/* separa a string s em tokens */
 	tok = strtok(s, delimiters);
 	while (tok != NULL) {
-		conj_insere(c, (void*)tok, strcmp_);
+		conj_insere(c, (void*)tok, (strlen(tok)+1)*sizeof(char), strcmp_);
 		tok = strtok(NULL, delimiters);
 	}
 
@@ -79,6 +79,9 @@ int lista_inv_insere_(char *s, int id) {
 	k = lista_inv_Sec_busca(s);
 	aux = lista_inv_Prim_insere(k, id);
 
+	if (aux == FAIL)
+		return FAIL;
+
 	if (k == FAIL)
 		if (lista_inv_Sec_insere(s, aux) == FAIL)
 			return FAIL;
@@ -93,13 +96,13 @@ void lista_inv_busca(char *s) {
 
 	/* insere em 'ans' todos IDs de especies */
 	for (j=0; j<N_IEspec; j++) {
-		conj_insere(ans, (void*)&(IEspec[j].id), intcmp_);
+		conj_insere(ans, (void*)(&IEspec[j].id), sizeof(int), intcmp_);
 	}
 
 	/* separa a string s em tokens */
 	tok = strtok(s, delimiters);
 	while (tok != NULL) {
-		conj_insere(c, (void*)tok, strcmp_);
+		conj_insere(c, (void*)tok, (strlen(tok)+1)*sizeof(char), strcmp_);
 		tok = strtok(NULL, delimiters);
 	}
 
@@ -109,7 +112,7 @@ void lista_inv_busca(char *s) {
 		/* gera lista de IDs relacionados */
 		aux = conj_init();
 		while (k != FAIL) {
-			conj_insere(aux, (void*)(&LIPrim[k].chave), intcmp_);
+			conj_insere(aux, (void*)(&LIPrim[k].chave), sizeof(int), intcmp_);
 			k = LIPrim[k].next;
 		}
 
@@ -118,10 +121,11 @@ void lista_inv_busca(char *s) {
 	}
 
 	/* itera em 'ans' fazendo algo */
-	puts("resposta à busca:");
+	puts("Espécies correspondentes à busca:");
 	for (i=ans->next; i!=NULL; i=i->next) {
 		printf("<%d>\n", *(int*)i->i);
 	}
+	Pause();
 
 	conj_destroy(ans);
 	conj_destroy(c);
@@ -187,10 +191,8 @@ int lista_inv_Sec_insere(char *s, int ind1) {
 	LISec = aux;
 	N_LISec++;
 
-	for (i=N_LISec-1; i>0 && strcmp(s, LISec[i-1].s)>0; i--) {
+	for (i=N_LISec-1; i>0 && strcmp(s, LISec[i-1].s)<0; i--) {
 		LISec[i] = LISec[i-1];
-		/*strcpy(LISec[i].s, LISec[i-1].s);
-		 LISec[i].ind1 = LISec[i-1].ind1;*/
 	}
 	strcpy(LISec[i].s, s);
 	LISec[i].ind1 = ind1;

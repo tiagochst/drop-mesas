@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 #include "conjunto.h"
 
 conjunto *conj_init() {
@@ -11,13 +12,16 @@ conjunto *conj_init() {
 void conj_destroy(conjunto *c) {
 	conjunto *next;
 
-	for (; c != NULL; c = next) {
+	next = c->next;
+	free(c);
+	for (c = next; c != NULL; c = next) {
 		next = c->next;
+		free(c->i);
 		free(c);
 	}
 }
 
-void conj_insere(conjunto *c, void *e, funcao cmp) {
+void conj_insere(conjunto *c, void *e, int sz, funcao cmp) {
 	conjunto *novo;
 
 	while (c->next != NULL && cmp(c->next->i, e) < 0)
@@ -27,7 +31,9 @@ void conj_insere(conjunto *c, void *e, funcao cmp) {
 		return;
 
 	novo = (conjunto *) malloc(sizeof(conjunto));
-	novo->i = e;
+	novo->i = malloc(sz);
+	memcpy(novo->i, e, sz);
+	novo->sz = sz;
 	novo->next = c->next;
 	c->next = novo;
 }
@@ -41,9 +47,11 @@ conjunto *conj_interseccao(conjunto *c1, conjunto *c2, funcao cmp) {
 	while (c1!=NULL && c2!=NULL) {
 		diff = cmp(c1->i, c2->i);
 
-		if (diff == 0)
-			conj_insere(inter, c1->i, cmp);
-		else if (diff < 0)
+		if (diff == 0) {
+			conj_insere(inter, c1->i, c1->sz, cmp);
+			c1 = c1->next;
+			c2 = c2->next;
+		} else if (diff < 0)
 			c1 = c1->next;
 		else
 			c2 = c2->next;
@@ -65,13 +73,13 @@ conjunto *conj_diferenca(conjunto *c1, conjunto *c2, funcao cmp) {
 			c1 = c1->next;
 			c2 = c2->next;
 		} else if (diff < 0) {
-			conj_insere(difer, c1->i, cmp);
+			conj_insere(difer, c1->i, c1->sz, cmp);
 			c1 = c1->next;
 		} else
 			c2 = c2->next;
 	}
 	while (c1!=NULL) {
-		conj_insere(difer, c1->i, cmp);
+		conj_insere(difer, c1->i, c1->sz, cmp);
 		c1 = c1->next;
 	}
 
