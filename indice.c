@@ -76,7 +76,7 @@ void indice_insere(int id, int offset) {
 	N_IEspec++;
 	IEspec = (Indice_Prim *)realloc(IEspec, (N_IEspec)*sizeof(Indice_Prim));
 	i = N_IEspec-1;
-	while ((id < IEspec[i-1].id) && i>=1) {
+	while (i>0 && (id < IEspec[i-1].id)) {
 		IEspec[i] = IEspec[i-1];
 		i--;
 	}

@@ -9,51 +9,49 @@ int N_LISec;
 int avail_list_LIPrim;
 
 void lista_inv_start(char *prim, char *sec) {
-	int n;
-
 	FInvPrim = fopen(prim, "rb");
 	FInvSec = fopen(sec, "rb");
 	LIPrim = NULL;
 	LISec = NULL;
 	avail_list_LIPrim = FAIL;
 
-	n = 0;
+	N_LIPrim = 0;
 	if (FInvPrim != NULL) {
-		fread(&n, sizeof(int), 1, FInvPrim);
+		fread(&N_LIPrim, sizeof(int), 1, FInvPrim);
 		fread(&avail_list_LIPrim, sizeof(int), 1, FInvPrim);
 
-		LIPrim = (ListaInv_Prim *) malloc(n*sizeof(ListaInv_Prim));
-		fread(LIPrim, sizeof(ListaInv_Prim), n, FInvPrim);
+		LIPrim = (ListaInv_Prim *) malloc(N_LIPrim*sizeof(ListaInv_Prim));
+		fread(LIPrim, sizeof(ListaInv_Prim), N_LIPrim, FInvPrim);
 	}
-	N_LIPrim = n;
 
-	n = 0;
+	N_LISec = 0;
 	if (FInvSec != NULL) {
-		fread(&n, sizeof(int), 1, FInvSec);
+		fread(&N_LISec, sizeof(int), 1, FInvSec);
 
-		LISec = (ListaInv_Sec *) malloc(n*sizeof(ListaInv_Sec));
-		fread(LISec, sizeof(ListaInv_Sec), n, FInvSec);
+		LISec = (ListaInv_Sec *) malloc(N_LISec*sizeof(ListaInv_Sec));
+		fread(LISec, sizeof(ListaInv_Sec), N_LISec, FInvSec);
 	}
-	N_LISec = n;
+
+	fclose(FInvPrim);
+	fclose(FInvSec);
 }
 
 void lista_inv_end(char *prim, char *sec) {
-	int n;
-
 	FInvPrim = fopen(prim, "wb");
 	FInvSec = fopen(sec, "wb");
 
-	n = N_LIPrim;
-	fwrite(&n, sizeof(int), 1, FInvPrim);
+	fwrite(&N_LIPrim, sizeof(int), 1, FInvPrim);
 	fwrite(&avail_list_LIPrim, sizeof(int), 1, FInvPrim);
-	fwrite(LIPrim, sizeof(ListaInv_Prim), n, FInvPrim);
+	fwrite(LIPrim, sizeof(ListaInv_Prim), N_LIPrim, FInvPrim);
 
-	n = N_LISec;
-	fwrite(&n, sizeof(int), 1, FInvSec);
-	fwrite(LISec, sizeof(ListaInv_Sec), n, FInvSec);
+	fwrite(&N_LISec, sizeof(int), 1, FInvSec);
+	fwrite(LISec, sizeof(ListaInv_Sec), N_LISec, FInvSec);
 
 	free(LIPrim);
 	free(LISec);
+
+	fclose(FInvPrim);
+	fclose(FInvSec);
 }
 
 void lista_inv_insere(char *s, int id) {
@@ -63,6 +61,7 @@ void lista_inv_insere(char *s, int id) {
 	/* separa a string s em tokens */
 	tok = strtok(s, delimiters);
 	while (tok != NULL) {
+		toupper_(tok);
 		conj_insere(c, (void*)tok, (strlen(tok)+1)*sizeof(char), strcmp_);
 		tok = strtok(NULL, delimiters);
 	}
@@ -90,7 +89,7 @@ int lista_inv_insere_(char *s, int id) {
 }
 
 void lista_inv_busca(char *s) {
-	conjunto *c = conj_init(), *ans = conj_init(), *i, *aux;
+	conjunto *c = conj_init(), *ans = conj_init(), *i, *aux, *aux2;
 	char *tok;
 	int k, j;
 
@@ -102,6 +101,7 @@ void lista_inv_busca(char *s) {
 	/* separa a string s em tokens */
 	tok = strtok(s, delimiters);
 	while (tok != NULL) {
+		toupper_(tok);
 		conj_insere(c, (void*)tok, (strlen(tok)+1)*sizeof(char), strcmp_);
 		tok = strtok(NULL, delimiters);
 	}
@@ -116,7 +116,9 @@ void lista_inv_busca(char *s) {
 			k = LIPrim[k].next;
 		}
 
-		ans = conj_interseccao(ans, aux, intcmp_);
+		aux2 = conj_interseccao(ans, aux, intcmp_);
+		conj_destroy(ans);
+		ans = aux2;
 		conj_destroy(aux);
 	}
 
