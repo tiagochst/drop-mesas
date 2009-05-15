@@ -14,7 +14,7 @@ FILE *FCaptu;
 FILE *FInvPrim;
 FILE *FInvSec;
 FILE *FIndEspec;
-
+FILE *FIndIndiv;
 
 int main() {
   int menu, m2;
@@ -22,8 +22,9 @@ int main() {
   FEspec = open_file(SEspec);
   FIndiv = open_file(SIndiv);
   FCaptu = open_file_bin(SCaptu);
-  
-  indice_start(SIndEspec);
+
+  lista_inv_start(SInvPrim, SInvSec);
+  indice_start(SIndEspec, SIndIndiv);
 
   m2 = 0;
   while(1) {
@@ -62,12 +63,13 @@ int main() {
       if(m2 == 5) busca_especie_descricao();
     }
   }
-  
+
+  lista_inv_end(SInvPrim, SInvSec);
   indice_end(SIndEspec);
   fclose(FCaptu);
   fclose(FEspec);
   fclose(FIndiv);
   system("clear");
 
-  return 0;
+	return 0;
 }

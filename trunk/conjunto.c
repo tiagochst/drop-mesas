@@ -10,8 +10,8 @@ conjunto *conj_init() {
 
 void conj_destroy(conjunto *c) {
 	conjunto *next;
-	
-	for(; c != NULL ; c = next) {
+
+	for (; c != NULL; c = next) {
 		next = c->next;
 		free(c);
 	}
@@ -19,13 +19,11 @@ void conj_destroy(conjunto *c) {
 
 void conj_insere(conjunto *c, void *e, funcao cmp) {
 	conjunto *novo;
-	
-	while(c->next != NULL &&
-	      cmp(c->next->i, e) < 0)
+
+	while (c->next != NULL && cmp(c->next->i, e) < 0)
 		c = c->next;
 
-	while(c->next != NULL &&
-	      cmp(c->next->i, e) == 0)
+	if (c->next != NULL && cmp(c->next->i, e) == 0)
 		return;
 
 	novo = (conjunto *) malloc(sizeof(conjunto));
@@ -39,15 +37,18 @@ conjunto *conj_interseccao(conjunto *c1, conjunto *c2, funcao cmp) {
 	int diff;
 	c1 = c1->next;
 	c2 = c2->next;
-	
-	while(c1!=NULL && c2!=NULL) {
+
+	while (c1!=NULL && c2!=NULL) {
 		diff = cmp(c1->i, c2->i);
-		
-		if(diff == 0) conj_insere(inter, c1->i, cmp);
-		else if(diff < 0) c1 = c1->next;
-		else c2 = c2->next;
+
+		if (diff == 0)
+			conj_insere(inter, c1->i, cmp);
+		else if (diff < 0)
+			c1 = c1->next;
+		else
+			c2 = c2->next;
 	}
-	
+
 	return inter;
 }
 
@@ -56,24 +57,23 @@ conjunto *conj_diferenca(conjunto *c1, conjunto *c2, funcao cmp) {
 	int diff;
 	c1 = c1->next;
 	c2 = c2->next;
-	
-	while(c1!=NULL && c2!=NULL) {
+
+	while (c1!=NULL && c2!=NULL) {
 		diff = cmp(c1->i, c2->i);
-		
-		if(diff == 0) {
+
+		if (diff == 0) {
 			c1 = c1->next;
 			c2 = c2->next;
-		}
-		else if(diff < 0) {
+		} else if (diff < 0) {
 			conj_insere(difer, c1->i, cmp);
 			c1 = c1->next;
-		}
-		else c2 = c2->next;
+		} else
+			c2 = c2->next;
 	}
-	while(c1!=NULL) {
+	while (c1!=NULL) {
 		conj_insere(difer, c1->i, cmp);
 		c1 = c1->next;
 	}
-	
+
 	return difer;
 }
