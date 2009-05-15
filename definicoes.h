@@ -22,47 +22,47 @@
 #define FAIL (-1)
 
 /** estruturas **/
-typedef struct{
+typedef struct {
 	int id;
 	int offset;
-}Indice_Prim;
+} Indice_Prim;
 
 typedef struct {
-  int id;
-  char camin[256];
-  int data;
-  char nomec[31];
-  char nomep[31];
-  char descr[501];
+	int id;
+	char camin[256];
+	int data;
+	char nomec[31];
+	char nomep[31];
+	char descr[501];
 } Especie;
 
 typedef struct {
-  int idE;
-  int idI;
-  char sexo;
+	int idE;
+	int idI;
+	char sexo;
 } Individuo;
 
-typedef struct{
-  int id;
-  int comprimento;
-  int largura;
-  int peso;
-  int data;
-  char local[51];
+typedef struct {
+	int id;
+	int comprimento;
+	int largura;
+	int peso;
+	int data;
+	char local[51];
 } Captura;
 
 typedef struct {
-  int sz, prev, next;
+	int sz, prev, next;
 } Lista;
 
 typedef struct {
-  int chave;
-  int next;
+	int chave;
+	int next;
 } ListaInv_Prim;
 
 typedef struct {
-  char s[30];
-  int ind1;
+	char s[30];
+	int ind1;
 } ListaInv_Sec;
 
 /** variaveis extern **/
@@ -72,6 +72,9 @@ extern FILE *FCaptu;
 extern FILE *FInvPrim;
 extern FILE *FInvSec;
 extern FILE *FIndEspec;
+extern FILE *FIndIndiv;
+extern Indice_Prim *IEspec;
+extern int N_IEspec;
 
 /** prototipos das funcoes **/
 int print_menu(int x);
@@ -133,7 +136,7 @@ void ultima_captura_peso();
 void caminho_especie();
 void busca_especie_descricao();
 
-void indice_start(char *s);
+void indice_start(char *espec, char *indiv);
 void indice_end(char *s);
 void indice_insere(int offset, int id);
 void indice_deleta(int id);
@@ -147,5 +150,6 @@ int lista_inv_Sec_busca(char *s);
 int lista_inv_Prim_insere(int k, int id);
 int lista_inv_Sec_insere(char *s, int ind1);
 int ListaInv_Sec_cmp(const void *i, const void *j);
+void lista_inv_busca(char *s);
 
 #endif
