@@ -8,6 +8,19 @@ int N_LIPrim;
 int N_LISec;
 int avail_list_LIPrim;
 
+void debug() {
+	int i;
+	for (i = 0; i < N_LISec; i++)
+		printf("LISec[%d] = {%s, %d}\n", i, LISec[i].s, LISec[i].ind1);
+	putchar('\n');
+
+	for (i = 0; i < N_LIPrim; i++)
+		printf("LIPrim[%d] = {%d, %d}\n", i, LIPrim[i].chave, LIPrim[i].next);
+	putchar('\n');
+
+	Pause();
+}
+
 void lista_inv_start(char *prim, char *sec) {
 	FInvPrim = fopen(prim, "rb");
 	FInvSec = fopen(sec, "rb");
@@ -22,6 +35,8 @@ void lista_inv_start(char *prim, char *sec) {
 
 		LIPrim = (ListaInv_Prim *) malloc(N_LIPrim*sizeof(ListaInv_Prim));
 		fread(LIPrim, sizeof(ListaInv_Prim), N_LIPrim, FInvPrim);
+
+		fclose(FInvPrim);
 	}
 
 	N_LISec = 0;
@@ -30,10 +45,11 @@ void lista_inv_start(char *prim, char *sec) {
 
 		LISec = (ListaInv_Sec *) malloc(N_LISec*sizeof(ListaInv_Sec));
 		fread(LISec, sizeof(ListaInv_Sec), N_LISec, FInvSec);
+
+		fclose(FInvSec);
 	}
 
-	fclose(FInvPrim);
-	fclose(FInvSec);
+	debug();
 }
 
 void lista_inv_end(char *prim, char *sec) {
@@ -76,9 +92,10 @@ int lista_inv_insere_(char *s, int id) {
 	int aux, k;
 
 	k = lista_inv_Sec_busca(s);
-	aux = lista_inv_Prim_insere(k, id);
+	if (k != FAIL)
+		k = LISec[k].ind1;
 
-	if (aux == FAIL)
+	if ((aux = lista_inv_Prim_insere(k, id)) == FAIL)
 		return FAIL;
 
 	if (k == FAIL)
@@ -89,7 +106,7 @@ int lista_inv_insere_(char *s, int id) {
 }
 
 void lista_inv_busca(char *s) {
-	conjunto *c = conj_init(), *ans = conj_init(), *i, *aux, *aux2;
+	conjunto *c = conj_init(), *ans = conj_init(), *i, *aux, *inter;
 	char *tok;
 	int k, j;
 
@@ -107,7 +124,9 @@ void lista_inv_busca(char *s) {
 	}
 
 	for (i=c->next; i!=NULL; i=i->next) {
-		k = lista_inv_Sec_busca((char*)i->i);
+		k = lista_inv_Sec_busca((char*) i->i);
+		if (k != FAIL)
+			k = LISec[k].ind1;
 
 		/* gera lista de IDs relacionados */
 		aux = conj_init();
@@ -116,10 +135,10 @@ void lista_inv_busca(char *s) {
 			k = LIPrim[k].next;
 		}
 
-		aux2 = conj_interseccao(ans, aux, intcmp_);
+		inter = conj_interseccao(ans, aux, intcmp_);
 		conj_destroy(ans);
-		ans = aux2;
 		conj_destroy(aux);
+		ans = inter;
 	}
 
 	/* itera em 'ans' fazendo algo */
@@ -177,9 +196,11 @@ int lista_inv_Prim_insere(int k, int id) {
 		/* basta alterar a lista ligada */
 		LIPrim[pos].next = LIPrim[k].next;
 		LIPrim[k].next = pos;
+
+		pos = k;
 	}
 
-	/* e devolve a posicao */
+	/* e devolve a posição do começo da lista ligada */
 	return pos;
 }
 
@@ -201,10 +222,3 @@ int lista_inv_Sec_insere(char *s, int ind1) {
 
 	return OK;
 }
-/*
- int ListaInv_Sec_cmp(const void *i, const void *j) {
- ListaInv_Sec *a = (ListaInv_Sec *)i;
- ListaInv_Sec *b = (ListaInv_Sec *)j;
- return strcmp(a->s, b->s);
- }
- */

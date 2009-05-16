@@ -153,4 +153,4 @@ int lista_inv_Sec_insere(char *s, int ind1);
 int ListaInv_Sec_cmp(const void *i, const void *j);
 void lista_inv_busca(char *s);
 
-#endif
+#endif /*_DEFINICOES_H_*/

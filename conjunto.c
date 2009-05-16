@@ -21,7 +21,7 @@ void conj_destroy(conjunto *c) {
 	}
 }
 
-void conj_insere(conjunto *c, void *e, int sz, funcao cmp) {
+void conj_insere(conjunto *c, void *e, int n_bytes, funcao cmp) {
 	conjunto *novo;
 
 	while (c->next != NULL && cmp(c->next->i, e) < 0)
@@ -31,9 +31,9 @@ void conj_insere(conjunto *c, void *e, int sz, funcao cmp) {
 		return;
 
 	novo = (conjunto *) malloc(sizeof(conjunto));
-	novo->i = malloc(sz);
-	memcpy(novo->i, e, sz);
-	novo->sz = sz;
+	novo->i = malloc(n_bytes);
+	memcpy(novo->i, e, n_bytes);
+	novo->sz = n_bytes;
 	novo->next = c->next;
 	c->next = novo;
 }
