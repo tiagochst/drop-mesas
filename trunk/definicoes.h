@@ -3,7 +3,7 @@
 
 /** includes **/
 #include <stdio.h>
-#include <stdio_ext.h>
+/*#include <stdio_ext.h>*/
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
@@ -137,8 +137,9 @@ void ultima_captura_peso();
 void caminho_especie();
 void busca_especie_descricao();
 
-void indice_start(char *espec, char *indiv);
-void indice_end(char *s);
+void indice_start(char *espec);
+void indice_end(char *espec);
+void indice_fail(char *espec);
 void indice_insere(int offset, int id);
 void indice_deleta(int id);
 int indice_busca(int id);
