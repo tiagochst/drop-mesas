@@ -24,7 +24,7 @@ int main() {
 	FCaptu = open_file_bin(SCaptu);
 
 	lista_inv_start(SInvPrim, SInvSec);
-	indice_start(SIndEspec, SIndIndiv);
+	indice_start(SIndEspec);
 
 	m2 = 0;
 	while (1) {
