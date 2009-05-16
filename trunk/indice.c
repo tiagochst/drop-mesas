@@ -67,7 +67,7 @@ void indice_end(char *s) {
 	fwrite(IEspec, sizeof(Indice_Prim), n, FIndEspec);
 
 	free(IEspec);
-
+	fclose(FIndEspec);
 }
 
 void indice_insere(int id, int offset) {
