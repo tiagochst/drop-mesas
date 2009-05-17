@@ -18,7 +18,7 @@ void historico_monitoramento() {
   fread(&n, sizeof(int), 1, FCaptu);
   while (n--) {
     aux = captura_read(FCaptu);
-    if (aux.idI == -1)
+    if (aux.idC == FAIL)
       n++;
     else if (aux.idI == id)
       captura_write(stdout, aux, 1);
@@ -44,7 +44,7 @@ void ultima_captura() {
   data = 0;
   while (n--) {
     aux = captura_read(FCaptu);
-    if (aux.idI == -1)
+    if (aux.idC == FAIL)
       n++;
     else if (aux.idI == id && aux.data > data) {
       pos = ftell(FCaptu) - sizeof(Captura);
@@ -92,7 +92,7 @@ void ultima_captura_peso() {
     if (X.idE == idE) {
     idI = X.idI;
 
-		
+
     printf("O individuo %d pertence aa especie %d\n", idI, idE);
 
     fseek(FCaptu, 0, SEEK_SET);
@@ -101,7 +101,7 @@ void ultima_captura_peso() {
     while (n2--) {
     C = captura_read(FCaptu);
 
-    if (C.idI == -1)
+    if (C.idC == -1)
     n2++;
     else if (C.idI == idI && C.data > data) {
     Cc = C;
@@ -125,16 +125,14 @@ void ultima_captura_peso() {
     printf("\n");
     }
     }
-    Pause();
     }
     }
 
     if (idI == -1) {
     printf("Nao foi encontrado individuos da especie com o ID fornecido.\n\n");
-    Pause();
     }
-	
-	
+
+    Pause();
 }
 
 /* Dado o individuo, buscamos a especie que ele pertence
