@@ -8,10 +8,10 @@ void historico_monitoramento() {
 	Captura aux;
 	system("clear");
 
-	puts("** HISTÓRICO DE MONITORAMENTO **");
+	puts("** HISTORICO DE MONITORAMENTO **");
 	printf("\n");
 
-	printf("Digite o ID do indivíduo: ");
+	printf("Digite o ID do individuo: ");
 	scanf(" %d", &id);
 
 	fseek(FCaptu, 0, SEEK_SET);

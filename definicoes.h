@@ -23,9 +23,14 @@
 
 /** estruturas **/
 typedef struct {
-	int id;
-	int offset;
+  int id;
+  int offset;
 } Indice_Prim;
+
+typedef struct{
+  int idP;
+  int idS;
+} Indice_Sec;
 
 typedef struct {
 	int id;
@@ -43,12 +48,13 @@ typedef struct {
 } Individuo;
 
 typedef struct {
-	int id;
-	int comprimento;
-	int largura;
-	int peso;
-	int data;
-	char local[51];
+  int idC;
+  int idI;
+  int comprimento;
+  int largura;
+  int peso;
+  int data;
+  char local[51];
 } Captura;
 
 typedef struct {
@@ -71,10 +77,12 @@ extern FILE *FEspec;
 extern FILE *FCaptu;
 extern FILE *FInvPrim;
 extern FILE *FInvSec;
-extern FILE *FIndEspec;
-extern FILE *FIndIndiv;
+extern FILE *FIPrimEspec;
+extern FILE *FISecIndiv;
 extern Indice_Prim *IEspec;
 extern int N_IEspec;
+extern Indice_Sec *ISIndiv;
+
 
 /** prototipos das funcoes **/
 int print_menu(int x);
@@ -143,6 +151,10 @@ void indice_fail(char *espec);
 void indice_insere(int offset, int id);
 void indice_deleta(int id);
 int indice_busca(int id);
+
+void indice_sec_start(char *indiv);
+void indice_sec_end(char *espec);
+void indice_sec_insere(int idE,int idI);
 
 void lista_inv_start(char *prim, char *sec);
 void lista_inv_end();
