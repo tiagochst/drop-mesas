@@ -4,11 +4,16 @@ Indice_Sec *ISIndiv;
 int N_ISIndiv;
 int FAIL_ISIndiv;
 
-void indice_sec_start(char *indiv){
-  int i, n;
-  int flag;
-  Individuo X;
+Indice_Sec *ISCaptu;
+int N_ISCaptu;
+int FAIL_ISCaptu;
 
+void indice_sec_start(char *indiv,char *captu){
+  int  n;
+  int flag;
+
+
+  /*-----------INDIVIDUO---------*/
   FISecIndiv = fopen(indiv, "rb");
   ISIndiv = NULL;
 
@@ -16,7 +21,7 @@ void indice_sec_start(char *indiv){
   if (FISecIndiv != NULL) {
     fread(&n, sizeof(int), 1, FISecIndiv);
     fread(&flag, sizeof(int), 1, FISecIndiv);
-    /*---RECONSTROI INDICE----*/
+    
     if (flag == FAIL){
     }else{
       ISIndiv = (Indice_Sec *) malloc(n*sizeof(Indice_Sec));
@@ -29,13 +34,36 @@ void indice_sec_start(char *indiv){
   else   N_ISIndiv = 0;
 
   FAIL_ISIndiv = 0;
+
+  /*-------------CAPTURA-----------*/
+  FISecCaptu = fopen(captu, "rb");
+  ISCaptu = NULL;
+
+  n = 0;
+  if (FISecCaptu != NULL) {
+    fread(&n, sizeof(int), 1, FISecCaptu);
+    fread(&flag, sizeof(int), 1, FISecCaptu);
+    
+    if (flag == FAIL){
+    }else{
+      ISCaptu = (Indice_Sec *) malloc(n*sizeof(Indice_Sec));
+      fread(ISCaptu, sizeof(Indice_Sec), n, FISecCaptu);
+
+      N_ISCaptu = n;
+    }
+    fclose(FISecCaptu);
+  }
+  else   N_ISCaptu = 0;
+
+  FAIL_ISCaptu = 0;
 }
 
 
-void indice_sec_end(char *indiv) {
+void indice_sec_end(char *indiv,char *captu) {
   int i;
   int n;
   int flag= OK;
+  /*-------INDIVIDUO---------*/
   FISecIndiv = fopen(indiv, "wb");
 
   n = N_ISIndiv;
@@ -49,44 +77,91 @@ void indice_sec_end(char *indiv) {
 
   free(ISIndiv);
   fclose(FISecIndiv);
+  /*-------CAPTURAS----------*/
+  FISecCaptu = fopen(captu, "wb");
+
+  n = N_ISCaptu;
+
+  fwrite(&n, sizeof(int), 1, FISecCaptu);
+  fwrite(&flag, sizeof(int), 1, FISecCaptu);
+  fwrite(ISCaptu,sizeof(Indice_Sec), n, FISecCaptu);
+
+  for(i=0;i<N_ISCaptu;i++)
+    printf("%d %d\n",ISCaptu[i].idS,ISCaptu[i].idP);
+
+  free(ISCaptu);
+  fclose(FISecCaptu);
 }
 
-void indice_sec_insere(int idS,int idP){
-  int i = N_ISIndiv;
-
-  N_ISIndiv++;
-  ISIndiv = (Indice_Sec *)realloc(ISIndiv, (N_ISIndiv)*sizeof(Indice_Sec));
-  while (i>0 && (idS < ISIndiv[i-1].idS)) {
-    ISIndiv[i] = ISIndiv[i-1];
-    i--;
+void indice_sec_insere(char *op,int idS,int idP){
+  int i;
+  if(!strcmp(op,"individuo")){
+    N_ISIndiv++;
+    ISIndiv = (Indice_Sec *)realloc(ISIndiv, (N_ISIndiv)*sizeof(Indice_Sec));
+    i = N_ISIndiv;
+    while (i>0 && (idS < ISIndiv[i-1].idS)) {
+      ISIndiv[i] = ISIndiv[i-1];
+      i--;
+    }
+    
+    ISIndiv[i].idS = idS;
+    ISIndiv[i].idP = idP;
+  }
+  if(!strcmp(op,"captura")){
+    N_ISCaptu++;
+    ISCaptu = (Indice_Sec *)realloc(ISCaptu, (N_ISCaptu)*sizeof(Indice_Sec));
+    i = N_ISCaptu;
+    while (i>0 && (idS < ISCaptu[i-1].idS)) {
+      ISCaptu[i] = ISCaptu[i-1];
+      i--;
+    }
+    
+    ISCaptu[i].idS = idS;
+    ISCaptu[i].idP = idP;
   }
 
-  ISIndiv[i].idS = idS;
-  ISIndiv[i].idP = idP;
-
 }
 
-int indice_sec_busca(int id) {
-  int ini = 0, fim = N_ISIndiv-1, meio;
-  if(N_ISIndiv == 0) return -1;
-  if (ISIndiv[ini].idS > id || ISIndiv[fim].idS < id)
-    return -1;
+int indice_sec_busca(char *op,int id) {
+  int i,N;
+  Indice_Sec *Indice;
+  int ini,fim,meio; 
+  
+  if(!strcmp(op,"individuo")){
+    N = N_ISCaptu;
+    Indice = (Indice_Sec *)malloc(N*sizeof(Indice_Sec));
+    for(i=0;i<N;i++) Indice[i] = ISCaptu[i];
+  }
+  if(!strcmp(op,"captura")){
+    N = N_ISCaptu;
+    Indice = (Indice_Sec *)malloc(N*sizeof(Indice_Sec));
+    for(i=0;i<N;i++) Indice[i] = ISCaptu[i];
+  }
 
-  if (ISIndiv[ini].idS == id)
+  ini = 0, fim = N-1;
+  if(N == 0) return -1;
+  if (Indice[ini].idS > id || Indice[fim].idS < id){
+    free(Indice);
+    return -1;
+  }
+
+  if (Indice[ini].idS == id){
+    free(Indice);
     return ini;
-  if (ISIndiv[fim].idS == id)
+  }
+  if (Indice[fim].idS == id){
+    free(Indice);
     return fim;
+  }
 
   while (fim - ini >= 2) {
     printf("%d %d\n",ini,fim);
     meio = (ini + fim)/2;
-    if (ISIndiv[meio].idS > id)
-      fim = meio;
-    else if (ISIndiv[meio].idS < id)
-      ini = meio;
-    else
-      return meio;
+    if (Indice[meio].idS >=id)      fim = meio;
+    else if (Indice[meio].idS < id) ini = meio;
+ 
   }
-
+  if(Indice[fim].idS == id) return fim;
+  free(Indice);
   return -1;
 }
