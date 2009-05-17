@@ -119,10 +119,10 @@ void lista_inv_busca(char *s) {
 		/* gera lista de IDs relacionados */
 		aux = conj_init();
 		while (k != FAIL) {
-			if(especie_busca(LIPrim[k].idE, NULL) == FAIL) {
-				/* no caso da espécie ter sido apagada, devemos atualizar a lista invertida */
+			/*if(especie_busca(LIPrim[k].idE, NULL) == FAIL) {
+				/\* no caso da espécie ter sido apagada, devemos atualizar a lista invertida *\/
 				lista_inv_deleta_((char*) i->i, LIPrim[k].idE);
-			}
+			}*/
 			conj_insere(aux, (void*)(&LIPrim[k].idE), sizeof(int), intcmp_);
 			k = LIPrim[k].next;
 		}
@@ -213,6 +213,28 @@ int lista_inv_Sec_insere(char *s, int ind1) {
 	LISec[i].ind1 = ind1;
 
 	return OK;
+}
+
+void lista_inv_atualiza(char *velho, char *novo, int id) {
+	conjunto *cvelho, *cnovo, *difer, *i;
+
+	cvelho = strtokenizer(velho);
+	cnovo = strtokenizer(novo);
+
+	/* tem que remover as palavras pertencentes a cvelho-cnovo
+	 * e adicionar as palavras de cnovo-cvelho */
+	difer = conj_diferenca(cvelho, cnovo, strcmp_);
+	for(i=difer->next ; i!=NULL; i=i->next)
+		lista_inv_deleta_((char *)i->i, id);
+	conj_destroy(difer);
+
+	difer = conj_diferenca(cnovo, cvelho, strcmp_);
+	for(i=difer->next ; i!=NULL; i=i->next)
+		lista_inv_insere_((char *)i->i, id);
+	conj_destroy(difer);
+
+	conj_destroy(cvelho);
+	conj_destroy(cnovo);
 }
 
 void lista_inv_deleta(char *s, int id) {
