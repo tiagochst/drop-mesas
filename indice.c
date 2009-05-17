@@ -10,7 +10,7 @@ int FAIL_IPIndiv;
 
 void indice_start(char *espec,char *indiv) {
   int i,n;
-  int flag; 
+  int flag;
   /*-----------ESPECIE------------*/
   FIPrimEspec = fopen(espec, "rb");
   IPEspec = NULL;
@@ -37,7 +37,7 @@ void indice_start(char *espec,char *indiv) {
     printf("%d %d\n", IPEspec[i].id, IPEspec[i].offset);
 
   /*-----------INDIVIDUO------------*/
-  FISecIndiv = fopen(indiv, "rb");
+  FIPrimIndiv = fopen(indiv, "rb");
   IPIndiv = NULL;
 
   n = 0;
@@ -124,7 +124,7 @@ void indice_insere(char *op,int id, int offset) {
     IPIndiv[i].id = id;
     IPIndiv[i].offset = offset;
   }
-  
+
 }
 
 void indice_deleta(char *op,int id) {
@@ -135,26 +135,26 @@ void indice_deleta(char *op,int id) {
     return;
   }
 
-  if(!strcmp(op,"especie")){      
+  if(!strcmp(op,"especie")){
     for (i=pos; i<N_IPEspec; i++) IPEspec[i] = IPEspec[i+1];
     N_IPEspec--;
     IPEspec = (Indice_Prim *)realloc(IPEspec, (N_IPEspec)*sizeof(Indice_Prim));
     printf("Registro removido com sucesso!\n");
-    
+
   }
   if(!strcmp(op,"individuo")){
     for (i=pos; i<N_IPIndiv; i++)  IPIndiv[i] = IPIndiv[i+1];
     N_IPIndiv--;
     IPIndiv = (Indice_Prim *)realloc(IPIndiv, (N_IPIndiv)*sizeof(Indice_Prim));
-    printf("Registro removido com sucesso!\n");    
+    printf("Registro removido com sucesso!\n");
   }
 }
 
 int indice_busca(char *op,int id){
   int i,N;
   Indice_Prim *Indice;
-  int ini,fim,meio; 
-  
+  int ini,fim,meio;
+
   if(!strcmp(op,"especie")){
     N = N_IPEspec;
     Indice = (Indice_Prim *)malloc(N*sizeof(Indice_Prim));
@@ -167,8 +167,7 @@ int indice_busca(char *op,int id){
   }
 
   ini = 0, fim = N-1;
-  if(N == 0) return -1;
-  if (Indice[ini].id > id || Indice[fim].id < id){
+  if(N == 0 || Indice[ini].id > id || Indice[fim].id < id) {
     free(Indice);
     return -1;
   }
