@@ -185,7 +185,7 @@ int intcmp_(void *a, void *b) {
 	return *(int*)a - *(int*)b;
 }
 
-void toupper_(char *s) {
+void strtoupper(char *s) {
 	for (; *s!='\0'; s++)
 		*s=toupper(*s);
 }

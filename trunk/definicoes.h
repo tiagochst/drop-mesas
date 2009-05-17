@@ -62,7 +62,7 @@ typedef struct {
 } Lista;
 
 typedef struct {
-	int chave;
+	int idE;
 	int next;
 } ListaInv_Prim;
 
@@ -98,7 +98,7 @@ void muda_n(FILE *fp, int var);
 void muda_n_bin(FILE *fp, int var);
 int strcmp_(void *a, void *b);
 int intcmp_(void *a, void *b);
-void toupper_(char *s);
+void strtoupper(char *s);
 
 void captura_insere();
 void captura_insere_(Captura X);
@@ -163,7 +163,9 @@ int lista_inv_insere_(char *s, int id);
 int lista_inv_Sec_busca(char *s);
 int lista_inv_Prim_insere(int k, int id);
 int lista_inv_Sec_insere(char *s, int ind1);
-int ListaInv_Sec_cmp(const void *i, const void *j);
+void lista_inv_Prim_deleta(int *k, int id);
+void lista_inv_deleta_(char *s, int id);
 void lista_inv_busca(char *s);
+void lista_inv_deleta(char *s, int id);
 
 #endif /*_DEFINICOES_H_*/

@@ -1,6 +1,7 @@
 #include "definicoes.h"
 
 int especie_busca(int id, Especie *K) {
+  /*
   int i, k, n, sz, save;
   Especie X;
 
@@ -24,6 +25,22 @@ int especie_busca(int id, Especie *K) {
 
   fseek(FEspec, save, SEEK_SET);
   return sz;
+  */
+  int sz, save;
+  int i = indice_busca(id);
+  Especie X;
+
+  if(i == FAIL)
+    return FAIL;
+
+  fseek(FEspec, IEspec[i].offset, SEEK_SET);
+  X = especie_read(FEspec, &save, &sz);
+
+  if (K != NULL)
+    *K = X;
+
+  fseek(FEspec, save, SEEK_SET);
+  return sz;
 }
 
 void especie_insere() {
@@ -38,7 +55,7 @@ void especie_insere() {
     return;
   }
   printf("NAO");
-  especie_insere_(X);  
+  especie_insere_(X);
   indice_fail("ind_especie.dat");
   lista_inv_insere(X.descr, X.id);
 
@@ -62,7 +79,7 @@ void especie_insere_(Especie X) {
 
   /*Insere no indice os dados da especie*/
   indice_insere(X.id,ftell(FEspec));
-    
+
   /*Coloca no arquivo o cabeçalho, indicando que está usado */
   if (Ssz - sz > SZ_LISTA)
     reg_escreve(FEspec, sz);
@@ -75,7 +92,7 @@ void especie_insere_(Especie X) {
   if (Ssz - sz > SZ_LISTA)
     lista_insere(FEspec, Ssz-sz-SZ_REG, ftell(FEspec));
 }
-    
+
 /*LE todas as especies existentes e imprime na saida padrao*/
 void especie_le() {
   Especie X;
@@ -122,6 +139,7 @@ void especie_deleta() {
       return;
 
     especie_deleta_(sz);
+    lista_inv_deleta(X.descr, X.id);
     indice_deleta(id);
     indice_fail("ind_especie.dat");
     muda_n(FEspec, -1);

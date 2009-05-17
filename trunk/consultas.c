@@ -18,9 +18,9 @@ void historico_monitoramento() {
 	fread(&n, sizeof(int), 1, FCaptu);
 	while (n--) {
 		aux = captura_read(FCaptu);
-		if (aux.id == -1)
+		if (aux.idI == -1)
 			n++;
-		else if (aux.id == id)
+		else if (aux.idI == id)
 			captura_write(stdout, aux, 1);
 	}
 
@@ -44,9 +44,9 @@ void ultima_captura() {
 	data = 0;
 	while (n--) {
 		aux = captura_read(FCaptu);
-		if (aux.id == -1)
+		if (aux.idI == -1)
 			n++;
-		else if (aux.id == id && aux.data > data) {
+		else if (aux.idI == id && aux.data > data) {
 			pos = ftell(FCaptu) - sizeof(Captura);
 			data = aux.data;
 		}
@@ -102,9 +102,9 @@ void ultima_captura_peso() {
 			while (n2--) {
 				C = captura_read(FCaptu);
 
-				if (C.id == -1)
+				if (C.idI == -1)
 					n2++;
-				else if (C.id == idI && C.data > data) {
+				else if (C.idI == idI && C.data > data) {
 					Cc = C;
 					data = C.data;
 				}
@@ -117,7 +117,7 @@ void ultima_captura_peso() {
 					printf("O peso na ultima captura deste individuo foi abaixo do minimo\n");
 				else {
 					printf("ID do Individuo: ");
-					printf("%d\n", Cc.id);
+					printf("%d\n", Cc.idI);
 					printf("Data de Captura: ");
 					printf("%d\n", Cc.data);
 					printf("Local de Captura: ");
