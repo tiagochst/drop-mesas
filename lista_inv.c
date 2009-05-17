@@ -8,7 +8,7 @@ int N_LIPrim;
 int N_LISec;
 int avail_list_LIPrim;
 
-conjunto *strtokenizer(char *s);
+Conjunto *strtokenizer(char *s);
 
 void debug() {
 	int i;
@@ -73,7 +73,7 @@ void lista_inv_end(char *prim, char *sec) {
 }
 
 void lista_inv_insere(char *s, int id) {
-	conjunto *c, *i;
+	Conjunto *c, *i;
 
 	c = strtokenizer(s);
 
@@ -101,7 +101,7 @@ int lista_inv_insere_(char *s, int id) {
 }
 
 void lista_inv_busca(char *s) {
-	conjunto *c, *ans = conj_init(), *i, *aux, *inter;
+	Conjunto *c, *ans = conj_init(), *i, *aux, *inter;
 	int k, j;
 
 	/* insere em 'ans' todos IDs de especies */
@@ -216,7 +216,7 @@ int lista_inv_Sec_insere(char *s, int ind1) {
 }
 
 void lista_inv_atualiza(char *velho, char *novo, int id) {
-	conjunto *cvelho, *cnovo, *difer, *i;
+	Conjunto *cvelho, *cnovo, *difer, *i;
 
 	cvelho = strtokenizer(velho);
 	cnovo = strtokenizer(novo);
@@ -238,7 +238,7 @@ void lista_inv_atualiza(char *velho, char *novo, int id) {
 }
 
 void lista_inv_deleta(char *s, int id) {
-	conjunto *c, *i;
+	Conjunto *c, *i;
 
 	c = strtokenizer(s);
 
@@ -272,8 +272,8 @@ void lista_inv_Prim_deleta(int *k, int id) {
 	*k = save;
 }
 
-conjunto *strtokenizer(char *s) {
-	conjunto *c = conj_init();
+Conjunto *strtokenizer(char *s) {
+	Conjunto *c = conj_init();
 	char *tok;
 
 	/* separa a string s em tokens */

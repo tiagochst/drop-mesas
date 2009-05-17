@@ -9,6 +9,7 @@
 #include <string.h>
 #include <math.h>
 #include "conjunto.h"
+#include "data.h"
 
 /** defines **/
 #define SZ_CAB (4)
@@ -35,7 +36,7 @@ typedef struct{
 typedef struct {
 	int id;
 	char camin[256];
-	int data;
+	Data data;
 	char nomec[31];
 	char nomep[31];
 	char descr[501];
@@ -53,7 +54,7 @@ typedef struct {
   int comprimento;
   int largura;
   int peso;
-  int data;
+  Data data;
   char local[51];
 } Captura;
 
@@ -108,6 +109,7 @@ int print_menu(int x);
 void muda_string(char *s);
 void muda_int(int *i);
 void muda_char(char *x);
+void muda_Data(Data *d);
 void Pause();
 int Pergunta(char *s);
 FILE *open_file(char *s);

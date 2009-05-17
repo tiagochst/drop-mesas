@@ -40,6 +40,11 @@ void captura_insere() {
     Pause();
     return;
   }
+  if(indice_busca("individuo", X.idI) == FAIL) {
+    puts("\nO individuo associado nao existe.");
+    Pause();
+    return;
+  }
 
   captura_insere_(X);
 }
@@ -93,8 +98,8 @@ void captura_atualiza() {
       printf("%d\n", X.peso);
       muda_int(&X.peso);
       printf("Data de Captura: ");
-      printf("%d\n", X.data);
-      muda_int(&X.data);
+      data_escreve(stdout, X.data);
+      muda_Data(&X.data);
       printf("Local de Captura: ");
       printf("%s\n", X.local);
       muda_string(X.local);
@@ -175,7 +180,7 @@ Captura captura_read_(FILE *fin) {
   fscanf(fin, " %d", &X.peso);
   if (print)
     printf("Data de Captura: ");
-  fscanf(fin, " %d", &X.data);
+  X.data = data_le(fin);
   if (print)
     printf("Local de Captura: ");
   fscanf(fin, " %[^\n]", X.local);
@@ -201,7 +206,7 @@ void captura_write(FILE *fout, Captura X, int print) {
   fprintf(fout, "%d\n", X.peso);
   if (print)
     printf("Data de Captura: ");
-  fprintf(fout, "%d\n", X.data);
+  data_escreve(fout, X.data);
   if (print)
     printf("Local de Captura: ");
   fprintf(fout, "%s\n", X.local);

@@ -27,7 +27,7 @@ int individuo_busca(int id, Individuo *K) {
   int sz, save;
   int i = indice_busca("individuo",id);
   Individuo X;
-  
+
   if(i == FAIL)
     return FAIL;
 
@@ -39,7 +39,7 @@ int individuo_busca(int id, Individuo *K) {
 
   fseek(FIndiv, save, SEEK_SET);
   return sz;
-  
+
 }
 
 void individuo_insere() {
@@ -49,8 +49,13 @@ void individuo_insere() {
   puts("** INSERE INDIVIDUO **");
   X = individuo_read_(stdin);
 
-  if (indice_busca("individuo",X.idI) != -1) {
+  if (indice_busca("individuo",X.idI) != FAIL) {
     puts("\nJa ha registro de individuo com esse id.");
+    Pause();
+    return;
+  }
+  if(indice_busca("especie", X.idE) == FAIL) {
+    puts("\nA especie associada nao existe.");
     Pause();
     return;
   }
@@ -74,10 +79,10 @@ void individuo_insere_(Individuo X) {
     /* remove da lista ligada */
     lista_remove(FIndiv);
   }
-  
+
   /*Insere no indice os dados do individuo*/
   indice_insere("individuo",X.idI,ftell(FIndiv));
-  
+
   if (Ssz - sz > SZ_LISTA)
     reg_escreve(FIndiv, sz);
   else
@@ -126,7 +131,7 @@ void individuo_deleta() {
   puts("** DELECAO INDIVIDUO **");
   printf("Digite o ID do individuo a ser deletado: ");
   scanf(" %d", &id);
-  
+
   sz = individuo_busca(id, &X);
   if (sz == -1) {
     puts("Nao existe individuo com este ID!\n");
@@ -135,9 +140,9 @@ void individuo_deleta() {
     individuo_write(stdout, X, 1);
     if (!Pergunta("Confirma exclusao?"))
       return;
-    
+
     individuo_deleta_(sz);
-    indice_deleta("individuo",id);    
+    indice_deleta("individuo",id);
     muda_n(FIndiv, -1);
   }
 }

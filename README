@@ -42,23 +42,23 @@ Verificar se isso é tudo que temos que mexer da estrutura do lab 01.
 
 + 07/mai/2009 - 22:20
 
-É preciso alterar o esquema das datas, criando uma estrutura própria, e funções para leitura, escrita e comparação
+[FEITO] É preciso alterar o esquema das datas, criando uma estrutura própria, e funções para leitura, escrita e comparação
 
 
 + 10/mai/2009 - 00:24
 
-É preciso implementar verificações nas inserções de indivíduos/espécies/capturas:
+[FEITO] É preciso implementar verificações nas inserções de indivíduos/espécies/capturas:
 [FEITO] - no caso de já existir ID igual, devolver erro
-- no caso de indivíduo/captura de espécie/indivíduo não existente, devolver erro
+[FEITO] - no caso de indivíduo/captura de espécie/indivíduo não existente, devolver erro
 
-Falta gerar integração das listas invertidas com as inserções/alterações/deleções.
+[FEITO] Falta gerar integração das listas invertidas com as inserções/alterações/deleções.
 
 Integrar as listas invertidas com os índices.
 
 
 + 13/mai/2009 - 00:05
 
-É preciso implementar ID nas capturas.
+[FEITO] É preciso implementar ID nas capturas.
 
 
 ++

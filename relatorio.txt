@@ -14,6 +14,11 @@ Para tanto, substituímos fscanf(fin, " %s", ...); por fscanf(fin, " %[^\n]", ..
 
 Modificamos o menu para tornar prático a execução das funções do programa.
 
+Adicionamos uma chave primária à captura.
+
+Criamos uma estrutura específica para as datas, que eram tratadas simplesmente como inteiros.
+A comparação entre datas ficava, portanto, comprometida.
+
 
 - Notas específicas
 
