@@ -5,16 +5,19 @@ char *SEspec = "especies.txt";
 char *SCaptu = "capturas.dat";
 char *SInvPrim = "inv_primario.dat";
 char *SInvSec = "inv_secundario.dat";
-char *SIndEspec = "ind_especie.dat";
-char *SIndIndiv = "ind_individuo.dat";
+char *SIPrimEspec = "ind_prim_especie.dat";
+char *SIPrimIndiv = "ind_prim_individuo.dat";
+char *SISecIndiv = "ind_sec_individuo.dat";
 
 FILE *FIndiv;
 FILE *FEspec;
 FILE *FCaptu;
 FILE *FInvPrim;
 FILE *FInvSec;
-FILE *FIndEspec;
-FILE *FIndIndiv;
+FILE *FIPrimEspec;
+FILE *FIPrimIndiv;
+FILE *FISecIndiv;
+
 
 int main() {
 	int menu, m2;
@@ -24,7 +27,8 @@ int main() {
 	FCaptu = open_file_bin(SCaptu);
 
 	lista_inv_start(SInvPrim, SInvSec);
-	indice_start(SIndEspec);
+	indice_start(SIPrimEspec);
+	indice_sec_start(SISecIndiv);
 
 	m2 = 0;
 	while (1) {
@@ -64,7 +68,8 @@ int main() {
 	}
 
 	lista_inv_end(SInvPrim, SInvSec);
-	indice_end(SIndEspec);
+	indice_end(SIPrimEspec);
+	indice_sec_end(SISecIndiv);
 	fclose(FCaptu);
 	fclose(FEspec);
 	fclose(FIndiv);
