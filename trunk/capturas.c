@@ -1,5 +1,31 @@
 #include "definicoes.h"
 
+int captura_busca(int idC, Captura *K) {
+  int i, k, n;
+  Captura X;
+
+  fseek(FCaptu, 0, SEEK_SET);
+  fread(&n, sizeof(int), 1, FCaptu);
+  for (i=0, k=-1; i<n; i++) {
+    X = captura_read(FCaptu);
+
+    if (X.idC == FAIL)
+      i--;
+    if (X.idC == idC) {
+      k = i;
+      break;
+    }
+  }
+
+  if (k == -1)
+    return FAIL;
+  if (K != NULL)
+    *K = X;
+
+  fseek(FCaptu, -sizeof(Captura), SEEK_CUR);
+  return OK;
+}
+
 /* CAPTURA INSERE
    Le os valores da entrada padrao e insere no arquivo
    de tamanho fixo  */
@@ -9,6 +35,11 @@ void captura_insere() {
 
   puts("** INSERE CAPTURA **");
   X = captura_read_(stdin);
+  if(captura_busca(X.idC, NULL) != FAIL) {
+    puts("\nJa ha registro de captura com esse id.");
+    Pause();
+    return;
+  }
 
   captura_insere_(X);
 }
@@ -22,7 +53,7 @@ void captura_insere_(Captura X) {
   fread(&n, sizeof(int), 1, FCaptu);
   while (n--) {
     aux = captura_read(FCaptu);
-    if (aux.idI == -1) {
+    if (aux.idC == FAIL) {
       fseek(FCaptu, -sizeof(Captura), SEEK_CUR);
       break;
     }
@@ -34,52 +65,42 @@ void captura_insere_(Captura X) {
 }
 
 void captura_atualiza() {
-  int id, i, n;
-  Captura aux;
+  int idC;
+  Captura X;
 
   system("clear");
 
   puts("** ATUALIZACAO CAPTURAS **");
-  printf("Digite o ID: ");
-  scanf(" %d", &id);
+  printf("Digite o ID da captura: ");
+  scanf(" %d", &idC);
 
-  fseek(FCaptu, 0, SEEK_SET);
-  fread(&n, sizeof(int), 1, FCaptu);
-
-  for (i=0; i<n; i++) {
-    aux = captura_read(FCaptu);
-
-    if (aux.idI == -1)
-      i--;
-    else if (aux.idI == id) {
-      printf("ID: ");
-      printf("%d\n", aux.idI);
-      muda_int(&aux.idI);
+  if (captura_busca(idC, &X) == FAIL) {
+    puts("Nao existe captura com este ID!\n");
+    Pause();
+  } else {
+      printf("ID da captura: ");
+      printf("%d\n", X.idC);
+      printf("ID do individuo: ");
+      printf("%d\n", X.idI);
+      muda_int(&X.idI);
       printf("Comprimento: ");
-      printf("%d\n", aux.comprimento);
-      muda_int(&aux.comprimento);
+      printf("%d\n", X.comprimento);
+      muda_int(&X.comprimento);
       printf("Largura: ");
-      printf("%d\n", aux.largura);
-      muda_int(&aux.largura);
+      printf("%d\n", X.largura);
+      muda_int(&X.largura);
       printf("Peso: ");
-      printf("%d\n", aux.peso);
-      muda_int(&aux.peso);
+      printf("%d\n", X.peso);
+      muda_int(&X.peso);
       printf("Data de Captura: ");
-      printf("%d\n", aux.data);
-      muda_int(&aux.data);
+      printf("%d\n", X.data);
+      muda_int(&X.data);
       printf("Local de Captura: ");
-      printf("%s\n", aux.local);
-      muda_string(aux.local);
+      printf("%s\n", X.local);
+      muda_string(X.local);
 
-      fseek(FCaptu, -sizeof(Captura), SEEK_CUR);
-      fwrite(&aux, sizeof(Captura), 1, FCaptu);
-
-      return;
-    }
+      fwrite(&X, sizeof(Captura), 1, FCaptu);
   }
-
-  printf("Nao foram encontradas capturas do individuo de ID %d\n", id);
-  Pause();
 }
 
 void captura_le() {
@@ -94,7 +115,7 @@ void captura_le() {
   fread(&n, sizeof(int), 1, FCaptu);
   while (n--) {
     aux = captura_read(FCaptu);
-    if (aux.idI == -1)
+    if (aux.idC == FAIL)
       n++;
     else
       captura_write(stdout, aux, 1);
@@ -104,39 +125,27 @@ void captura_le() {
 }
 
 void captura_deleta() {
-  int id, n;
-  Captura aux;
+  int idC;
+  Captura X;
 
   system("clear");
 
   puts("** DELECAO CAPTURA **");
-  printf("Digite o ID do individuo capturado a ser deletado: ");
-  scanf(" %d", &id);
+  printf("Digite o ID da captura a ser deletada: ");
+  scanf(" %d", &idC);
 
-  fseek(FCaptu, 0, SEEK_SET);
-  fread(&n, sizeof(int), 1, FCaptu);
-  while (n--) {
-    aux = captura_read(FCaptu);
-    if (aux.idI == -1)
-      n++;
-    else if (aux.idI == id) {
-      captura_write(stdout, aux, 1);
+  if(captura_busca(idC, &X) == FAIL) {
+    puts("Nao existe captura com este ID!\n");
+    Pause();
+  } else {
+    captura_write(stdout, X, 1);
+    if (!Pergunta("Confirma exclusao?"))
+      return;
 
-      if (Pergunta("Voce deseja apagar este registro?")) {
-	fseek(FCaptu, -sizeof(Captura), SEEK_CUR);
-	aux.idI = -1;
-	fwrite(&aux, sizeof(Captura), 1, FCaptu);
-
-	/* reduz o número de registros no cabeçalho */
+	X.idC = FAIL;
+	fwrite(&X, sizeof(Captura), 1, FCaptu);
 	muda_n_bin(FCaptu, -1);
-
-	return;
-      }
-    }
   }
-
-  printf("Nao foram encontradas capturas do individuo de ID %d\n", id);
-  Pause();
 }
 
 Captura captura_read(FILE *fin) {

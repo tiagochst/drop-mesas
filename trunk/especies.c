@@ -50,12 +50,12 @@ void especie_insere() {
   puts("** INSERE ESPECIE **");
   X = especie_read_(stdin);
 
-  if (indice_busca("especie",X.id) != -1) {
+  if (indice_busca("especie",X.id) != FAIL) {
     puts("\nJa ha registro de especie com esse id.");
     Pause();
     return;
   }
- 
+
   especie_insere_(X);
   lista_inv_insere(X.descr, X.id);
 
@@ -139,9 +139,9 @@ void especie_deleta() {
     if (!Pergunta("Confirma exclusao?"))
       return;
 
-    especie_deleta_(sz);    
-    lista_inv_deleta(X.descr, X.id);   
-    indice_deleta("especie",id);    
+    especie_deleta_(sz);
+    lista_inv_deleta(X.descr, X.id);
+    indice_deleta("especie",id);
     muda_n(FEspec, -1);
   }
 }

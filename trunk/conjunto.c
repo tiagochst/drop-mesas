@@ -21,6 +21,10 @@ void conj_destroy(conjunto *c) {
 	}
 }
 
+int conj_vazio(conjunto *c) {
+	return (c->next == NULL)?(1):(0);
+}
+
 void conj_insere(conjunto *c, void *e, int n_bytes, funcao cmp) {
 	conjunto *novo;
 

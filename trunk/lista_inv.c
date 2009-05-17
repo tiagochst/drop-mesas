@@ -111,7 +111,7 @@ void lista_inv_busca(char *s) {
 
 	c = strtokenizer(s);
 
-	for (i=c->next; i!=NULL; i=i->next) {
+	for (i=c->next; i!=NULL && !conj_vazio(ans); i=i->next) {
 		k = lista_inv_Sec_busca((char*) i->i);
 		if (k != FAIL)
 			k = LISec[k].ind1;
