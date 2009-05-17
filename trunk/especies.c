@@ -166,7 +166,7 @@ void especie_deleta_(int sz) {
 
 void especie_atualiza() {
   int id, sz;
-  Especie X;
+  Especie X, Xold;
   system("clear");
 
   puts("** ATUALIZACAO ESPECIES **");
@@ -180,9 +180,9 @@ void especie_atualiza() {
   } else {
     especie_deleta_(sz);
 
+    Xold = X;
     printf("ID: ");
     printf("%d\n", X.id);
-    muda_int(&X.id);
     printf("Caminho da foto: ");
     printf("%s\n", X.camin);
     muda_string(X.camin);
@@ -201,6 +201,8 @@ void especie_atualiza() {
 
     /* insere de volta */
     especie_insere_(X);
+
+    lista_inv_atualiza(Xold.descr, X.descr, X.id);
   }
 }
 

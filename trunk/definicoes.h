@@ -167,5 +167,6 @@ void lista_inv_Prim_deleta(int *k, int id);
 void lista_inv_deleta_(char *s, int id);
 void lista_inv_busca(char *s);
 void lista_inv_deleta(char *s, int id);
+void lista_inv_atualiza(char *velho, char *novo, int id);
 
 #endif /*_DEFINICOES_H_*/
