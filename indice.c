@@ -1,220 +1,200 @@
 #include "definicoes.h"
 
-Indice_Prim *IEspec;
-int N_IEspec;
-int FAIL_IEspec;
+Indice_Prim *IPEspec;
+int N_IPEspec;
+int FAIL_IPEspec;
 
+Indice_Prim *IPIndiv;
+int N_IPIndiv;
+int FAIL_IPIndiv;
 
-Indice_Sec *ISIndiv;
-int N_ISIndiv;
-int FAIL_ISIndiv;
-
-void indice_start(char *espec) {
-  int i, n, offset;
-  int flag;
-  Especie X;
+void indice_start(char *espec,char *indiv) {
+  int i,n;
+  int flag; 
   /*-----------ESPECIE------------*/
   FIPrimEspec = fopen(espec, "rb");
-  IEspec = NULL;
+  IPEspec = NULL;
 
   n = 0;
   if (FIPrimEspec != NULL) {
     fread(&n, sizeof(int), 1, FIPrimEspec);
     fread(&flag, sizeof(int), 1, FIPrimEspec);
-    /*---RECONSTROI INDICE----*/
     if (flag == FAIL){
-      fseek(FEspec, 0, SEEK_SET);
-      fscanf(FEspec, " %d", &n);
-      IEspec = (Indice_Prim *) malloc(n*sizeof(Indice_Prim));
-      while (n--) {
-	X = especie_read(FEspec, &offset, NULL);
-	if (X.id == -1) {
-	  n++;
-	  continue;
-	}
-	else{
-	  indice_insere(X.id,offset);
-	}
-      }
     }else{
-      IEspec = (Indice_Prim *) malloc(n*sizeof(Indice_Prim));
-      fread(IEspec, sizeof(Indice_Prim), n, FIPrimEspec);
+      IPEspec = (Indice_Prim *) malloc(n*sizeof(Indice_Prim));
+      fread(IPEspec, sizeof(Indice_Prim), n, FIPrimEspec);
 
-      N_IEspec = n;
+      N_IPEspec = n;
     }
     fclose(FIPrimEspec);
   }
-  else   N_IEspec = 0;
+  else   N_IPEspec = 0;
 
-  FAIL_IEspec = 0;
+  FAIL_IPEspec = 0;
 
-  printf("%d\n", N_IEspec);
+  printf("%d\n", N_IPEspec);
   for (i=0; i<n; i++)
-    printf("%d %d\n", IEspec[i].id, IEspec[i].offset);
+    printf("%d %d\n", IPEspec[i].id, IPEspec[i].offset);
+
+  /*-----------INDIVIDUO------------*/
+  FISecIndiv = fopen(indiv, "rb");
+  IPIndiv = NULL;
+
+  n = 0;
+  if (FIPrimIndiv != NULL) {
+    fread(&n, sizeof(int), 1, FIPrimIndiv);
+    fread(&flag, sizeof(int), 1, FIPrimIndiv);
+    if (flag == FAIL){
+    }else{
+      IPIndiv = (Indice_Prim *) malloc(n*sizeof(Indice_Prim));
+      fread(IPIndiv, sizeof(Indice_Prim), n, FIPrimIndiv);
+
+      N_IPIndiv = n;
+    }
+    fclose(FIPrimIndiv);
+  }
+  else N_IPIndiv = 0;
+
+  FAIL_IPIndiv = 0;
+
+  printf("%d\n", N_IPIndiv);
+  for (i=0; i<n; i++)
+    printf("%d %d\n", IPIndiv[i].id, IPIndiv[i].offset);
 
 }
 
 
-void indice_end(char *espec) {
+void indice_end(char *espec,char *indiv) {
   int i;
   int n;
   int flag= OK;
+
+  /*-------ESPECIE-------*/
   FIPrimEspec = fopen(espec, "wb");
 
-  n = N_IEspec;
+  n = N_IPEspec;
 
   for (i=0; i<n; i++)
-    printf("%d %d\n", IEspec[i].id, IEspec[i].offset);
+    printf("%d %d\n", IPEspec[i].id, IPEspec[i].offset);
 
   fwrite(&n, sizeof(int), 1, FIPrimEspec);
   fwrite(&flag, sizeof(int), 1, FIPrimEspec);
-  fwrite(IEspec, sizeof(Indice_Prim), n, FIPrimEspec);
+  fwrite(IPEspec, sizeof(Indice_Prim), n, FIPrimEspec);
 
-  free(IEspec);
+  free(IPEspec);
   fclose(FIPrimEspec);
+
+  /*-------INDIVIDUO------*/
+  FIPrimIndiv = fopen(indiv, "wb");
+
+  n = N_IPIndiv;
+
+  for (i=0; i<n; i++)
+    printf("%d %d\n", IPIndiv[i].id, IPIndiv[i].offset);
+
+  fwrite(&n, sizeof(int), 1, FIPrimIndiv);
+  fwrite(&flag, sizeof(int), 1, FIPrimIndiv);
+  fwrite(IPEspec, sizeof(Indice_Prim), n, FIPrimIndiv);
+
+  free(IPIndiv);
+  fclose(FIPrimIndiv);
 }
 
-void indice_fail(char *espec){
-  int n = 0;
-  int flag = -1;
-  if(!FAIL_IEspec){
-    FIPrimEspec = fopen(espec,"wb");
-    fwrite(&n, sizeof(int), 1, FIPrimEspec);
-    fwrite(&flag, sizeof(int), 1, FIPrimEspec);
-    /*Diz que o arquivo de especie esta desatualizado*/
-    FAIL_IEspec = 1;
-    fclose(FIPrimEspec);
-  }
-}
-
-void indice_insere(int id, int offset) {
+void indice_insere(char *op,int id, int offset) {
   int i;
-
-  N_IEspec++;
-  IEspec = (Indice_Prim *)realloc(IEspec, (N_IEspec)*sizeof(Indice_Prim));
-  i = N_IEspec-1;
-  while (i>0 && (id < IEspec[i-1].id)) {
-    IEspec[i] = IEspec[i-1];
-    i--;
+  if(!strcmp(op,"especie")){
+    N_IPEspec++;
+    IPEspec = (Indice_Prim *)realloc(IPEspec,N_IPEspec*sizeof(Indice_Prim));
+    i = N_IPEspec-1;
+    while (i>0 && (id < IPEspec[i-1].id)) {
+      IPEspec[i] = IPEspec[i-1];
+      i--;
+    }
+    IPEspec[i].id = id;
+    IPEspec[i].offset = offset;
   }
-
-  IEspec[i].id = id;
-  IEspec[i].offset = offset;
+  if(!strcmp(op,"individuo")){
+    N_IPIndiv++;
+    IPIndiv = (Indice_Prim *)realloc(IPIndiv,N_IPIndiv*sizeof(Indice_Prim));
+    i = N_IPIndiv-1;
+    while (i>0 && (id < IPIndiv[i-1].id)) {
+      IPIndiv[i] = IPIndiv[i-1];
+      i--;
+    }
+    IPIndiv[i].id = id;
+    IPIndiv[i].offset = offset;
+  }
+  
 }
 
-void indice_deleta(int id) {
+void indice_deleta(char *op,int id) {
   int i;
-  int pos = indice_busca(id);
-  printf("%d\n", pos);
-  if (pos == -1) {
-    printf("Nao existe arquivo com esse indice!\n");
-  }else {
-    for (i=pos; i<N_IEspec; i++)
-      IEspec[i] = IEspec[i+1];
-    N_IEspec--;
-    IEspec = (Indice_Prim *)realloc(IEspec, (N_IEspec)*sizeof(Indice_Prim));
+  int pos = indice_busca(op,id);
+  if (pos == -1){
+    printf("Nao existe registro com esse indice!\n");
+    return;
+  }
+
+  if(!strcmp(op,"especie")){      
+    for (i=pos; i<N_IPEspec; i++) IPEspec[i] = IPEspec[i+1];
+    N_IPEspec--;
+    IPEspec = (Indice_Prim *)realloc(IPEspec, (N_IPEspec)*sizeof(Indice_Prim));
     printf("Registro removido com sucesso!\n");
+    
+  }
+  if(!strcmp(op,"individuo")){
+    for (i=pos; i<N_IPIndiv; i++)  IPIndiv[i] = IPIndiv[i+1];
+    N_IPIndiv--;
+    IPIndiv = (Indice_Prim *)realloc(IPIndiv, (N_IPIndiv)*sizeof(Indice_Prim));
+    printf("Registro removido com sucesso!\n");    
   }
 }
 
-int indice_busca(int id) {
-  int ini = 0, fim = N_IEspec-1, meio;
-  if(N_IEspec == 0) return -1;
-  if (IEspec[ini].id > id || IEspec[fim].id < id)
-    return -1;
+int indice_busca(char *op,int id){
+  int i,N;
+  Indice_Prim *Indice;
+  int ini,fim,meio; 
+  
+  if(!strcmp(op,"especie")){
+    N = N_IPEspec;
+    Indice = (Indice_Prim *)malloc(N*sizeof(Indice_Prim));
+    for(i=0;i<N;i++) Indice[i] = IPEspec[i];
+  }
+  if(!strcmp(op,"individuo")){
+    N = N_IPIndiv;
+    Indice = (Indice_Prim *)malloc(N*sizeof(Indice_Prim));
+    for(i=0;i<N;i++) Indice[i] = IPIndiv[i];
+  }
 
-  if (IEspec[ini].id == id)
+  ini = 0, fim = N-1;
+  if(N == 0) return -1;
+  if (Indice[ini].id > id || Indice[fim].id < id){
+    free(Indice);
+    return -1;
+  }
+
+  if (Indice[ini].id == id){
+    free(Indice);
     return ini;
-  if (IEspec[fim].id == id)
+  }
+  if (Indice[fim].id == id){
+    free(Indice);
     return fim;
+  }
 
   while (fim - ini >= 2) {
+    printf("%d %d\n",ini,fim);
     meio = (ini + fim)/2;
-    if (IEspec[meio].id > id)
+    if (Indice[meio].id > id)
       fim = meio;
-    else if (IEspec[meio].id < id)
+    else if (Indice[meio].id < id)
       ini = meio;
-    else
+    else{
+      free(Indice);
       return meio;
-  }
-
-  return -1;
-}
-
-/*----FUNCOES PARA INDICE SECUNDARIO---*/
-
-void indice_sec_start(char *indiv){
-  int i, n;
-  int flag;
-  Individuo X;
-
-  FISecIndiv = fopen(indiv, "rb");
-  ISIndiv = NULL;
-
-  n = 0;
-  if (FISecIndiv != NULL) {
-    fread(&n, sizeof(int), 1, FISecIndiv);
-    fread(&flag, sizeof(int), 1, FISecIndiv);
-    /*---RECONSTROI INDICE----*/
-    if (flag == FAIL){
-      fseek(FIndiv, 0, SEEK_SET);
-      fscanf(FIndiv, " %d", &n);
-      ISIndiv = (Indice_Sec *) malloc(n*sizeof(Indice_Sec));
-      while (n--) {
-	X = individuo_read(FIndiv, NULL, NULL);
-	if (X.idI == -1) {
-	  n++;
-	  continue;
-	}
-	else{
-	  indice_sec_insere(X.idE,X.idI);
-	}
-      }
-    }else{
-      ISIndiv = (Indice_Sec *) malloc(n*sizeof(Indice_Sec));
-      fread(ISIndiv, sizeof(Indice_Sec), n, FISecIndiv);
-
-      N_ISIndiv = n;
     }
-    fclose(FISecIndiv);
   }
-  else   N_ISIndiv = 0;
-
-  FAIL_ISIndiv = 0;
-}
-
-
-void indice_sec_end(char *espec) {
-  int i;
-  int n;
-  int flag= OK;
-  FISecIndiv = fopen(espec, "wb");
-
-  n = N_ISIndiv;
-
-  fwrite(&n, sizeof(int), 1, FISecIndiv);
-  fwrite(&flag, sizeof(int), 1, FISecIndiv);
-  fwrite(ISIndiv, sizeof(Indice_Sec), n, FISecIndiv);
-
-  for(i=0;i<N_ISIndiv;i++)
-    printf("%d %d\n",ISIndiv[i].idS,ISIndiv[i].idP);
-
-  free(ISIndiv);
-  fclose(FISecIndiv);
-}
-
-void indice_sec_insere(int idS,int idP){
-  int i = N_ISIndiv;
-
-  N_ISIndiv++;
-  ISIndiv = (Indice_Sec *)realloc(ISIndiv, (N_ISIndiv)*sizeof(Indice_Sec));
-  while (i>0 && (idS < ISIndiv[i-1].idS)) {
-    ISIndiv[i] = ISIndiv[i-1];
-    i--;
-  }
-
-  ISIndiv[i].idS = idS;
-  ISIndiv[i].idP = idP;
-
+  free(Indice);
+  return -1;
 }
 

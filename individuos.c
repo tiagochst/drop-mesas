@@ -1,7 +1,7 @@
 #include "definicoes.h"
 
 int individuo_busca(int id, Individuo *K) {
-  int i, k, n, sz, save;
+  /*int i, k, n, sz, save;
   Individuo X;
 
   fseek(FIndiv, 0, SEEK_SET);
@@ -23,7 +23,23 @@ int individuo_busca(int id, Individuo *K) {
     *K = X;
 
   fseek(FIndiv, save, SEEK_SET);
+  return sz;*/
+  int sz, save;
+  int i = indice_busca("individuo",id);
+  Individuo X;
+  
+  if(i == FAIL)
+    return FAIL;
+
+  fseek(FIndiv, IPIndiv[i].offset, SEEK_SET);
+  X = individuo_read(FIndiv, &save, &sz);
+
+  if (K != NULL)
+    *K = X;
+
+  fseek(FIndiv, save, SEEK_SET);
   return sz;
+  
 }
 
 void individuo_insere() {
@@ -33,7 +49,7 @@ void individuo_insere() {
   puts("** INSERE INDIVIDUO **");
   X = individuo_read_(stdin);
 
-  if (individuo_busca(X.idI, NULL) != -1) {
+  if (indice_busca("individuo",X.idI) != -1) {
     puts("\nJa ha registro de individuo com esse id.");
     Pause();
     return;
@@ -41,6 +57,8 @@ void individuo_insere() {
 
   individuo_insere_(X);
   indice_sec_insere(X.idE,X.idI);
+
+  /* Atualiza a quantidade de registros */
   muda_n(FIndiv, +1);
 }
 
@@ -56,7 +74,10 @@ void individuo_insere_(Individuo X) {
     /* remove da lista ligada */
     lista_remove(FIndiv);
   }
-
+  
+  /*Insere no indice os dados do individuo*/
+  indice_insere("individuo",X.idI,ftell(FIndiv));
+  
   if (Ssz - sz > SZ_LISTA)
     reg_escreve(FIndiv, sz);
   else
@@ -70,12 +91,12 @@ void individuo_insere_(Individuo X) {
 
 void individuo_le() {
   Individuo X;
-  int n;
+  int i;
   system("clear");
 
   puts("** LEITURA INDIVIDUOS **");
   printf("\n");
-
+  /*
   fseek(FIndiv, 0, SEEK_SET);
   fscanf(FIndiv, " %d", &n);
   while (n--) {
@@ -85,6 +106,12 @@ void individuo_le() {
       continue;
     }
 
+    individuo_write(stdout, X, 1);
+    }*/
+
+  for(i=0;i<N_IPIndiv;i++){
+    fseek(FIndiv,IPIndiv[i].offset,SEEK_SET);
+    X = individuo_read(FIndiv,NULL,NULL);
     individuo_write(stdout, X, 1);
   }
 
@@ -99,7 +126,7 @@ void individuo_deleta() {
   puts("** DELECAO INDIVIDUO **");
   printf("Digite o ID do individuo a ser deletado: ");
   scanf(" %d", &id);
-
+  
   sz = individuo_busca(id, &X);
   if (sz == -1) {
     puts("Nao existe individuo com este ID!\n");
@@ -108,9 +135,9 @@ void individuo_deleta() {
     individuo_write(stdout, X, 1);
     if (!Pergunta("Confirma exclusao?"))
       return;
-
+    
     individuo_deleta_(sz);
-
+    indice_deleta("individuo",id);    
     muda_n(FIndiv, -1);
   }
 }
