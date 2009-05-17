@@ -78,10 +78,22 @@ extern FILE *FCaptu;
 extern FILE *FInvPrim;
 extern FILE *FInvSec;
 extern FILE *FIPrimEspec;
+extern FILE *FIPrimIndiv;
 extern FILE *FISecIndiv;
-extern Indice_Prim *IEspec;
-extern int N_IEspec;
+
+extern Indice_Prim *IPEspec;
+extern int N_IPEspec;
+extern int FAIL_IPEspec;
+
+extern Indice_Prim *IPIndiv;
+extern int N_IPIndiv;
+extern int FAIL_IPIndiv;
+
 extern Indice_Sec *ISIndiv;
+
+extern char *SIPrimEspec;
+extern char *SIPrimIndiv;
+extern char *SISecIndiv;
 
 
 /** prototipos das funcoes **/
@@ -145,16 +157,18 @@ void ultima_captura_peso();
 void caminho_especie();
 void busca_especie_descricao();
 
-void indice_start(char *espec);
-void indice_end(char *espec);
-void indice_fail(char *espec);
-void indice_insere(int offset, int id);
-void indice_deleta(int id);
-int indice_busca(int id);
+void indice_start(char *espec,char *indiv);
+void indice_end(char *espec,char *indiv);
+void indice_insere(char *op,int offset, int id);
+void indice_deleta(char *op,int id);
+int indice_busca(char *op,int id);
 
 void indice_sec_start(char *indiv);
 void indice_sec_end(char *espec);
 void indice_sec_insere(int idE,int idI);
+void indice_sec_deleta(int id);
+int indice_sec_busca(int id);
+
 
 void lista_inv_start(char *prim, char *sec);
 void lista_inv_end();

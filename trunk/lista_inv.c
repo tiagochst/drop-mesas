@@ -105,8 +105,8 @@ void lista_inv_busca(char *s) {
 	int k, j;
 
 	/* insere em 'ans' todos IDs de especies */
-	for (j=0; j<N_IEspec; j++) {
-		conj_insere(ans, (void*)(&IEspec[j].id), sizeof(int), intcmp_);
+	for (j=0; j<N_IPEspec; j++) {
+		conj_insere(ans, (void*)(&IPEspec[j].id), sizeof(int), intcmp_);
 	}
 
 	c = strtokenizer(s);

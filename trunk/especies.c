@@ -27,13 +27,13 @@ int especie_busca(int id, Especie *K) {
   return sz;
   */
   int sz, save;
-  int i = indice_busca(id);
+  int i = indice_busca("especie",id);
   Especie X;
 
   if(i == FAIL)
     return FAIL;
 
-  fseek(FEspec, IEspec[i].offset, SEEK_SET);
+  fseek(FEspec, IPEspec[i].offset, SEEK_SET);
   X = especie_read(FEspec, &save, &sz);
 
   if (K != NULL)
@@ -49,14 +49,14 @@ void especie_insere() {
 
   puts("** INSERE ESPECIE **");
   X = especie_read_(stdin);
-  if (indice_busca(X.id) != -1) {
+
+  if (indice_busca("especie",X.id) != -1) {
     puts("\nJa ha registro de especie com esse id.");
     Pause();
     return;
   }
-  printf("NAO");
+ 
   especie_insere_(X);
-  indice_fail("ind_especie.dat");
   lista_inv_insere(X.descr, X.id);
 
   /* Atualiza a quantidade de registros */
@@ -78,7 +78,7 @@ void especie_insere_(Especie X) {
   }
 
   /*Insere no indice os dados da especie*/
-  indice_insere(X.id,ftell(FEspec));
+  indice_insere("especie",X.id,ftell(FEspec));
 
   /*Coloca no arquivo o cabeçalho, indicando que está usado */
   if (Ssz - sz > SZ_LISTA)
@@ -96,13 +96,13 @@ void especie_insere_(Especie X) {
 /*LE todas as especies existentes e imprime na saida padrao*/
 void especie_le() {
   Especie X;
-  int n;
+  int i;
   system("clear");
 
   puts("** LEITURA ESPECIES **");
   printf("\n");
 
-  fseek(FEspec, 0, SEEK_SET);
+  /*fseek(FEspec, 0, SEEK_SET);
   fscanf(FEspec, " %d", &n);
   while (n--) {
     X = especie_read(FEspec, NULL, NULL);
@@ -112,8 +112,12 @@ void especie_le() {
     }
 
     especie_write(stdout, X, 1);
+    }*/
+  for(i=0;i<N_IPEspec;i++){
+    fseek(FEspec,IPEspec[i].offset,SEEK_SET);
+    X = especie_read(FEspec,NULL,NULL);
+    especie_write(stdout, X, 1);
   }
-
   Pause();
 }
 
@@ -126,22 +130,18 @@ void especie_deleta() {
   printf("Digite o ID da especie a ser deletada: ");
   scanf(" %d", &id);
 
-  sz = indice_busca(id);
-  printf("%d\n",sz);
+  sz = especie_busca(id,&X);
   if (sz == -1) {
     puts("Nao existe especie com este ID!\n");
     Pause();
   } else {
-    fseek(FEspec, IEspec[sz].offset,SEEK_SET );
-    X = especie_read(FEspec,NULL,NULL);
     especie_write(stdout, X, 1);
     if (!Pergunta("Confirma exclusao?"))
       return;
 
-    especie_deleta_(sz);
-    lista_inv_deleta(X.descr, X.id);
-    indice_deleta(id);
-    indice_fail("ind_especie.dat");
+    especie_deleta_(sz);    
+    lista_inv_deleta(X.descr, X.id);   
+    indice_deleta("especie",id);    
     muda_n(FEspec, -1);
   }
 }
