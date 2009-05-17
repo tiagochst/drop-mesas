@@ -51,11 +51,13 @@ void individuo_insere() {
 
   if (indice_busca("individuo",X.idI) != FAIL) {
     puts("\nJa ha registro de individuo com esse id.");
+    puts("Insercao falhou.");
     Pause();
     return;
   }
   if(indice_busca("especie", X.idE) == FAIL) {
     puts("\nA especie associada nao existe.");
+    puts("Insercao falhou.");
     Pause();
     return;
   }
@@ -65,6 +67,8 @@ void individuo_insere() {
 
   /* Atualiza a quantidade de registros */
   muda_n(FIndiv, +1);
+
+  puts("Individuo inserido corretamente.");
 }
 
 void individuo_insere_(Individuo X) {

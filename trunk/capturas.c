@@ -37,16 +37,20 @@ void captura_insere() {
   X = captura_read_(stdin);
   if(captura_busca(X.idC, NULL) != FAIL) {
     puts("\nJa ha registro de captura com esse id.");
+    puts("Insercao falhou.");
     Pause();
     return;
   }
   if(indice_busca("individuo", X.idI) == FAIL) {
     puts("\nO individuo associado nao existe.");
+    puts("Insercao falhou.");
     Pause();
     return;
   }
 
   captura_insere_(X);
+
+  puts("Captura inserida corretamente.");
 }
 
 void captura_insere_(Captura X) {

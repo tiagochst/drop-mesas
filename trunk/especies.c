@@ -53,6 +53,7 @@ void especie_insere() {
   if (indice_busca("especie",X.id) != FAIL) {
     puts("\nJa ha registro de especie com esse id.");
     Pause();
+    puts("Insercao falhou.");
     return;
   }
 
@@ -61,6 +62,8 @@ void especie_insere() {
 
   /* Atualiza a quantidade de registros */
   muda_n(FEspec, +1);
+
+  puts("Especie inserida corretamente.");
 }
 
 void especie_insere_(Especie X) {
