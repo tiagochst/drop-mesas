@@ -56,7 +56,7 @@ void individuo_insere() {
   }
 
   individuo_insere_(X);
-  indice_sec_insere(X.idE,X.idI);
+  indice_sec_insere("individuo",X.idE,X.idI);
 
   /* Atualiza a quantidade de registros */
   muda_n(FIndiv, +1);

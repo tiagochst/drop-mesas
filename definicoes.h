@@ -80,6 +80,12 @@ extern FILE *FInvSec;
 extern FILE *FIPrimEspec;
 extern FILE *FIPrimIndiv;
 extern FILE *FISecIndiv;
+extern FILE *FISecCaptu;
+
+extern char *SIPrimEspec;
+extern char *SIPrimIndiv;
+extern char *SISecIndiv;
+extern char *SISecCaptu;
 
 extern Indice_Prim *IPEspec;
 extern int N_IPEspec;
@@ -90,11 +96,12 @@ extern int N_IPIndiv;
 extern int FAIL_IPIndiv;
 
 extern Indice_Sec *ISIndiv;
+extern int N_ISIndiv;
+extern int FAIL_ISIndiv;
 
-extern char *SIPrimEspec;
-extern char *SIPrimIndiv;
-extern char *SISecIndiv;
-
+extern Indice_Sec *ISCaptu;
+extern int N_ISCaptu;
+extern int FAIL_ISCaptu;
 
 /** prototipos das funcoes **/
 int print_menu(int x);
@@ -163,11 +170,11 @@ void indice_insere(char *op,int offset, int id);
 void indice_deleta(char *op,int id);
 int indice_busca(char *op,int id);
 
-void indice_sec_start(char *indiv);
-void indice_sec_end(char *espec);
-void indice_sec_insere(int idE,int idI);
-void indice_sec_deleta(int id);
-int indice_sec_busca(int id);
+void indice_sec_start(char *indiv,char *captu);
+void indice_sec_end(char *indiv,char *captu);
+void indice_sec_insere(char *op,int idS,int idP);
+void indice_sec_deleta(char *op,int id);
+int indice_sec_busca(char *op,int id);
 
 
 void lista_inv_start(char *prim, char *sec);
