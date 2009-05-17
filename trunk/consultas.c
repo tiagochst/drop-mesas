@@ -31,7 +31,8 @@ void historico_monitoramento() {
    mas para determinar a ultima captura, armazena-se a
    data da captura mais recente e o registro dessa captura */
 void ultima_captura() {
-  int n, id, pos, data;
+  int n, id, pos;
+  Data data;
   Captura aux;
   system("clear");
 
@@ -41,21 +42,22 @@ void ultima_captura() {
   fseek(FCaptu, 0, SEEK_SET);
   fread(&n, sizeof(int), 1, FCaptu);
 
-  data = 0;
+  data.dia = FAIL;
   while (n--) {
     aux = captura_read(FCaptu);
     if (aux.idC == FAIL)
       n++;
-    else if (aux.idI == id && aux.data > data) {
+    else if (aux.idI == id && data_cmp(aux.data, data) > 0) {
       pos = ftell(FCaptu) - sizeof(Captura);
       data = aux.data;
     }
   }
 
-  if (!data)
+  if (data.dia == FAIL)
     printf("Nao ha registros de captura desse individuo\n");
   else {
-    printf("O ultimo registro desse individuo data de %d:\n", data);
+    printf("O ultimo registro desse individuo data de ");
+    data_escreve(stdout, data);
     fseek(FCaptu, pos, SEEK_SET);
     aux = captura_read(FCaptu);
     captura_write(stdout, aux, 1);
@@ -68,7 +70,8 @@ void ultima_captura() {
    da ultima captura desse individuo, e enfim verifica-se
    se o peso esta dentro do pedido */
 void ultima_captura_peso() {
-  int idE, idI, n1, n2, data, peso;
+  int idE, idI, n1, n2, peso;
+  Data data;
   Captura C, Cc;
   Individuo X;
 
@@ -97,19 +100,19 @@ void ultima_captura_peso() {
 
     fseek(FCaptu, 0, SEEK_SET);
     fread(&n2, sizeof(int), 1, FCaptu);
-    data = -1;
+    data.dia = FAIL;
     while (n2--) {
     C = captura_read(FCaptu);
 
     if (C.idC == -1)
     n2++;
-    else if (C.idI == idI && C.data > data) {
+    else if (C.idI == idI && data_cmp(C.data, data) > 0) {
     Cc = C;
     data = C.data;
     }
     }
 
-    if (data == -1)
+    if (data.dia == FAIL)
     printf("Nao ha registros de captura desse individuo\n");
     else {
     if (Cc.peso < peso)
@@ -118,7 +121,7 @@ void ultima_captura_peso() {
     printf("ID do Individuo: ");
     printf("%d\n", Cc.idI);
     printf("Data de Captura: ");
-    printf("%d\n", Cc.data);
+    data_escreve(stdout, Cc.data);
     printf("Local de Captura: ");
     printf("%s\n", Cc.local);
 

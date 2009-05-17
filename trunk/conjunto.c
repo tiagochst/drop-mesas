@@ -2,15 +2,15 @@
 #include <string.h>
 #include "conjunto.h"
 
-conjunto *conj_init() {
-	conjunto *y = (conjunto *) malloc(sizeof(conjunto));
+Conjunto *conj_init() {
+	Conjunto *y = (Conjunto *) malloc(sizeof(Conjunto));
 	y->i = NULL;
 	y->next = NULL;
 	return y;
 }
 
-void conj_destroy(conjunto *c) {
-	conjunto *next;
+void conj_destroy(Conjunto *c) {
+	Conjunto *next;
 
 	next = c->next;
 	free(c);
@@ -21,12 +21,12 @@ void conj_destroy(conjunto *c) {
 	}
 }
 
-int conj_vazio(conjunto *c) {
+int conj_vazio(Conjunto *c) {
 	return (c->next == NULL)?(1):(0);
 }
 
-void conj_insere(conjunto *c, void *e, int n_bytes, funcao cmp) {
-	conjunto *novo;
+void conj_insere(Conjunto *c, void *e, int n_bytes, funcao cmp) {
+	Conjunto *novo;
 
 	while (c->next != NULL && cmp(c->next->i, e) < 0)
 		c = c->next;
@@ -34,7 +34,7 @@ void conj_insere(conjunto *c, void *e, int n_bytes, funcao cmp) {
 	if (c->next != NULL && cmp(c->next->i, e) == 0)
 		return;
 
-	novo = (conjunto *) malloc(sizeof(conjunto));
+	novo = (Conjunto *) malloc(sizeof(Conjunto));
 	novo->i = malloc(n_bytes);
 	memcpy(novo->i, e, n_bytes);
 	novo->sz = n_bytes;
@@ -42,8 +42,8 @@ void conj_insere(conjunto *c, void *e, int n_bytes, funcao cmp) {
 	c->next = novo;
 }
 
-conjunto *conj_interseccao(conjunto *c1, conjunto *c2, funcao cmp) {
-	conjunto *inter = conj_init();
+Conjunto *conj_interseccao(Conjunto *c1, Conjunto *c2, funcao cmp) {
+	Conjunto *inter = conj_init();
 	int diff;
 	c1 = c1->next;
 	c2 = c2->next;
@@ -64,8 +64,8 @@ conjunto *conj_interseccao(conjunto *c1, conjunto *c2, funcao cmp) {
 	return inter;
 }
 
-conjunto *conj_diferenca(conjunto *c1, conjunto *c2, funcao cmp) {
-	conjunto *difer = conj_init();
+Conjunto *conj_diferenca(Conjunto *c1, Conjunto *c2, funcao cmp) {
+	Conjunto *difer = conj_init();
 	int diff;
 	c1 = c1->next;
 	c2 = c2->next;

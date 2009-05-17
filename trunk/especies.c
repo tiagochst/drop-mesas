@@ -187,8 +187,8 @@ void especie_atualiza() {
     printf("%s\n", X.camin);
     muda_string(X.camin);
     printf("Data: ");
-    printf("%d\n", X.data);
-    muda_int(&X.data);
+    data_escreve(stdout, X.data);
+    muda_Data(&X.data);
     printf("Nome cientifico: ");
     printf("%s\n", X.nomec);
     muda_string(X.nomec);
@@ -249,7 +249,7 @@ Especie especie_read_(FILE *fin) {
   fscanf(fin, " %[^\n]", X.camin);
   if (print)
     printf("Data: ");
-  fscanf(fin, " %d", &X.data);
+  X.data = data_le(fin);
   if (print)
     printf("Nome cientifico: ");
   fscanf(fin, " %[^\n]", X.nomec);
@@ -272,7 +272,7 @@ void especie_write(FILE *fout, Especie X, int print) {
   fprintf(fout, "%s\n", X.camin);
   if (print)
     printf("Data: ");
-  fprintf(fout, "%d\n", X.data);
+  data_escreve(fout, X.data);
   if (print)
     printf("Nome cientifico: ");
   fprintf(fout, "%s\n", X.nomec);
@@ -288,7 +288,7 @@ void especie_write(FILE *fout, Especie X, int print) {
 }
 
 int especie_conta_caracteres(Especie X) {
-  int id, data;
+  int id;
 
   id = 0;
   if (X.id == 0)
@@ -298,15 +298,7 @@ int especie_conta_caracteres(Especie X) {
     X.id/=10;
   }
 
-  data = 0;
-  if (X.data == 0)
-    data = 1;
-  while (X.data) {
-    data++;
-    X.data/=10;
-  }
-
-  return ((id+1) + (strlen(X.camin)+1) + (data+1) + (strlen(X.nomec)+1)
+  return ((id+1) + (strlen(X.camin)+1) + (SZ_DATA+1) + (strlen(X.nomec)+1)
 	  + (strlen(X.nomep)+1) + (strlen(X.descr)));
 }
 

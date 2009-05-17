@@ -5,15 +5,15 @@ typedef struct conjunto_ {
 	void *i;
 	struct conjunto_ *next;
 	int sz;
-} conjunto;
+} Conjunto;
 
 typedef int (*funcao)(void*, void*);
 
-conjunto *conj_init();
-void conj_destroy(conjunto *c);
-int conj_vazio(conjunto *c);
-void conj_insere(conjunto *c, void *e, int n_bytes, funcao cmp);
-conjunto *conj_interseccao(conjunto *c1, conjunto *c2, funcao cmp);
-conjunto *conj_diferenca(conjunto *c1, conjunto *c2, funcao cmp);
+Conjunto *conj_init();
+void conj_destroy(Conjunto *c);
+int conj_vazio(Conjunto *c);
+void conj_insere(Conjunto *c, void *e, int n_bytes, funcao cmp);
+Conjunto *conj_interseccao(Conjunto *c1, Conjunto *c2, funcao cmp);
+Conjunto *conj_diferenca(Conjunto *c1, Conjunto *c2, funcao cmp);
 
 #endif /*CONJUNTO_H_*/

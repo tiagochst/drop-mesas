@@ -112,6 +112,14 @@ void muda_char(char *x) {
 	scanf(" %c", x);
 }
 
+void muda_Data(Data *d) {
+	if (!Pergunta("Deseja alterar este valor?"))
+		return;
+
+	printf("Digite o novo valor: ");
+	*d = data_le(stdin);
+}
+
 void Pause() {
 	char c;
 	puts("Pressione (q) para continuar. . .");
