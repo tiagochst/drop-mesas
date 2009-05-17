@@ -8,6 +8,8 @@ int N_LIPrim;
 int N_LISec;
 int avail_list_LIPrim;
 
+conjunto *strtokenizer(char *s);
+
 void debug() {
 	int i;
 	for (i = 0; i < N_LISec; i++)
@@ -15,7 +17,7 @@ void debug() {
 	putchar('\n');
 
 	for (i = 0; i < N_LIPrim; i++)
-		printf("LIPrim[%d] = {%d, %d}\n", i, LIPrim[i].chave, LIPrim[i].next);
+		printf("LIPrim[%d] = {%d, %d}\n", i, LIPrim[i].idE, LIPrim[i].next);
 	putchar('\n');
 
 	Pause();
@@ -49,7 +51,7 @@ void lista_inv_start(char *prim, char *sec) {
 		fclose(FInvSec);
 	}
 
-	debug();
+	/*debug();*/
 }
 
 void lista_inv_end(char *prim, char *sec) {
@@ -71,16 +73,9 @@ void lista_inv_end(char *prim, char *sec) {
 }
 
 void lista_inv_insere(char *s, int id) {
-	conjunto *c = conj_init(), *i;
-	char *tok;
+	conjunto *c, *i;
 
-	/* separa a string s em tokens */
-	tok = strtok(s, delimiters);
-	while (tok != NULL) {
-		toupper_(tok);
-		conj_insere(c, (void*)tok, (strlen(tok)+1)*sizeof(char), strcmp_);
-		tok = strtok(NULL, delimiters);
-	}
+	c = strtokenizer(s);
 
 	for (i=c->next; i!=NULL; i=i->next)
 		lista_inv_insere_((char*)i->i, id);
@@ -106,8 +101,7 @@ int lista_inv_insere_(char *s, int id) {
 }
 
 void lista_inv_busca(char *s) {
-	conjunto *c = conj_init(), *ans = conj_init(), *i, *aux, *inter;
-	char *tok;
+	conjunto *c, *ans = conj_init(), *i, *aux, *inter;
 	int k, j;
 
 	/* insere em 'ans' todos IDs de especies */
@@ -115,13 +109,7 @@ void lista_inv_busca(char *s) {
 		conj_insere(ans, (void*)(&IEspec[j].id), sizeof(int), intcmp_);
 	}
 
-	/* separa a string s em tokens */
-	tok = strtok(s, delimiters);
-	while (tok != NULL) {
-		toupper_(tok);
-		conj_insere(c, (void*)tok, (strlen(tok)+1)*sizeof(char), strcmp_);
-		tok = strtok(NULL, delimiters);
-	}
+	c = strtokenizer(s);
 
 	for (i=c->next; i!=NULL; i=i->next) {
 		k = lista_inv_Sec_busca((char*) i->i);
@@ -131,7 +119,11 @@ void lista_inv_busca(char *s) {
 		/* gera lista de IDs relacionados */
 		aux = conj_init();
 		while (k != FAIL) {
-			conj_insere(aux, (void*)(&LIPrim[k].chave), sizeof(int), intcmp_);
+			if(especie_busca(LIPrim[k].idE, NULL) == FAIL) {
+				/* no caso da espécie ter sido apagada, devemos atualizar a lista invertida */
+				lista_inv_deleta_((char*) i->i, LIPrim[k].idE);
+			}
+			conj_insere(aux, (void*)(&LIPrim[k].idE), sizeof(int), intcmp_);
 			k = LIPrim[k].next;
 		}
 
@@ -188,7 +180,7 @@ int lista_inv_Prim_insere(int k, int id) {
 		avail_list_LIPrim = LIPrim[pos].next;
 	}
 
-	LIPrim[pos].chave = id;
+	LIPrim[pos].idE = id;
 	if (k == FAIL) {
 		/* insere um novo */
 		LIPrim[pos].next = -1;
@@ -221,4 +213,54 @@ int lista_inv_Sec_insere(char *s, int ind1) {
 	LISec[i].ind1 = ind1;
 
 	return OK;
+}
+
+void lista_inv_deleta(char *s, int id) {
+	conjunto *c, *i;
+
+	c = strtokenizer(s);
+
+	for (i=c->next; i!=NULL; i=i->next)
+		lista_inv_deleta_((char *)i->i, id);
+
+	conj_destroy(c);
+}
+
+void lista_inv_deleta_(char *s, int id) {
+	int k = lista_inv_Sec_busca(s);
+	lista_inv_Prim_deleta(&LISec[k].ind1, id);
+
+	if (LISec[k].ind1 == FAIL) {
+		/* se todos os registros para essa palavra
+		 * foram apagados da LIPrim */
+		for (; k < N_LISec-1; k++)
+			LISec[k] = LISec[k+1];
+		N_LISec--;
+	}
+}
+
+void lista_inv_Prim_deleta(int *k, int id) {
+	int save;
+	for (; LIPrim[*k].idE != id; k = &LIPrim[*k].next);
+
+	save = LIPrim[*k].next;
+	LIPrim[*k].next = avail_list_LIPrim;
+	avail_list_LIPrim = *k;
+
+	*k = save;
+}
+
+conjunto *strtokenizer(char *s) {
+	conjunto *c = conj_init();
+	char *tok;
+
+	/* separa a string s em tokens */
+	tok = strtok(s, delimiters);
+	while (tok != NULL) {
+		strtoupper(tok);
+		conj_insere(c, (void*)tok, (strlen(tok)+1)*sizeof(char), strcmp_);
+		tok = strtok(NULL, delimiters);
+	}
+
+	return c;
 }
