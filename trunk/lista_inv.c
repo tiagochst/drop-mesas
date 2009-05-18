@@ -14,19 +14,6 @@ void set_flag_atualizado_OK();
 void set_flag_atualizado_FAIL();
 void lista_inv_rebuild();
 
-void debug() {
-	int i;
-	for (i = 0; i < N_LISec; i++)
-		printf("LISec[%d] = {%s, %d}\n", i, LISec[i].s, LISec[i].ind1);
-	putchar('\n');
-
-	for (i = 0; i < N_LIPrim; i++)
-		printf("LIPrim[%d] = {%d, %d}\n", i, LIPrim[i].idE, LIPrim[i].next);
-	putchar('\n');
-
-	Pause();
-}
-
 void lista_inv_reset(char *prim, char *sec) {
 	FInvPrim = fopen(prim, "wb");
 	FInvSec = fopen(sec, "wb");
@@ -60,7 +47,9 @@ void lista_inv_start(char *prim, char *sec) {
 		fread(LIPrim, sizeof(ListaInv_Prim), N_LIPrim, FInvPrim);
 
 		fclose(FInvPrim);
+		FInvPrim = fopen(prim, "rb+");
 	}
+	else FInvPrim = fopen(prim, "wb");
 
 	N_LISec = 0;
 	if (FInvSec != NULL) {
@@ -70,9 +59,9 @@ void lista_inv_start(char *prim, char *sec) {
 		fread(LISec, sizeof(ListaInv_Sec), N_LISec, FInvSec);
 
 		fclose(FInvSec);
+		FInvSec = fopen(sec, "rb+");
 	}
-
-	lista_inv_reset(prim, sec);
+	else FInvSec = fopen(sec, "wb");
 }
 
 void lista_inv_end() {
@@ -86,7 +75,7 @@ void lista_inv_end() {
 }
 
 void lista_inv_write() {
-	if(flag_atualizado == OK) return;
+	if (flag_atualizado == OK) return;
 
 	fseek(FInvPrim, 0, SEEK_SET);
 	fseek(FInvSec, 0, SEEK_SET);
@@ -109,8 +98,8 @@ void lista_inv_insere(char *s, int id) {
 
 	c = strtokenizer(s);
 
-	for (i=c->next; i!=NULL; i=i->next)
-		lista_inv_insere_((char*)i->i, id);
+	for (i = c->next; i != NULL; i = i->next)
+		lista_inv_insere_((char*) i->i, id);
 
 	conj_destroy(c);
 }
@@ -137,13 +126,13 @@ void lista_inv_busca(char *s) {
 	int k, j;
 
 	/* insere em 'ans' todos IDs de especies */
-	for (j=0; j<N_IPEspec; j++) {
-		conj_insere(ans, (void*)(&IPEspec[j].id), sizeof(int), intcmp_);
+	for (j = 0; j < N_IPEspec; j++) {
+		conj_insere(ans, (void*) (&IPEspec[j].id), sizeof(int), intcmp_);
 	}
 
 	c = strtokenizer(s);
 
-	for (i=c->next; i!=NULL && !conj_vazio(ans); i=i->next) {
+	for (i = c->next; i != NULL && !conj_vazio(ans); i = i->next) {
 		k = lista_inv_Sec_busca((char*) i->i);
 		if (k != FAIL)
 			k = LISec[k].ind1;
@@ -151,14 +140,14 @@ void lista_inv_busca(char *s) {
 		/* gera lista de IDs relacionados */
 		aux = conj_init();
 		while (k != FAIL) {
-			if(indice_busca("especie", LIPrim[k].idE) == FAIL) {
+			if (indice_busca("especie", LIPrim[k].idE) == FAIL) {
 				/* no caso da espécie ter sido apagada, devemos atualizar a lista invertida */
 				j = LIPrim[k].next;
 				lista_inv_deleta_((char*) i->i, LIPrim[k].idE);
 				k = j;
 				continue;
 			}
-			conj_insere(aux, (void*)(&LIPrim[k].idE), sizeof(int), intcmp_);
+			conj_insere(aux, (void*) (&LIPrim[k].idE), sizeof(int), intcmp_);
 			k = LIPrim[k].next;
 		}
 
@@ -170,8 +159,8 @@ void lista_inv_busca(char *s) {
 
 	/* itera em 'ans' fazendo algo */
 	printf("Há %d espécie(s) correspondente(s) à busca:\n", conj_size(ans));
-	for (i=ans->next; i!=NULL; i=i->next) {
-		printf("> %d\n", *(int*)i->i);
+	for (i = ans->next; i != NULL; i = i->next) {
+		printf("> %d\n", *(int*) i->i);
 	}
 	putchar('\n');
 	Pause();
@@ -185,7 +174,7 @@ int lista_inv_Sec_busca(char *s) {
 	int esq=0, dir=N_LISec-1, meio, cmp;
 
 	while (esq <= dir) {
-		meio = (esq+dir)/2;
+		meio = (esq + dir) / 2;
 		cmp = strcmp(LISec[meio].s, s);
 		if (cmp == 0) return meio;
 		if (cmp > 0) dir = meio-1;
@@ -201,8 +190,8 @@ int lista_inv_Prim_insere(int k, int id) {
 
 	if (avail_list_LIPrim == FAIL) {
 		/* nao tem buraco, dar realloc no LIPrim */
-		aux = (ListaInv_Prim*) realloc(LIPrim, (N_LIPrim+1)
-				*sizeof(ListaInv_Prim));
+		aux = (ListaInv_Prim*) realloc(LIPrim, (N_LIPrim + 1)
+				* sizeof(ListaInv_Prim));
 		if (aux == NULL)
 			return FAIL;
 		LIPrim = aux;
@@ -231,16 +220,16 @@ int lista_inv_Prim_insere(int k, int id) {
 
 int lista_inv_Sec_insere(char *s, int ind1) {
 	int i;
-	ListaInv_Sec *aux = (ListaInv_Sec *) realloc(LISec, (N_LISec+1)
-			*sizeof(ListaInv_Sec));
+	ListaInv_Sec *aux = (ListaInv_Sec *) realloc(LISec, (N_LISec + 1)
+			* sizeof(ListaInv_Sec));
 	if (aux == NULL)
 		return FAIL;
 
 	LISec = aux;
 	N_LISec++;
 
-	for (i=N_LISec-1; i>0 && strcmp(s, LISec[i-1].s)<0; i--) {
-		LISec[i] = LISec[i-1];
+	for (i = N_LISec-1; i>0 && strcmp(s, LISec[i-1].s)<0; i--) {
+		LISec[i] = LISec[i - 1];
 	}
 	strcpy(LISec[i].s, s);
 	LISec[i].ind1 = ind1;
@@ -259,13 +248,13 @@ void lista_inv_atualiza(char *velho, char *novo, int id) {
 	/* tem que remover as palavras pertencentes a cvelho-cnovo
 	 * e adicionar as palavras de cnovo-cvelho */
 	difer = conj_diferenca(cvelho, cnovo, strcmp_);
-	for(i=difer->next ; i!=NULL; i=i->next)
-		lista_inv_deleta_((char *)i->i, id);
+	for (i = difer->next; i != NULL; i = i->next)
+		lista_inv_deleta_((char *) i->i, id);
 	conj_destroy(difer);
 
 	difer = conj_diferenca(cnovo, cvelho, strcmp_);
-	for(i=difer->next ; i!=NULL; i=i->next)
-		lista_inv_insere_((char *)i->i, id);
+	for (i = difer->next; i != NULL; i = i->next)
+		lista_inv_insere_((char *) i->i, id);
 	conj_destroy(difer);
 
 	conj_destroy(cvelho);
@@ -280,8 +269,8 @@ void lista_inv_deleta(char *s, int id) {
 
 	c = strtokenizer(s);
 
-	for (i=c->next; i!=NULL; i=i->next)
-		lista_inv_deleta_((char *)i->i, id);
+	for (i = c->next; i != NULL; i = i->next)
+		lista_inv_deleta_((char *) i->i, id);
 
 	conj_destroy(c);
 }
@@ -296,8 +285,8 @@ void lista_inv_deleta_(char *s, int id) {
 	if (LISec[k].ind1 == FAIL) {
 		/* se todos os registros para essa palavra
 		 * foram apagados da LIPrim */
-		for (; k < N_LISec-1; k++)
-			LISec[k] = LISec[k+1];
+		for (; k < N_LISec - 1; k++)
+			LISec[k] = LISec[k + 1];
 		N_LISec--;
 	}
 }
@@ -321,7 +310,7 @@ Conjunto *strtokenizer(char *s) {
 	tok = strtok(s, delimiters);
 	while (tok != NULL) {
 		strtoupper(tok);
-		conj_insere(c, (void*)tok, (strlen(tok)+1)*sizeof(char), strcmp_);
+		conj_insere(c, (void*) tok, (strlen(tok) + 1) * sizeof(char), strcmp_);
 		tok = strtok(NULL, delimiters);
 	}
 
@@ -329,7 +318,8 @@ Conjunto *strtokenizer(char *s) {
 }
 
 void set_flag_atualizado_OK() {
-	if(flag_atualizado == OK) return;
+	if (flag_atualizado == OK)
+		return;
 
 	flag_atualizado = OK;
 	fseek(FInvPrim, 0, SEEK_SET);
@@ -339,7 +329,8 @@ void set_flag_atualizado_OK() {
 }
 
 void set_flag_atualizado_FAIL() {
-	if(flag_atualizado == FAIL) return;
+	if (flag_atualizado == FAIL)
+		return;
 
 	flag_atualizado = FAIL;
 	fseek(FInvPrim, 0, SEEK_SET);
