@@ -21,7 +21,7 @@ void indice_sec_start(char *indiv,char *captu){
   if (FISecIndiv != NULL) {
     fread(&n, sizeof(int), 1, FISecIndiv);
     fread(&flag, sizeof(int), 1, FISecIndiv);
-    
+
     if (flag == FAIL){
     }else{
       ISIndiv = (Indice_Sec *) malloc(n*sizeof(Indice_Sec));
@@ -43,7 +43,7 @@ void indice_sec_start(char *indiv,char *captu){
   if (FISecCaptu != NULL) {
     fread(&n, sizeof(int), 1, FISecCaptu);
     fread(&flag, sizeof(int), 1, FISecCaptu);
-    
+
     if (flag == FAIL){
     }else{
       ISCaptu = (Indice_Sec *) malloc(n*sizeof(Indice_Sec));
@@ -98,24 +98,24 @@ void indice_sec_insere(char *op,int idS,int idP){
   if(!strcmp(op,"individuo")){
     N_ISIndiv++;
     ISIndiv = (Indice_Sec *)realloc(ISIndiv, (N_ISIndiv)*sizeof(Indice_Sec));
-    i = N_ISIndiv;
+    i = N_ISIndiv-1;
     while (i>0 && (idS < ISIndiv[i-1].idS)) {
       ISIndiv[i] = ISIndiv[i-1];
       i--;
     }
-    
+
     ISIndiv[i].idS = idS;
     ISIndiv[i].idP = idP;
   }
   if(!strcmp(op,"captura")){
     N_ISCaptu++;
     ISCaptu = (Indice_Sec *)realloc(ISCaptu, (N_ISCaptu)*sizeof(Indice_Sec));
-    i = N_ISCaptu;
+    i = N_ISCaptu-1;
     while (i>0 && (idS < ISCaptu[i-1].idS)) {
       ISCaptu[i] = ISCaptu[i-1];
       i--;
     }
-    
+
     ISCaptu[i].idS = idS;
     ISCaptu[i].idP = idP;
   }
@@ -123,34 +123,29 @@ void indice_sec_insere(char *op,int idS,int idP){
 }
 
 int indice_sec_busca(char *op,int id) {
-  int i,N;
+  int N;
   Indice_Sec *Indice;
-  int ini,fim,meio; 
-  
+  int ini,fim,meio;
+
   if(!strcmp(op,"individuo")){
-    N = N_ISCaptu;
-    Indice = (Indice_Sec *)malloc(N*sizeof(Indice_Sec));
-    for(i=0;i<N;i++) Indice[i] = ISCaptu[i];
+    N = N_ISIndiv;
+    Indice = ISIndiv;
   }
   if(!strcmp(op,"captura")){
     N = N_ISCaptu;
-    Indice = (Indice_Sec *)malloc(N*sizeof(Indice_Sec));
-    for(i=0;i<N;i++) Indice[i] = ISCaptu[i];
+    Indice =  ISCaptu;
   }
 
   ini = 0, fim = N-1;
   if(N == 0) return -1;
   if (Indice[ini].idS > id || Indice[fim].idS < id){
-    free(Indice);
     return -1;
   }
 
   if (Indice[ini].idS == id){
-    free(Indice);
     return ini;
   }
   if (Indice[fim].idS == id){
-    free(Indice);
     return fim;
   }
 
@@ -159,9 +154,8 @@ int indice_sec_busca(char *op,int id) {
     meio = (ini + fim)/2;
     if (Indice[meio].idS >=id)      fim = meio;
     else if (Indice[meio].idS < id) ini = meio;
- 
+
   }
   if(Indice[fim].idS == id) return fim;
-  free(Indice);
   return -1;
 }
