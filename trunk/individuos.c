@@ -68,7 +68,7 @@ void individuo_insere() {
   indice_sec_insere("individuo",X.idE,X.idI);
 
   /* Atualiza a quantidade de registros */
-  
+
 
   puts("Individuo inserido corretamente.");
 }
@@ -146,7 +146,7 @@ void individuo_deleta() {
     individuo_write(stdout, X, 1);
     if (!Pergunta("Confirma exclusao?"))
       return;
-    
+
     individuo_deleta_(sz);
     muda_n(FIndiv, -1);
     indice_fail(SIPrimIndiv);
@@ -216,7 +216,7 @@ Individuo individuo_read(FILE* fin, int *_save, int *_sz) {
   fscanf(fin, " %c", &c);
   if (c == VAZIO) {
     buraco_var_le(fin, &L);
-    fseek(fin, L.sz - SZ_REG + 1, SEEK_CUR);
+    fseek(fin, L.sz - (SZ_LISTA-SZ_REG), SEEK_CUR);
 
     X.idI = -1;
     return X;

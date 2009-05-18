@@ -170,8 +170,11 @@ void indice_sec_insere(char *op, int idS, int idP);
 void indice_sec_deleta(char *op, int idS,int idP);
 int indice_sec_busca(char *op, int id);
 
+void lista_inv_reset(char *prim, char *sec);
+void lista_inv_rebuild();
 void lista_inv_start(char *prim, char *sec);
 void lista_inv_end();
+void lista_inv_write();
 void lista_inv_insere(char *s, int id);
 int lista_inv_insere_(char *s, int id);
 int lista_inv_Sec_busca(char *s);
