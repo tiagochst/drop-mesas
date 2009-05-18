@@ -94,7 +94,7 @@ void indice_end(char *espec,char *indiv) {
 
   fwrite(&n, sizeof(int), 1, FIPrimIndiv);
   fwrite(&flag, sizeof(int), 1, FIPrimIndiv);
-  fwrite(IPEspec, sizeof(Indice_Prim), n, FIPrimIndiv);
+  fwrite(IPIndiv, sizeof(Indice_Prim), n, FIPrimIndiv);
 
   free(IPIndiv);
   fclose(FIPrimIndiv);
@@ -151,33 +151,28 @@ void indice_deleta(char *op,int id) {
 }
 
 int indice_busca(char *op,int id){
-  int i,N;
+  int N;
   Indice_Prim *Indice;
   int ini,fim,meio;
 
   if(!strcmp(op,"especie")){
     N = N_IPEspec;
-    Indice = (Indice_Prim *)malloc(N*sizeof(Indice_Prim));
-    for(i=0;i<N;i++) Indice[i] = IPEspec[i];
+    Indice = IPEspec;
   }
   if(!strcmp(op,"individuo")){
     N = N_IPIndiv;
-    Indice = (Indice_Prim *)malloc(N*sizeof(Indice_Prim));
-    for(i=0;i<N;i++) Indice[i] = IPIndiv[i];
+    Indice = IPIndiv;
   }
 
   ini = 0, fim = N-1;
   if(N == 0 || Indice[ini].id > id || Indice[fim].id < id) {
-    free(Indice);
     return -1;
   }
 
   if (Indice[ini].id == id){
-    free(Indice);
     return ini;
   }
   if (Indice[fim].id == id){
-    free(Indice);
     return fim;
   }
 
@@ -189,11 +184,8 @@ int indice_busca(char *op,int id){
     else if (Indice[meio].id < id)
       ini = meio;
     else{
-      free(Indice);
       return meio;
     }
   }
-  free(Indice);
   return -1;
 }
-
