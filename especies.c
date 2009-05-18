@@ -143,7 +143,6 @@ void especie_deleta() {
       return;
 
     especie_deleta_(sz);
-    lista_inv_deleta(X.descr, X.id);
     indice_deleta("especie",id);
     muda_n(FEspec, -1);
   }

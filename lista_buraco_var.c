@@ -119,7 +119,7 @@ int buraco_var_insere(FILE *fp, int sz, int pos) {
 
 /* REMOVE UM BURACO DA LISTA LIGADA */
 /* a posicao do ponteiro do arquivo sera, garatidamente,
- a mesma antes e depois do uso da funcao lista_remove() */
+ a mesma antes e depois do uso da funcao buraco_var_remove() */
 void buraco_var_remove(FILE *fp) {
 	int save;
 	BuracoVar x, prev, next;
