@@ -39,7 +39,6 @@ int individuo_busca(int id, Individuo *K) {
 
   fseek(FIndiv, save, SEEK_SET);
   return sz;
-
 }
 
 void individuo_insere() {

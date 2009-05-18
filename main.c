@@ -69,7 +69,7 @@ int main() {
     }
   }
 
-  lista_inv_end(SInvPrim, SInvSec);
+  lista_inv_end(SInvPrim, SInvSec);  
   indice_end(SIPrimEspec,SIPrimIndiv);
   indice_sec_end(SISecIndiv,SISecCaptu);
 

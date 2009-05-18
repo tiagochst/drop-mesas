@@ -65,7 +65,8 @@ void captura_insere_(Captura X) {
     fseek(FCaptu, pos, SEEK_SET);
     buraco_fixo_remove(FCaptu);
   }
-
+  
+  indice_sec_insere("captura",X.idI,ftell(FCaptu));
   captura_write(FCaptu, &X);
   muda_n_bin(FCaptu, +1);
 }

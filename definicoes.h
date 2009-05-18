@@ -13,6 +13,7 @@
 #include "lista_buraco_var.h"
 #include "lista_buraco_fixo.h"
 
+
 /** defines **/
 #define SZ_CAB (4)
 #define SZ_LISTA (21)
