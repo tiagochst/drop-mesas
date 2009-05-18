@@ -50,8 +50,6 @@ void lista_inv_start(char *prim, char *sec) {
 
 		fclose(FInvSec);
 	}
-
-	/*debug();*/
 }
 
 void lista_inv_end(char *prim, char *sec) {
@@ -119,10 +117,13 @@ void lista_inv_busca(char *s) {
 		/* gera lista de IDs relacionados */
 		aux = conj_init();
 		while (k != FAIL) {
-			/*if(especie_busca(LIPrim[k].idE, NULL) == FAIL) {
-				/\* no caso da espécie ter sido apagada, devemos atualizar a lista invertida *\/
+			if(indice_busca("especie", LIPrim[k].idE) == FAIL) {
+				/* no caso da espécie ter sido apagada, devemos atualizar a lista invertida */
+				j = LIPrim[k].next;
 				lista_inv_deleta_((char*) i->i, LIPrim[k].idE);
-			}*/
+				k = j;
+				continue;
+			}
 			conj_insere(aux, (void*)(&LIPrim[k].idE), sizeof(int), intcmp_);
 			k = LIPrim[k].next;
 		}
@@ -134,10 +135,11 @@ void lista_inv_busca(char *s) {
 	}
 
 	/* itera em 'ans' fazendo algo */
-	puts("Espécies correspondentes à busca:");
+	printf("Há %d espécie(s) correspondente(s) à busca:\n", conj_size(ans));
 	for (i=ans->next; i!=NULL; i=i->next) {
-		printf("<%d>\n", *(int*)i->i);
+		printf("> %d\n", *(int*)i->i);
 	}
+	putchar('\n');
 	Pause();
 
 	conj_destroy(ans);

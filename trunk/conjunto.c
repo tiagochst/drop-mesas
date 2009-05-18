@@ -25,6 +25,12 @@ int conj_vazio(Conjunto *c) {
 	return (c->next == NULL)?(1):(0);
 }
 
+int conj_size(Conjunto *c) {
+	int n;
+	for (n = 0; c->next != NULL; n++, c = c->next);
+	return n;
+}
+
 void conj_insere(Conjunto *c, void *e, int n_bytes, funcao cmp) {
 	Conjunto *novo;
 
