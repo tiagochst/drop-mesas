@@ -1,0 +1,12 @@
+> EXECUTAR
+make run
+
+> COMPILAR
+make
+
+> REMOVER EXECUTÁVEIS
+make clean
+
+> REMOVER EXECUTÁVEIS E ARQUIVOS DOS REGISTROS/ÍNDICES
+make reset
+

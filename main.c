@@ -20,7 +20,6 @@ FILE *FIPrimIndiv;
 FILE *FISecIndiv;
 FILE *FISecCaptu;
 
-
 int main() {
   int menu, m2;
 
@@ -28,9 +27,9 @@ int main() {
   FIndiv = open_file(SIndiv);
   FCaptu = open_file_bin(SCaptu);
 
-  lista_inv_start(SInvPrim, SInvSec);
   indice_start(SIPrimEspec,SIPrimIndiv);
   indice_sec_start(SISecIndiv,SISecCaptu);
+  lista_inv_start(SInvPrim, SInvSec);
 
   m2 = 0;
   while (1) {
@@ -69,7 +68,7 @@ int main() {
     }
   }
 
-  lista_inv_end(SInvPrim, SInvSec);  
+  lista_inv_end();
   indice_end(SIPrimEspec,SIPrimIndiv);
   indice_sec_end(SISecIndiv,SISecCaptu);
 

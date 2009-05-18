@@ -7,8 +7,12 @@ ListaInv_Sec *LISec;
 int N_LIPrim;
 int N_LISec;
 int avail_list_LIPrim;
+char flag_atualizado;
 
 Conjunto *strtokenizer(char *s);
+void set_flag_atualizado_OK();
+void set_flag_atualizado_FAIL();
+void lista_inv_rebuild();
 
 void debug() {
 	int i;
@@ -23,19 +27,36 @@ void debug() {
 	Pause();
 }
 
+void lista_inv_reset(char *prim, char *sec) {
+	FInvPrim = fopen(prim, "wb");
+	FInvSec = fopen(sec, "wb");
+
+	flag_atualizado = OK; /* para forcar set_flag_atualizado_FAIL() a executar */
+	set_flag_atualizado_FAIL();
+}
+
 void lista_inv_start(char *prim, char *sec) {
 	FInvPrim = fopen(prim, "rb");
 	FInvSec = fopen(sec, "rb");
 	LIPrim = NULL;
 	LISec = NULL;
 	avail_list_LIPrim = FAIL;
+	flag_atualizado = OK;
 
 	N_LIPrim = 0;
 	if (FInvPrim != NULL) {
+		fread(&flag_atualizado, sizeof(char), 1, FInvPrim);
 		fread(&N_LIPrim, sizeof(int), 1, FInvPrim);
 		fread(&avail_list_LIPrim, sizeof(int), 1, FInvPrim);
 
-		LIPrim = (ListaInv_Prim *) malloc(N_LIPrim*sizeof(ListaInv_Prim));
+		if (flag_atualizado == FAIL) {
+			fclose(FInvPrim);
+			lista_inv_reset(prim, sec);
+			lista_inv_rebuild();
+			return;
+		}
+
+		LIPrim = (ListaInv_Prim *) malloc(N_LIPrim * sizeof(ListaInv_Prim));
 		fread(LIPrim, sizeof(ListaInv_Prim), N_LIPrim, FInvPrim);
 
 		fclose(FInvPrim);
@@ -45,23 +66,17 @@ void lista_inv_start(char *prim, char *sec) {
 	if (FInvSec != NULL) {
 		fread(&N_LISec, sizeof(int), 1, FInvSec);
 
-		LISec = (ListaInv_Sec *) malloc(N_LISec*sizeof(ListaInv_Sec));
+		LISec = (ListaInv_Sec *) malloc(N_LISec * sizeof(ListaInv_Sec));
 		fread(LISec, sizeof(ListaInv_Sec), N_LISec, FInvSec);
 
 		fclose(FInvSec);
 	}
+
+	lista_inv_reset(prim, sec);
 }
 
-void lista_inv_end(char *prim, char *sec) {
-	FInvPrim = fopen(prim, "wb");
-	FInvSec = fopen(sec, "wb");
-
-	fwrite(&N_LIPrim, sizeof(int), 1, FInvPrim);
-	fwrite(&avail_list_LIPrim, sizeof(int), 1, FInvPrim);
-	fwrite(LIPrim, sizeof(ListaInv_Prim), N_LIPrim, FInvPrim);
-
-	fwrite(&N_LISec, sizeof(int), 1, FInvSec);
-	fwrite(LISec, sizeof(ListaInv_Sec), N_LISec, FInvSec);
+void lista_inv_end() {
+	lista_inv_write();
 
 	free(LIPrim);
 	free(LISec);
@@ -70,8 +85,27 @@ void lista_inv_end(char *prim, char *sec) {
 	fclose(FInvSec);
 }
 
+void lista_inv_write() {
+	if(flag_atualizado == OK) return;
+
+	fseek(FInvPrim, 0, SEEK_SET);
+	fseek(FInvSec, 0, SEEK_SET);
+
+	fwrite(&flag_atualizado, sizeof(char), 1, FInvPrim);
+	fwrite(&N_LIPrim, sizeof(int), 1, FInvPrim);
+	fwrite(&avail_list_LIPrim, sizeof(int), 1, FInvPrim);
+	fwrite(LIPrim, sizeof(ListaInv_Prim), N_LIPrim, FInvPrim);
+
+	fwrite(&N_LISec, sizeof(int), 1, FInvSec);
+	fwrite(LISec, sizeof(ListaInv_Sec), N_LISec, FInvSec);
+
+	set_flag_atualizado_OK();
+}
+
 void lista_inv_insere(char *s, int id) {
 	Conjunto *c, *i;
+
+	set_flag_atualizado_FAIL();
 
 	c = strtokenizer(s);
 
@@ -217,6 +251,8 @@ int lista_inv_Sec_insere(char *s, int ind1) {
 void lista_inv_atualiza(char *velho, char *novo, int id) {
 	Conjunto *cvelho, *cnovo, *difer, *i;
 
+	set_flag_atualizado_FAIL();
+
 	cvelho = strtokenizer(velho);
 	cnovo = strtokenizer(novo);
 
@@ -236,8 +272,11 @@ void lista_inv_atualiza(char *velho, char *novo, int id) {
 	conj_destroy(cnovo);
 }
 
+/* não é utilizado */
 void lista_inv_deleta(char *s, int id) {
 	Conjunto *c, *i;
+
+	set_flag_atualizado_FAIL();
 
 	c = strtokenizer(s);
 
@@ -249,6 +288,9 @@ void lista_inv_deleta(char *s, int id) {
 
 void lista_inv_deleta_(char *s, int id) {
 	int k = lista_inv_Sec_busca(s);
+
+	set_flag_atualizado_FAIL();
+
 	lista_inv_Prim_deleta(&LISec[k].ind1, id);
 
 	if (LISec[k].ind1 == FAIL) {
@@ -284,4 +326,37 @@ Conjunto *strtokenizer(char *s) {
 	}
 
 	return c;
+}
+
+void set_flag_atualizado_OK() {
+	if(flag_atualizado == OK) return;
+
+	flag_atualizado = OK;
+	fseek(FInvPrim, 0, SEEK_SET);
+	fwrite(&flag_atualizado, sizeof(char), 1, FInvPrim);
+
+	fflush(FInvPrim);
+}
+
+void set_flag_atualizado_FAIL() {
+	if(flag_atualizado == FAIL) return;
+
+	flag_atualizado = FAIL;
+	fseek(FInvPrim, 0, SEEK_SET);
+	fwrite(&flag_atualizado, sizeof(char), 1, FInvPrim);
+
+	fflush(FInvPrim);
+}
+
+void lista_inv_rebuild() {
+	int i;
+	Especie X;
+
+	for (i = 0; i < N_IPEspec; i++) {
+		fseek(FEspec, IPEspec[i].offset, SEEK_SET);
+		X = especie_read(FEspec, NULL, NULL);
+		lista_inv_insere(X.descr, X.id);
+	}
+
+	lista_inv_write();
 }
