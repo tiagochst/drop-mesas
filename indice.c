@@ -2,17 +2,16 @@
 
 Indice_Prim *IPEspec;
 int N_IPEspec;
-int FAIL_IPEspec;
 
 Indice_Prim *IPIndiv;
 int N_IPIndiv;
-int FAIL_IPIndiv;
 
 void indice_start(char *espec,char *indiv) {
   int i,n;
   int flag;
   int offset;
   Especie X;
+  Individuo Y;
   /*-----------ESPECIE------------*/
   FIPrimEspec = fopen(espec, "rb");
   IPEspec = NULL;
@@ -22,33 +21,26 @@ void indice_start(char *espec,char *indiv) {
     fread(&n, sizeof(int), 1, FIPrimEspec);
     fread(&flag, sizeof(int), 1, FIPrimEspec);
     if (flag == FAIL){
+      N_IPEspec = 0;
       fseek(FEspec, 0, SEEK_SET);
       fscanf(FEspec, " %d", &i);
       while (i--) {
 	X = especie_read(FEspec, &offset, NULL);
-	if (X.id == -1) {
-	  i++;
-	  continue;
-	}
+	especie_write(stdout, X, 1);
+	if (X.id == -1) i++;
 	else indice_insere("especie",X.id,offset);
       }
     }else{
-      
       IPEspec = (Indice_Prim *) malloc(n*sizeof(Indice_Prim));
       fread(IPEspec, sizeof(Indice_Prim), n, FIPrimEspec);
-      
+
       N_IPEspec = n;
     }
     fclose(FIPrimEspec);
   }
   else   N_IPEspec = 0;
   
-  FAIL_IPEspec = 0;
-
-  printf("%d\n", N_IPEspec);
-  for (i=0; i<n; i++)
-    printf("%d %d\n", IPEspec[i].id, IPEspec[i].offset);
-
+  
   /*-----------INDIVIDUO------------*/
   FIPrimIndiv = fopen(indiv, "rb");
   IPIndiv = NULL;
@@ -58,6 +50,17 @@ void indice_start(char *espec,char *indiv) {
     fread(&n, sizeof(int), 1, FIPrimIndiv);
     fread(&flag, sizeof(int), 1, FIPrimIndiv);
     if (flag == FAIL){
+      N_IPIndiv = 0;
+      fseek(FIndiv, 0, SEEK_SET);
+      fscanf(FIndiv, " %d", &i);
+      while (i--) {
+	Y = individuo_read(FIndiv, &offset, NULL);
+	if (Y.idI == -1) {
+	  i++;
+	  continue;
+	}
+	else indice_insere("individuo",Y.idI,offset);
+      }
     }else{
       IPIndiv = (Indice_Prim *) malloc(n*sizeof(Indice_Prim));
       fread(IPIndiv, sizeof(Indice_Prim), n, FIPrimIndiv);
@@ -68,11 +71,7 @@ void indice_start(char *espec,char *indiv) {
   }
   else N_IPIndiv = 0;
 
-  FAIL_IPIndiv = 0;
-
-  printf("%d\n", N_IPIndiv);
-  for (i=0; i<n; i++)
-    printf("%d %d\n", IPIndiv[i].id, IPIndiv[i].offset);
+ 
 
 }
 
@@ -117,6 +116,7 @@ void indice_end(char *espec,char *indiv) {
 void indice_insere(char *op,int id, int offset) {
   int i;
   if(!strcmp(op,"especie")){
+    printf("%d %d\n",id,offset);
     N_IPEspec++;
     IPEspec = (Indice_Prim *)realloc(IPEspec,N_IPEspec*sizeof(Indice_Prim));
     i = N_IPEspec-1;
@@ -187,4 +187,13 @@ int indice_busca(char *op, int id){
   }
 
   return FAIL;
+}
+
+void indice_fail(char *sfp){
+  int n = 0;
+  int flag = FAIL;
+  FILE *fp = fopen(sfp,"wb");
+  fwrite(&n, sizeof(int), 1, fp);
+  fwrite(&flag, sizeof(int), 1, fp);
+  fclose(fp);
 }

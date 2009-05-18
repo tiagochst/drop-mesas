@@ -174,6 +174,7 @@ void muda_n(FILE *fp, int var) {
 	fscanf(fp, " %d", &n);
 	fseek(fp, 0, SEEK_SET);
 	fprintf(fp, "%03d", n+var);
+	fflush(fp);
 }
 
 void muda_n_bin(FILE *fp, int var) {
@@ -184,6 +185,7 @@ void muda_n_bin(FILE *fp, int var) {
 	n += var;
 	fseek(fp, 0, SEEK_SET);
 	fwrite(&n, sizeof(int), 1, fp);
+	fflush(fp);
 }
 
 int strcmp_(void *a, void *b) {

@@ -62,10 +62,13 @@ void individuo_insere() {
   }
 
   individuo_insere_(X);
+  muda_n(FIndiv, +1);
+  indice_fail(SISecIndiv);
+  indice_fail(SIPrimIndiv);
   indice_sec_insere("individuo",X.idE,X.idI);
 
   /* Atualiza a quantidade de registros */
-  muda_n(FIndiv, +1);
+  
 
   puts("Individuo inserido corretamente.");
 }
@@ -143,10 +146,12 @@ void individuo_deleta() {
     individuo_write(stdout, X, 1);
     if (!Pergunta("Confirma exclusao?"))
       return;
-
+    
     individuo_deleta_(sz);
-    indice_deleta("individuo",id);
     muda_n(FIndiv, -1);
+    indice_fail(SIPrimIndiv);
+    indice_fail(SISecIndiv);
+    indice_deleta("individuo",id);    
   }
 }
 
