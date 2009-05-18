@@ -142,7 +142,7 @@ FILE *open_file(char *s) {
 	if (fp == NULL) {
 		fp = fopen(s, "w+");
 		fprintf(fp, "%03d\n", 0); /* numero de registros */
-		buraco_var_escreve(fp, SZ_REG, -1, SZ_CAB+SZ_LISTA+1); /* no cabeca */
+		buraco_var_escreve(fp, (SZ_LISTA-SZ_REG)+1, -1, SZ_CAB+SZ_LISTA+1); /* no cabeca */
 		buraco_var_escreve(fp, 999999, SZ_CAB, -1);
 	}
 

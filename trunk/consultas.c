@@ -25,16 +25,6 @@ void historico_monitoramento() {
       captura_write_(stdout,aux,1);
     }
   }
-  /*
-    fseek(FCaptu, 0, SEEK_SET);
-    fread(&n, sizeof(int), 1, FCaptu);
-    while (n--) {
-    aux = captura_read(FCaptu);
-    if (aux.idC == FAIL)
-    n++;
-    else if (aux.idI == id)
-    captura_write_(stdout, aux, 1);
-    }*/
   
   Pause();
 }
@@ -77,31 +67,7 @@ void ultima_captura() {
     aux = captura_read(FCaptu);
     captura_write_(stdout, aux, 1);
   }
-  
-  /*
-    fseek(FCaptu, 0, SEEK_SET);
-    fread(&n, sizeof(int), 1, FCaptu);
 
-    data.dia = FAIL;
-    while (n--) {
-    aux = captura_read(FCaptu);
-    if (aux.idC == FAIL)
-    n++;
-    else if (aux.idI == id && data_cmp(aux.data, data) > 0) {
-    pos = ftell(FCaptu) - sizeof(Captura);
-    data = aux.data;
-    }
-    }
-
-    if (data.dia == FAIL)
-    printf("Nao ha registros de captura desse individuo\n");
-    else {
-    printf("O ultimo registro desse individuo data de ");
-    data_escreve(stdout, data);
-    fseek(FCaptu, pos, SEEK_SET);
-    aux = captura_read(FCaptu);
-    captura_write_(stdout, aux, 1);
-    }*/
   Pause();
 }
 
@@ -162,59 +128,7 @@ void ultima_captura_peso() {
       }
     }
   }
-  /*      
-	  fseek(FIndiv, 0, SEEK_SET);
-	  fscanf(FIndiv, " %d", &n1);
-	  while (n1--) {
-	  X = individuo_read(FIndiv, NULL, NULL);
-	  
-	  if (X.idI == -1) {
-	  n1++;
-	  continue;
-    }
-    if (X.idE == idE) {
-      idI = X.idI;
-
-
-      printf("O individuo %d pertence aa especie %d\n", idI, idE);
-
-      fseek(FCaptu, 0, SEEK_SET);
-      fread(&n2, sizeof(int), 1, FCaptu);
-      data.dia = FAIL;
-      while (n2--) {
-	C = captura_read(FCaptu);
-
-	if (C.idC == -1)
-	  n2++;
-	else if (C.idI == idI && data_cmp(C.data, data) > 0) {
-	  Cc = C;
-	  data = C.data;
-	}
-      }
-
-      if (data.dia == FAIL)
-	printf("Nao ha registros de captura desse individuo\n");
-      else {
-	if (Cc.peso < peso)
-	  printf("O peso na ultima captura deste individuo foi abaixo do minimo\n");
-	else {
-	  printf("ID do Individuo: ");
-	  printf("%d\n", Cc.idI);
-	  printf("Data de Captura: ");
-	  data_escreve(stdout, Cc.data);
-	  printf("Local de Captura: ");
-	  printf("%s\n", Cc.local);
-
-	  printf("\n");
-	}
-      }
-    }
-  }
-
-  if (idI == -1) {
-    printf("Nao foi encontrado individuos da especie com o ID fornecido.\n\n");
-    }*/
-
+ 
   Pause();
 }
 

@@ -167,7 +167,7 @@ int indice_busca(char *op, int id);
 void indice_sec_start(char *indiv, char *captu);
 void indice_sec_end(char *indiv, char *captu);
 void indice_sec_insere(char *op, int idS, int idP);
-void indice_sec_deleta(char *op, int id);
+void indice_sec_deleta(char *op, int idS,int idP);
 int indice_sec_busca(char *op, int id);
 
 void lista_inv_start(char *prim, char *sec);

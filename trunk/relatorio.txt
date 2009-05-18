@@ -27,8 +27,16 @@ Foram implementadas as operações de intersecção e diferença de conjuntos.
 A implementação é utilizada quando efetuamos separação das palavras dada uma "descrição textual" dos registros de espécies, evitando palavras repetidas; quando efetuamos busca pela "descrição textual" dos registros de espécies, de forma que obtemos o resultado de cada busca independentemente e efetuamos intersecção dos conjuntos de resultados.
 
 
+- Suposições
+
+Supomos que, nas espécies, não há possibilidade de remover espécie de certo ID, e inserir outra espécie com mesmo ID.
+Isso nos dá a possibilidade de, na lista invertida, não efetuar a remoção da descrição no momento da deleção da espécie, mas apenas quando ocorre uma busca e verificamos que a espécie foi removida.
+Caso não houvesse essa suposição, ao inserir novamente uma espécie com mesmo ID, a lista invertida poderia devolver erroneamente o ID dessa espécie para consultas por palavras que não constam na sua descrição, mas constavam antes da deleção.
+O caso de atualização é tratado corretamente, no entanto.
+
+
 - Questões
 
 (Seção 3) Dada o texto de consulta, entrado pelo usuário, decompomos o texto em palavras usando strtok(...) e montamos um conjunto com as palavras a serem consultadas. Assim evitamos repetição de palavras e, portanto, de buscas. No entanto, este passo tem complexidade O(N²) no pior caso, sendo N o número de palavras no texto.
-Para cada palavra no conjunto, efetuamos a busca na lista invertida, encontrando listas de ID de espécies que correspondam à palavra. Para cada lista, geramos um conjunto correspondente.
-A solução, dado o texto de consulta, é a intersecção dos conjuntos formados. Geramos assim um conjunto que contém ID de espécies que correspondam a todas as palavras pertencentes ao texto de consulta.
+Para cada palavra no conjunto, efetuamos a busca na lista invertida, encontrando listas de ID de espécies que correspondam à palavra. Para cada lista de ID, geramos um conjunto correspondente.
+A solução, dado o texto de consulta, é a intersecção dos conjuntos de ID formados. Geramos assim um conjunto que contém ID de espécies que correspondam a todas as palavras pertencentes ao texto de consulta.
