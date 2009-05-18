@@ -70,14 +70,14 @@ void especie_insere_(Especie X) {
   int sz, Ssz;
 
   sz = especie_conta_caracteres(X);
-  Ssz = lista_busca_vazio(FEspec, sz);
+  Ssz = buraco_var_busca_vazio(FEspec, sz);
   if (Ssz == -1) {
     /*Se  nao achar um buraco vazio coloca no final do arquivo*/
     fseek(FEspec, 0, SEEK_END);
     Ssz = sz;
   } else {
     /* remove da lista ligada */
-    lista_remove(FEspec);
+    buraco_var_remove(FEspec);
   }
 
   /*Insere no indice os dados da especie*/
@@ -93,7 +93,7 @@ void especie_insere_(Especie X) {
   especie_write(FEspec, X, 0);
 
   if (Ssz - sz > SZ_LISTA)
-    lista_insere(FEspec, Ssz-sz-SZ_REG, ftell(FEspec));
+    buraco_var_insere(FEspec, Ssz-sz-SZ_REG, ftell(FEspec));
 }
 
 /*LE todas as especies existentes e imprime na saida padrao*/
@@ -153,7 +153,7 @@ void especie_deleta_(int sz) {
   int save, szY;
   Especie Y;
 
-  if (lista_insere(FEspec, sz, (int)ftell(FEspec)) == FAIL) {
+  if (buraco_var_insere(FEspec, sz, (int)ftell(FEspec)) == FAIL) {
     /* registro muito pequeno para a lista ligada */
 
     /* vai para o registro seguinte */
@@ -212,7 +212,7 @@ void especie_atualiza() {
 /* Le UM registro de Especie do arquivo */
 Especie especie_read(FILE* fin, int *_save, int *_sz) {
   Especie X;
-  Lista L;
+  BuracoVar L;
   int jump, save;
   char c;
 
@@ -220,7 +220,7 @@ Especie especie_read(FILE* fin, int *_save, int *_sz) {
 
   fscanf(fin, " %c", &c);
   if (c == VAZIO) {
-    lista_le(fin, &L);
+    buraco_var_le(fin, &L);
     fseek(fin, L.sz - SZ_REG + 1, SEEK_CUR);
 
     X.id = -1;

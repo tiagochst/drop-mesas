@@ -75,13 +75,13 @@ void individuo_insere_(Individuo X) {
   int sz, Ssz;
 
   sz = individuo_conta_caracteres(X);
-  Ssz = lista_busca_vazio(FIndiv, sz);
+  Ssz = buraco_var_busca_vazio(FIndiv, sz);
   if (Ssz == -1) {
     fseek(FIndiv, 0, SEEK_END);
     Ssz = sz;
   } else {
     /* remove da lista ligada */
-    lista_remove(FIndiv);
+    buraco_var_remove(FIndiv);
   }
 
   /*Insere no indice os dados do individuo*/
@@ -95,7 +95,7 @@ void individuo_insere_(Individuo X) {
   individuo_write(FIndiv, X, 0);
 
   if (Ssz - sz > SZ_LISTA)
-    lista_insere(FIndiv, Ssz-sz-SZ_REG, ftell(FIndiv));
+    buraco_var_insere(FIndiv, Ssz-sz-SZ_REG, ftell(FIndiv));
 }
 
 void individuo_le() {
@@ -155,7 +155,7 @@ void individuo_deleta_(int sz) {
   int save, szY;
   Individuo Y;
 
-  if (lista_insere(FIndiv, sz, (int)ftell(FIndiv)) == FAIL) {
+  if (buraco_var_insere(FIndiv, sz, (int)ftell(FIndiv)) == FAIL) {
     /* registro muito pequeno para a lista ligada */
 
     /* vai para o registro seguinte */
@@ -202,7 +202,7 @@ void individuo_atualiza() {
 
 Individuo individuo_read(FILE* fin, int *_save, int *_sz) {
   Individuo X;
-  Lista L;
+  BuracoVar L;
   int jump, save;
   char c;
 
@@ -210,7 +210,7 @@ Individuo individuo_read(FILE* fin, int *_save, int *_sz) {
 
   fscanf(fin, " %c", &c);
   if (c == VAZIO) {
-    lista_le(fin, &L);
+    buraco_var_le(fin, &L);
     fseek(fin, L.sz - SZ_REG + 1, SEEK_CUR);
 
     X.idI = -1;

@@ -21,7 +21,7 @@ void historico_monitoramento() {
     if (aux.idC == FAIL)
       n++;
     else if (aux.idI == id)
-      captura_write(stdout, aux, 1);
+      captura_write_(stdout, aux, 1);
   }
 
   Pause();
@@ -60,7 +60,7 @@ void ultima_captura() {
     data_escreve(stdout, data);
     fseek(FCaptu, pos, SEEK_SET);
     aux = captura_read(FCaptu);
-    captura_write(stdout, aux, 1);
+    captura_write_(stdout, aux, 1);
   }
   Pause();
 }

@@ -10,6 +10,8 @@
 #include <math.h>
 #include "conjunto.h"
 #include "data.h"
+#include "lista_buraco_var.h"
+#include "lista_buraco_fixo.h"
 
 /** defines **/
 #define SZ_CAB (4)
@@ -24,13 +26,13 @@
 
 /** estruturas **/
 typedef struct {
-  int id;
-  int offset;
+	int id;
+	int offset;
 } Indice_Prim;
 
-typedef struct{
-  int idP;
-  int idS;
+typedef struct {
+	int idP;
+	int idS;
 } Indice_Sec;
 
 typedef struct {
@@ -49,18 +51,14 @@ typedef struct {
 } Individuo;
 
 typedef struct {
-  int idC;
-  int idI;
-  int comprimento;
-  int largura;
-  int peso;
-  Data data;
-  char local[51];
+	int idC;
+	int idI;
+	int comprimento;
+	int largura;
+	int peso;
+	Data data;
+	char local[51];
 } Captura;
-
-typedef struct {
-	int sz, prev, next;
-} Lista;
 
 typedef struct {
 	int idE;
@@ -128,7 +126,8 @@ void captura_le();
 void captura_deleta();
 Captura captura_read(FILE *fin);
 Captura captura_read_(FILE *fin);
-void captura_write(FILE *fout, Captura X, int print);
+void captura_write(FILE *fout, Captura *X);
+void captura_write_(FILE *fout, Captura X, int print);
 
 int especie_busca(int id, Especie *K);
 void especie_insere();
@@ -154,30 +153,23 @@ Individuo individuo_read_(FILE *fin);
 void individuo_write(FILE *fout, Individuo X, int print);
 int individuo_conta_caracteres(Individuo X);
 
-void lista_escreve(FILE *fp, int sz, int prev, int next);
-int lista_le(FILE *fp, Lista *x);
-int lista_busca_vazio(FILE *fp, int sz);
-int lista_insere(FILE *fp, int sz, int pos);
-void lista_remove(FILE *fp);
-
 void historico_monitoramento();
 void ultima_captura();
 void ultima_captura_peso();
 void caminho_especie();
 void busca_especie_descricao();
 
-void indice_start(char *espec,char *indiv);
-void indice_end(char *espec,char *indiv);
-void indice_insere(char *op,int offset, int id);
-void indice_deleta(char *op,int id);
-int indice_busca(char *op,int id);
+void indice_start(char *espec, char *indiv);
+void indice_end(char *espec, char *indiv);
+void indice_insere(char *op, int offset, int id);
+void indice_deleta(char *op, int id);
+int indice_busca(char *op, int id);
 
-void indice_sec_start(char *indiv,char *captu);
-void indice_sec_end(char *indiv,char *captu);
-void indice_sec_insere(char *op,int idS,int idP);
-void indice_sec_deleta(char *op,int id);
-int indice_sec_busca(char *op,int id);
-
+void indice_sec_start(char *indiv, char *captu);
+void indice_sec_end(char *indiv, char *captu);
+void indice_sec_insere(char *op, int idS, int idP);
+void indice_sec_deleta(char *op, int id);
+int indice_sec_busca(char *op, int id);
 
 void lista_inv_start(char *prim, char *sec);
 void lista_inv_end();
