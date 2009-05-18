@@ -51,6 +51,7 @@ void captura_insere() {
   }
 
   captura_insere_(X);
+  indice_fail("SISecCaptu");
 
   puts("Captura inserida corretamente.");
 }
@@ -150,23 +151,21 @@ void captura_deleta() {
     if (!Pergunta("Confirma exclusao?"))
       return;
 
+    indice_sec_deleta("captura",X.idI,ftell(FCaptu));
     buraco_fixo_insere(FCaptu, (int)ftell(FCaptu));
-	muda_n_bin(FCaptu, -1);
+    muda_n_bin(FCaptu, -1);
+    indice_fail(SISecCaptu);
+    
   }
 }
 
 Captura captura_read(FILE *fin) {
-  BuracoFixo B;
   Captura X;
-  int save;
   char c;
 
   fread(&c, sizeof(char), 1, fin);
   if(c == VAZIO) {
-    save = (int) ftell(fin);
-    buraco_fixo_le(fin, &B);
-
-    fseek(fin, save+sizeof(Captura), SEEK_SET);
+    fseek(fin, sizeof(Captura), SEEK_CUR);
 
     X.idC = FAIL;
     return X;

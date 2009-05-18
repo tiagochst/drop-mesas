@@ -151,7 +151,8 @@ void individuo_deleta() {
     muda_n(FIndiv, -1);
     indice_fail(SIPrimIndiv);
     indice_fail(SISecIndiv);
-    indice_deleta("individuo",id);    
+    indice_deleta("individuo",id);
+    indice_sec_deleta("individuo",id,X.idE);
   }
 }
 
