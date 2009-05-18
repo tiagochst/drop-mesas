@@ -11,6 +11,8 @@ int FAIL_IPIndiv;
 void indice_start(char *espec,char *indiv) {
   int i,n;
   int flag;
+  int offset;
+  Especie X;
   /*-----------ESPECIE------------*/
   FIPrimEspec = fopen(espec, "rb");
   IPEspec = NULL;
@@ -20,16 +22,27 @@ void indice_start(char *espec,char *indiv) {
     fread(&n, sizeof(int), 1, FIPrimEspec);
     fread(&flag, sizeof(int), 1, FIPrimEspec);
     if (flag == FAIL){
+      fseek(FEspec, 0, SEEK_SET);
+      fscanf(FEspec, " %d", &i);
+      while (i--) {
+	X = especie_read(FEspec, &offset, NULL);
+	if (X.id == -1) {
+	  i++;
+	  continue;
+	}
+	else indice_insere("especie",X.id,offset);
+      }
     }else{
+      
       IPEspec = (Indice_Prim *) malloc(n*sizeof(Indice_Prim));
       fread(IPEspec, sizeof(Indice_Prim), n, FIPrimEspec);
-
+      
       N_IPEspec = n;
     }
     fclose(FIPrimEspec);
   }
   else   N_IPEspec = 0;
-
+  
   FAIL_IPEspec = 0;
 
   printf("%d\n", N_IPEspec);
@@ -68,6 +81,7 @@ void indice_end(char *espec,char *indiv) {
   int i;
   int n;
   int flag= OK;
+  
 
   /*-------ESPECIE-------*/
   FIPrimEspec = fopen(espec, "wb");

@@ -12,7 +12,6 @@ void indice_sec_start(char *indiv,char *captu){
   int  n;
   int flag;
 
-
   /*-----------INDIVIDUO---------*/
   FISecIndiv = fopen(indiv, "rb");
   ISIndiv = NULL;
@@ -59,24 +58,22 @@ void indice_sec_start(char *indiv,char *captu){
 }
 
 
-void indice_sec_end(char *indiv,char *captu) {
-  int i;
+void indice_sec_end(char *indiv,char *captu){
   int n;
   int flag= OK;
   /*-------INDIVIDUO---------*/
   FISecIndiv = fopen(indiv, "wb");
 
   n = N_ISIndiv;
-
+ 
   fwrite(&n, sizeof(int), 1, FISecIndiv);
   fwrite(&flag, sizeof(int), 1, FISecIndiv);
   fwrite(ISIndiv, sizeof(Indice_Sec), n, FISecIndiv);
 
-  for(i=0;i<N_ISIndiv;i++)
-    printf("%d %d\n",ISIndiv[i].idS,ISIndiv[i].idP);
-
+  
   free(ISIndiv);
   fclose(FISecIndiv);
+  
   /*-------CAPTURAS----------*/
   FISecCaptu = fopen(captu, "wb");
 
@@ -86,15 +83,37 @@ void indice_sec_end(char *indiv,char *captu) {
   fwrite(&flag, sizeof(int), 1, FISecCaptu);
   fwrite(ISCaptu,sizeof(Indice_Sec), n, FISecCaptu);
 
-  for(i=0;i<N_ISCaptu;i++)
-    printf("%d %d\n",ISCaptu[i].idS,ISCaptu[i].idP);
-
   free(ISCaptu);
   fclose(FISecCaptu);
 }
 
 void indice_sec_insere(char *op,int idS,int idP){
-  int i;
+  int i, *N;
+  Indice_Sec *Indice, *aux;
+
+  if(!strcmp(op,"individuo")){
+    N = &N_ISIndiv;
+    Indice = ISIndiv;
+  } else if(!strcmp(op,"captura")){
+    N = &N_ISCaptu;
+    Indice = ISCaptu;
+  }
+
+  (*N)++;
+  aux = (Indice_Sec *)realloc(Indice, (*N)*sizeof(Indice_Sec));
+  if(aux == NULL) return;
+  Indice = aux;
+
+  i = (*N)-1;
+  while(i>0 && (idS < Indice[i-1].idS)) {
+    Indice[i] = Indice[i-1];
+    i--;
+  }
+
+  Indice[i].idS = idS;
+  Indice[i].idP = idP;
+
+  /*
   if(!strcmp(op,"individuo")){
     N_ISIndiv++;
     ISIndiv = (Indice_Sec *)realloc(ISIndiv, (N_ISIndiv)*sizeof(Indice_Sec));
@@ -119,7 +138,7 @@ void indice_sec_insere(char *op,int idS,int idP){
     ISCaptu[i].idS = idS;
     ISCaptu[i].idP = idP;
   }
-
+  */
 }
 
 int indice_sec_busca(char *op, int id) {
