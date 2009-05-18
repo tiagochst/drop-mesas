@@ -12,7 +12,6 @@ void indice_sec_start(char *indiv,char *captu){
   int flag;
   int offset;
   int avail_list;
-  char c;
   Individuo X;
   Captura Y;
   
