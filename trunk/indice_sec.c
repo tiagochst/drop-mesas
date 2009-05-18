@@ -122,40 +122,29 @@ void indice_sec_insere(char *op,int idS,int idP){
 
 }
 
-int indice_sec_busca(char *op,int id) {
+int indice_sec_busca(char *op, int id) {
   int N;
   Indice_Sec *Indice;
-  int ini,fim,meio;
+  int esq,dir,meio;
 
   if(!strcmp(op,"individuo")){
     N = N_ISIndiv;
     Indice = ISIndiv;
-  }
-  if(!strcmp(op,"captura")){
+  } else if(!strcmp(op,"captura")){
     N = N_ISCaptu;
     Indice =  ISCaptu;
   }
 
-  ini = 0, fim = N-1;
-  if(N == 0) return -1;
-  if (Indice[ini].idS > id || Indice[fim].idS < id){
-    return -1;
+  esq = 0;
+  dir = N-1;
+  if(N == 0) return FAIL;
+  while(esq <= dir) {
+    meio = (esq+dir)/2;
+    if(Indice[meio].idS < id) esq = meio+1;
+    else dir = meio-1;
   }
 
-  if (Indice[ini].idS == id){
-    return ini;
-  }
-  if (Indice[fim].idS == id){
-    return fim;
-  }
-
-  while (fim - ini >= 2) {
-    printf("%d %d\n",ini,fim);
-    meio = (ini + fim)/2;
-    if (Indice[meio].idS >=id)      fim = meio;
-    else if (Indice[meio].idS < id) ini = meio;
-
-  }
-  if(Indice[fim].idS == id) return fim;
-  return -1;
+  if(Indice[meio].idS == id) return meio;
+  if(Indice[meio+1].idS == id) return meio+1;
+  return FAIL;
 }

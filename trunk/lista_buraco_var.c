@@ -1,13 +1,13 @@
 #include "definicoes.h"
 
 /* ESCREVE EM UM ARQUIVO UM REGISTRO DE LISTA */
-void lista_escreve(FILE *fp, int sz, int prev, int next) {
+void buraco_var_escreve(FILE *fp, int sz, int prev, int next) {
 	fprintf(fp, "%c", VAZIO);
 	fprintf(fp, "%06d %06d %06d\n", sz, prev, next);
 }
 
 /* LE DE UM ARQUIVO UM REGISTRO DE LISTA */
-int lista_le(FILE *fp, Lista *x) {
+int buraco_var_le(FILE *fp, BuracoVar *x) {
 	if (fscanf(fp, " %d %d %d", &(x->sz), &(x->prev), &(x->next))==3)
 		return OK;
 	return FAIL;
@@ -16,8 +16,8 @@ int lista_le(FILE *fp, Lista *x) {
 /* BUSCA UM BURACO DE NO MINIMO sz BYTES */
 /* devolve -1 em caso de falha na busca e SZ, o
  tamanho do buraco, em caso de sucesso na busca */
-int lista_busca_vazio(FILE *fp, int sz) {
-	Lista x;
+int buraco_var_busca_vazio(FILE *fp, int sz) {
+	BuracoVar x;
 	char c;
 	int aux, no_cabeca = 1;
 
@@ -30,7 +30,7 @@ int lista_busca_vazio(FILE *fp, int sz) {
 			continue;
 		}
 
-		if (lista_le(fp, &x)==FAIL)
+		if (buraco_var_le(fp, &x)==FAIL)
 			break;
 		if (x.sz >= sz && !no_cabeca) {
 			fseek(fp, -SZ_LISTA, SEEK_CUR);
@@ -48,15 +48,15 @@ int lista_busca_vazio(FILE *fp, int sz) {
 }
 
 /* INSERCAO DE BURACOS NA LISTA LIGADA */
-int lista_insere(FILE *fp, int sz, int pos) {
-	Lista x, y;
+int buraco_var_insere(FILE *fp, int sz, int pos) {
+	BuracoVar x, y;
 	int save, next;
 
 	/* BUSCA NO ANTERIOR AO NOVO */
 	next = SZ_CAB;
 	while (next < pos && next != -1) {
 		fseek(fp, next+1, SEEK_SET);
-		lista_le(fp, &x);
+		buraco_var_le(fp, &x);
 
 		next = x.next;
 	}
@@ -67,7 +67,7 @@ int lista_insere(FILE *fp, int sz, int pos) {
 	/* PEGA INFORMACOES DO NO SEGUINTE AO NOVO */
 	if (x.next != -1) {
 		fseek(fp, x.next+1, SEEK_SET);
-		lista_le(fp, &y);
+		buraco_var_le(fp, &y);
 	}
 
 	/* volta aa posicao do no anterior ao novo */
@@ -78,22 +78,22 @@ int lista_insere(FILE *fp, int sz, int pos) {
 	if ((save + SZ_REG + x.sz == pos) && (x.prev != -1)) {
 		/* este e o proximo podem se juntar */
 		if (pos + SZ_REG + sz == x.next) {
-			lista_escreve(fp, x.sz+sz+y.sz+2*SZ_REG, x.prev, y.next);
+			buraco_var_escreve(fp, x.sz+sz+y.sz+2*SZ_REG, x.prev, y.next);
 			return OK;
 		} else {
-			lista_escreve(fp, x.sz+sz+SZ_REG, x.prev, x.next);
+			buraco_var_escreve(fp, x.sz+sz+SZ_REG, x.prev, x.next);
 			/* modifica o no seguinte ao novo */
 			if (x.next == -1)
 				return OK;
 			fseek(fp, x.next, SEEK_SET);
-			lista_escreve(fp, y.sz, pos, y.next);
+			buraco_var_escreve(fp, y.sz, pos, y.next);
 		}
 	} else if (pos + SZ_REG + sz == x.next) {
-		lista_escreve(fp, x.sz, x.prev, pos);
+		buraco_var_escreve(fp, x.sz, x.prev, pos);
 
 		/* cria o no novo */
 		fseek(fp, pos, SEEK_SET);
-		lista_escreve(fp, sz+y.sz+SZ_REG, save, y.next);
+		buraco_var_escreve(fp, sz+y.sz+SZ_REG, save, y.next);
 	} else { /* caso sem união alguma */
 		if (sz <= SZ_LISTA-SZ_REG) {
 			/* registro pequeno demais, deve ser tratado fora das listas ligadas */
@@ -101,17 +101,17 @@ int lista_insere(FILE *fp, int sz, int pos) {
 			return FAIL;
 		}
 
-		lista_escreve(fp, x.sz, x.prev, pos);
+		buraco_var_escreve(fp, x.sz, x.prev, pos);
 
 		/* cria o no novo */
 		fseek(fp, pos, SEEK_SET);
-		lista_escreve(fp, sz, save, x.next);
+		buraco_var_escreve(fp, sz, save, x.next);
 
 		/* modifica o no seguinte ao novo */
 		if (x.next == -1)
 			return OK;
 		fseek(fp, x.next, SEEK_SET);
-		lista_escreve(fp, y.sz, pos, y.next);
+		buraco_var_escreve(fp, y.sz, pos, y.next);
 	}
 
 	return OK;
@@ -120,29 +120,29 @@ int lista_insere(FILE *fp, int sz, int pos) {
 /* REMOVE UM BURACO DA LISTA LIGADA */
 /* a posicao do ponteiro do arquivo sera, garatidamente,
  a mesma antes e depois do uso da funcao lista_remove() */
-void lista_remove(FILE *fp) {
+void buraco_var_remove(FILE *fp) {
 	int save;
-	Lista x, prev, next;
+	BuracoVar x, prev, next;
 
 	save = (int)ftell(fp);
 
 	fscanf(fp, "%*c");
-	lista_le(fp, &x);
+	buraco_var_le(fp, &x);
 
 	/* modifica os apontadores do no anterior ao removido */
 	fseek(fp, x.prev, SEEK_SET);
 	fscanf(fp, "%*c");
-	lista_le(fp, &prev);
+	buraco_var_le(fp, &prev);
 	fseek(fp, -SZ_LISTA, SEEK_CUR);
-	lista_escreve(fp, prev.sz, prev.prev, x.next);
+	buraco_var_escreve(fp, prev.sz, prev.prev, x.next);
 
 	if (x.next != -1) {
 		/* modifica os apontadores do no posterior ao removido */
 		fseek(fp, x.next, SEEK_SET);
 		fscanf(fp, "%*c");
-		lista_le(fp, &next);
+		buraco_var_le(fp, &next);
 		fseek(fp, -SZ_LISTA, SEEK_CUR);
-		lista_escreve(fp, next.sz, x.prev, next.next);
+		buraco_var_escreve(fp, next.sz, x.prev, next.next);
 	}
 
 	fseek(fp, save, SEEK_SET);

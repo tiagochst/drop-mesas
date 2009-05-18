@@ -1,12 +1,14 @@
 #include "definicoes.h"
 
 int captura_busca(int idC, Captura *K) {
-  int i, k, n;
+  int i, k, n, avail_list, save;
   Captura X;
 
   fseek(FCaptu, 0, SEEK_SET);
   fread(&n, sizeof(int), 1, FCaptu);
+  fread(&avail_list, sizeof(int), 1, FCaptu);
   for (i=0, k=-1; i<n; i++) {
+    save = (int) ftell(FCaptu);
     X = captura_read(FCaptu);
 
     if (X.idC == FAIL)
@@ -22,7 +24,7 @@ int captura_busca(int idC, Captura *K) {
   if (K != NULL)
     *K = X;
 
-  fseek(FCaptu, -sizeof(Captura), SEEK_CUR);
+  fseek(FCaptu, save, SEEK_SET);
   return OK;
 }
 
@@ -54,22 +56,17 @@ void captura_insere() {
 }
 
 void captura_insere_(Captura X) {
-  int n;
-  Captura aux;
+  int pos;
 
-  fseek(FCaptu, 0, SEEK_SET);
-
-  fread(&n, sizeof(int), 1, FCaptu);
-  while (n--) {
-    aux = captura_read(FCaptu);
-    if (aux.idC == FAIL) {
-      fseek(FCaptu, -sizeof(Captura), SEEK_CUR);
-      break;
-    }
+  pos = buraco_fixo_busca_vazio(FCaptu);
+  if(pos == FAIL) {
+    fseek(FCaptu, 0, SEEK_END);
+  } else {
+    fseek(FCaptu, pos, SEEK_SET);
+    buraco_fixo_remove(FCaptu);
   }
 
-  fwrite(&X, sizeof(Captura), 1, FCaptu);
-
+  captura_write(FCaptu, &X);
   muda_n_bin(FCaptu, +1);
 }
 
@@ -108,12 +105,12 @@ void captura_atualiza() {
       printf("%s\n", X.local);
       muda_string(X.local);
 
-      fwrite(&X, sizeof(Captura), 1, FCaptu);
+      captura_write(FCaptu, &X);
   }
 }
 
 void captura_le() {
-  int n;
+  int n, avail_list;
   Captura aux;
   system("clear");
 
@@ -122,12 +119,13 @@ void captura_le() {
 
   fseek(FCaptu, 0, SEEK_SET);
   fread(&n, sizeof(int), 1, FCaptu);
+  fread(&avail_list, sizeof(int), 1, FCaptu);
   while (n--) {
     aux = captura_read(FCaptu);
     if (aux.idC == FAIL)
       n++;
     else
-      captura_write(stdout, aux, 1);
+      captura_write_(stdout, aux, 1);
   }
 
   Pause();
@@ -147,18 +145,32 @@ void captura_deleta() {
     puts("Nao existe captura com este ID!\n");
     Pause();
   } else {
-    captura_write(stdout, X, 1);
+    captura_write_(stdout, X, 1);
     if (!Pergunta("Confirma exclusao?"))
       return;
 
-	X.idC = FAIL;
-	fwrite(&X, sizeof(Captura), 1, FCaptu);
+    buraco_fixo_insere(FCaptu, (int)ftell(FCaptu));
 	muda_n_bin(FCaptu, -1);
   }
 }
 
 Captura captura_read(FILE *fin) {
+  BuracoFixo B;
   Captura X;
+  int save;
+  char c;
+
+  fread(&c, sizeof(char), 1, fin);
+  if(c == VAZIO) {
+    save = (int) ftell(fin);
+    buraco_fixo_le(fin, &B);
+
+    fseek(fin, save+sizeof(Captura), SEEK_SET);
+
+    X.idC = FAIL;
+    return X;
+  }
+
   fread(&X, sizeof(Captura), 1, fin);
   return X;
 }
@@ -192,7 +204,13 @@ Captura captura_read_(FILE *fin) {
   return X;
 }
 
-void captura_write(FILE *fout, Captura X, int print) {
+void captura_write(FILE *fout, Captura *X) {
+  char c = USADO;
+  fwrite(&c, sizeof(char), 1, fout);
+  fwrite(X, sizeof(Captura), 1, fout);
+}
+
+void captura_write_(FILE *fout, Captura X, int print) {
   if (print)
     printf("ID da Captura: ");
   fprintf(fout, "%d\n", X.idC);

@@ -72,7 +72,7 @@ int main() {
   lista_inv_end(SInvPrim, SInvSec);
   indice_end(SIPrimEspec,SIPrimIndiv);
   indice_sec_end(SISecIndiv,SISecCaptu);
-  
+
   fclose(FCaptu);
   fclose(FEspec);
   fclose(FIndiv);

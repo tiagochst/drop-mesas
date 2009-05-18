@@ -151,12 +151,9 @@ int lista_inv_Sec_busca(char *s) {
 	while (esq <= dir) {
 		meio = (esq+dir)/2;
 		cmp = strcmp(LISec[meio].s, s);
-		if (cmp == 0)
-			return meio;
-		if (cmp > 0)
-			dir = meio-1;
-		else
-			esq = meio+1;
+		if (cmp == 0) return meio;
+		if (cmp > 0) dir = meio-1;
+		else esq = meio+1;
 	}
 
 	return FAIL;

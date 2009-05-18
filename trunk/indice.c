@@ -150,42 +150,27 @@ void indice_deleta(char *op,int id) {
   }
 }
 
-int indice_busca(char *op,int id){
+int indice_busca(char *op, int id){
   int N;
   Indice_Prim *Indice;
-  int ini,fim,meio;
+  int esq,dir,meio;
 
   if(!strcmp(op,"especie")){
     N = N_IPEspec;
     Indice = IPEspec;
-  }
-  if(!strcmp(op,"individuo")){
+  } else if(!strcmp(op,"individuo")){
     N = N_IPIndiv;
     Indice = IPIndiv;
   }
 
-  ini = 0, fim = N-1;
-  if(N == 0 || Indice[ini].id > id || Indice[fim].id < id) {
-    return -1;
+  esq = 0;
+  dir = N-1;
+  while (esq <= dir) {
+    meio = (esq+dir)/2;
+    if (Indice[meio].id == id) return meio;
+    if (Indice[meio].id > id) dir = meio-1;
+    else esq = meio+1;
   }
 
-  if (Indice[ini].id == id){
-    return ini;
-  }
-  if (Indice[fim].id == id){
-    return fim;
-  }
-
-  while (fim - ini >= 2) {
-    printf("%d %d\n",ini,fim);
-    meio = (ini + fim)/2;
-    if (Indice[meio].id > id)
-      fim = meio;
-    else if (Indice[meio].id < id)
-      ini = meio;
-    else{
-      return meio;
-    }
-  }
-  return -1;
+  return FAIL;
 }

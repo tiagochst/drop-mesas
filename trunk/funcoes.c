@@ -142,20 +142,21 @@ FILE *open_file(char *s) {
 	if (fp == NULL) {
 		fp = fopen(s, "w+");
 		fprintf(fp, "%03d\n", 0); /* numero de registros */
-		lista_escreve(fp, SZ_REG, -1, SZ_CAB+SZ_LISTA+1); /* no cabeca */
-		lista_escreve(fp, 999999, SZ_CAB, -1);
+		buraco_var_escreve(fp, SZ_REG, -1, SZ_CAB+SZ_LISTA+1); /* no cabeca */
+		buraco_var_escreve(fp, 999999, SZ_CAB, -1);
 	}
 
 	return fp;
 }
 
 FILE *open_file_bin(char *s) {
-	int zero = 0;
+	int zero = 0, fail = FAIL;
 	FILE *fp = fopen(s, "r+b");
 
 	if (fp == NULL) {
 		fp = fopen(s, "w+b");
 		fwrite(&zero, sizeof(int), 1, fp);
+		fwrite(&fail, sizeof(int), 1, fp);
 	}
 
 	return fp;
