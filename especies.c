@@ -62,7 +62,7 @@ void especie_insere() {
   lista_inv_insere(X.descr, X.id);
 
   /* Atualiza a quantidade de registros */
-  muda_n(FEspec, +1);
+  muda_n(FEspec, +1);  
 
   puts("Especie inserida corretamente.");
 }
@@ -142,12 +142,12 @@ void especie_deleta() {
     especie_write(stdout, X, 1);
     if (!Pergunta("Confirma exclusao?"))
       return;
-
+    
     especie_deleta_(sz);
     muda_n(FEspec, -1);
     indice_fail(SIPrimEspec);
     indice_deleta("especie",id);
-
+   
   }
 }
 
@@ -184,7 +184,8 @@ void especie_atualiza() {
     Pause();
   } else {
     especie_deleta_(sz);
-
+    indice_deleta("especie",X.id);
+    indice_fail(SIPrimEspec);
     Xold = X;
     printf("ID: ");
     printf("%d\n", X.id);
@@ -223,7 +224,7 @@ Especie especie_read(FILE* fin, int *_save, int *_sz) {
   fscanf(fin, " %c", &c);
   if (c == VAZIO) {
     buraco_var_le(fin, &L);
-    fseek(fin, L.sz - (SZ_LISTA-SZ_REG), SEEK_CUR);
+    fseek(fin, L.sz - SZ_REG + 1, SEEK_CUR);
 
     X.id = -1;
     return X;
@@ -312,3 +313,4 @@ int especie_conta_caracteres(Especie X) {
   return ((id+1) + (strlen(X.camin)+1) + (SZ_DATA+1) + (strlen(X.nomec)+1)
 	  + (strlen(X.nomep)+1) + (strlen(X.descr)));
 }
+
