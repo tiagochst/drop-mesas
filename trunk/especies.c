@@ -58,10 +58,11 @@ void especie_insere() {
   }
 
   especie_insere_(X);
+  indice_fail(SIPrimEspec);
   lista_inv_insere(X.descr, X.id);
 
   /* Atualiza a quantidade de registros */
-  muda_n(FEspec, +1);
+  muda_n(FEspec, +1);  
 
   puts("Especie inserida corretamente.");
 }
@@ -141,10 +142,12 @@ void especie_deleta() {
     especie_write(stdout, X, 1);
     if (!Pergunta("Confirma exclusao?"))
       return;
-
+    
     especie_deleta_(sz);
-    indice_deleta("especie",id);
     muda_n(FEspec, -1);
+    indice_fail(SIPrimEspec);
+    indice_deleta("especie",id);
+   
   }
 }
 
@@ -269,6 +272,12 @@ void especie_write(FILE *fout, Especie X, int print) {
   if (print)
     printf("ID: ");
   fprintf(fout, "%d\n", X.id);
+  /*
+  if(X.id == -1) {
+    putchar('\n');
+    return;
+  }
+  */
   if (print)
     printf("Caminho da foto: ");
   fprintf(fout, "%s\n", X.camin);
