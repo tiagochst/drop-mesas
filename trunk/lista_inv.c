@@ -13,15 +13,11 @@ Conjunto *strtokenizer(char *s);
 void set_flag_atualizado_OK();
 void set_flag_atualizado_FAIL();
 void lista_inv_rebuild();
+void lista_inv_reset(char *prim, char *sec);
 
-void lista_inv_reset(char *prim, char *sec) {
-	FInvPrim = fopen(prim, "wb");
-	FInvSec = fopen(sec, "wb");
-
-	flag_atualizado = OK; /* para forcar set_flag_atualizado_FAIL() a executar */
-	set_flag_atualizado_FAIL();
-}
-
+/* LISTA INVERTIDA START
+ * carrega a lista invertida do arquivo ou
+ * a reconstrói caso o arquivo esteja desatualizado */
 void lista_inv_start(char *prim, char *sec) {
 	FInvPrim = fopen(prim, "rb");
 	FInvSec = fopen(sec, "rb");
@@ -48,8 +44,8 @@ void lista_inv_start(char *prim, char *sec) {
 
 		fclose(FInvPrim);
 		FInvPrim = fopen(prim, "rb+");
-	}
-	else FInvPrim = fopen(prim, "wb");
+	} else
+		FInvPrim = fopen(prim, "wb");
 
 	N_LISec = 0;
 	if (FInvSec != NULL) {
@@ -60,10 +56,12 @@ void lista_inv_start(char *prim, char *sec) {
 
 		fclose(FInvSec);
 		FInvSec = fopen(sec, "rb+");
-	}
-	else FInvSec = fopen(sec, "wb");
+	} else
+		FInvSec = fopen(sec, "wb");
 }
 
+/* LISTA INVERTIDA END
+ * finaliza a lista invertida, reescrevendo no arquivo */
 void lista_inv_end() {
 	lista_inv_write();
 
@@ -74,8 +72,11 @@ void lista_inv_end() {
 	fclose(FInvSec);
 }
 
+/* LISTA INVERTIDA WRITE
+ * escreve a lista invertida no arquivo */
 void lista_inv_write() {
-	if (flag_atualizado == OK) return;
+	if (flag_atualizado == OK)
+		return;
 
 	fseek(FInvPrim, 0, SEEK_SET);
 	fseek(FInvSec, 0, SEEK_SET);
@@ -91,6 +92,12 @@ void lista_inv_write() {
 	set_flag_atualizado_OK();
 }
 
+/* LISTA INVERTIDA INSERE
+ * dada a descrição e o ID de certa espécie, adiciona
+ * na lista invertida cada palavra, relacionando-a com
+ * o ID da espécie
+ * - esta função só quebra o texto em palavras e chama
+ * função auxiliar para inserir cada palavra separadamente */
 void lista_inv_insere(char *s, int id) {
 	Conjunto *c, *i;
 
@@ -104,6 +111,9 @@ void lista_inv_insere(char *s, int id) {
 	conj_destroy(c);
 }
 
+/* LISTA INVERTIDA INSERE 2
+ * insere uma única palavra na lista invertida, relacionando-a
+ * com o ID dado */
 int lista_inv_insere_(char *s, int id) {
 	int aux, k;
 
@@ -121,6 +131,10 @@ int lista_inv_insere_(char *s, int id) {
 	return OK;
 }
 
+/* LISTA INVERTIDA BUSCA
+ * executa busca textual na descrição das espécies
+ * - separa o texto em palavras, executa uma busca para cada palavra
+ * independentemente, e finalmente faz intersecção dos resultados */
 void lista_inv_busca(char *s) {
 	Conjunto *c, *ans = conj_init(), *i, *aux, *inter;
 	int k, j;
@@ -157,7 +171,7 @@ void lista_inv_busca(char *s) {
 		ans = inter;
 	}
 
-	/* itera em 'ans' fazendo algo */
+	/* itera em 'ans' escrevendo os resultados da busca */
 	printf("Há %d espécie(s) correspondente(s) à busca:\n", conj_size(ans));
 	for (i = ans->next; i != NULL; i = i->next) {
 		printf("> %d\n", *(int*) i->i);
@@ -169,21 +183,27 @@ void lista_inv_busca(char *s) {
 	conj_destroy(c);
 }
 
+/* LISTA INVERTIDA Secundária BUSCA
+ * executa uma busca por palavra */
 int lista_inv_Sec_busca(char *s) {
 	/* uma busca binária */
-	int esq=0, dir=N_LISec-1, meio, cmp;
+	int esq = 0, dir = N_LISec - 1, meio, cmp;
 
 	while (esq <= dir) {
 		meio = (esq + dir) / 2;
 		cmp = strcmp(LISec[meio].s, s);
-		if (cmp == 0) return meio;
-		if (cmp > 0) dir = meio-1;
-		else esq = meio+1;
+		if (cmp == 0)
+			return meio;
+		if (cmp > 0)
+			dir = meio - 1;
+		else
+			esq = meio + 1;
 	}
 
 	return FAIL;
 }
 
+/* LISTA INVERTIDA Primária INSERE */
 int lista_inv_Prim_insere(int k, int id) {
 	int pos;
 	ListaInv_Prim *aux;
@@ -218,6 +238,7 @@ int lista_inv_Prim_insere(int k, int id) {
 	return pos;
 }
 
+/* LISTA INVERTIDA Secundária INSERE */
 int lista_inv_Sec_insere(char *s, int ind1) {
 	int i;
 	ListaInv_Sec *aux = (ListaInv_Sec *) realloc(LISec, (N_LISec + 1)
@@ -228,7 +249,7 @@ int lista_inv_Sec_insere(char *s, int ind1) {
 	LISec = aux;
 	N_LISec++;
 
-	for (i = N_LISec-1; i>0 && strcmp(s, LISec[i-1].s)<0; i--) {
+	for (i=N_LISec-1; i>0 && strcmp(s, LISec[i-1].s)<0; i--) {
 		LISec[i] = LISec[i - 1];
 	}
 	strcpy(LISec[i].s, s);
@@ -237,6 +258,8 @@ int lista_inv_Sec_insere(char *s, int ind1) {
 	return OK;
 }
 
+/* LISTA INVERTIDA ATUALIZA */
+/* rotina chamada quando há atualização em espécie */
 void lista_inv_atualiza(char *velho, char *novo, int id) {
 	Conjunto *cvelho, *cnovo, *difer, *i;
 
@@ -245,8 +268,8 @@ void lista_inv_atualiza(char *velho, char *novo, int id) {
 	cvelho = strtokenizer(velho);
 	cnovo = strtokenizer(novo);
 
-	/* tem que remover as palavras pertencentes a cvelho-cnovo
-	 * e adicionar as palavras de cnovo-cvelho */
+	/* removemos as palavras pertencentes a cvelho-cnovo
+	 * e adicionamos as palavras de cnovo-cvelho */
 	difer = conj_diferenca(cvelho, cnovo, strcmp_);
 	for (i = difer->next; i != NULL; i = i->next)
 		lista_inv_deleta_((char *) i->i, id);
@@ -261,7 +284,10 @@ void lista_inv_atualiza(char *velho, char *novo, int id) {
 	conj_destroy(cnovo);
 }
 
-/* não é utilizado */
+/* LISTA INVERTIDA DELETA */
+/* esta rotina não é utilizada: quando uma espécie
+ * é removida, a remoção na lista invertida só é
+ * efetuada durante a busca */
 void lista_inv_deleta(char *s, int id) {
 	Conjunto *c, *i;
 
@@ -275,6 +301,9 @@ void lista_inv_deleta(char *s, int id) {
 	conj_destroy(c);
 }
 
+/* LISTA INVERTIDA DELETA 2
+ * deleção de apenas um registro na lista invertida
+ * - remoção da palavra 's', relacionada ao ID de espécie 'id' */
 void lista_inv_deleta_(char *s, int id) {
 	int k = lista_inv_Sec_busca(s);
 
@@ -291,6 +320,7 @@ void lista_inv_deleta_(char *s, int id) {
 	}
 }
 
+/* LISTA INVERTIDA Primária DELETA */
 void lista_inv_Prim_deleta(int *k, int id) {
 	int save;
 	for (; LIPrim[*k].idE != id; k = &LIPrim[*k].next);
@@ -302,6 +332,9 @@ void lista_inv_Prim_deleta(int *k, int id) {
 	*k = save;
 }
 
+/* STRING TOKENIZER */
+/* divide a string dada em palavras, montando
+ * e devolvendo um conjunto das palavras */
 Conjunto *strtokenizer(char *s) {
 	Conjunto *c = conj_init();
 	char *tok;
@@ -317,6 +350,7 @@ Conjunto *strtokenizer(char *s) {
 	return c;
 }
 
+/* SET FLAG ATUALIZADO = OK */
 void set_flag_atualizado_OK() {
 	if (flag_atualizado == OK)
 		return;
@@ -328,6 +362,7 @@ void set_flag_atualizado_OK() {
 	fflush(FInvPrim);
 }
 
+/* SET FLAG ATUALIZADO = FAIL */
 void set_flag_atualizado_FAIL() {
 	if (flag_atualizado == FAIL)
 		return;
@@ -339,6 +374,9 @@ void set_flag_atualizado_FAIL() {
 	fflush(FInvPrim);
 }
 
+/* LISTA INVERTIDA REBUILD */
+/* reconstrução da lista invertida em caso de
+ * interrupção do programa */
 void lista_inv_rebuild() {
 	int i;
 	Especie X;
@@ -350,4 +388,14 @@ void lista_inv_rebuild() {
 	}
 
 	lista_inv_write();
+}
+
+/* LISTA INVERTIDA RESET
+ * destrói os arquivos da lista invertida */
+void lista_inv_reset(char *prim, char *sec) {
+	FInvPrim = fopen(prim, "wb");
+	FInvSec = fopen(sec, "wb");
+
+	flag_atualizado = OK; /* para forcar set_flag_atualizado_FAIL() a executar */
+	set_flag_atualizado_FAIL();
 }
