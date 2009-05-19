@@ -1,6 +1,9 @@
 > EXECUTAR
 make run
 
+> EXECUTAR PREENCHENDO COM OS DADOS DO LABORATÓRIO 1
+make load
+
 > COMPILAR
 make
 
@@ -9,4 +12,3 @@ make clean
 
 > REMOVER EXECUTÁVEIS E ARQUIVOS DOS REGISTROS/ÍNDICES
 make reset
-

@@ -3,7 +3,7 @@
 
 /** includes **/
 #include <stdio.h>
-/*#include <stdio_ext.h>*/
+#include <stdio_ext.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
@@ -12,7 +12,6 @@
 #include "data.h"
 #include "lista_buraco_var.h"
 #include "lista_buraco_fixo.h"
-
 
 /** defines **/
 #define SZ_CAB (4)
@@ -163,15 +162,12 @@ void indice_deleta(char *op, int id);
 void indice_fail(char *sfp);
 int indice_busca(char *op, int id);
 
-
 void indice_sec_start(char *indiv, char *captu);
 void indice_sec_end(char *indiv, char *captu);
 void indice_sec_insere(char *op, int idS, int idP);
-void indice_sec_deleta(char *op, int idS,int idP);
+void indice_sec_deleta(char *op, int idS, int idP);
 int indice_sec_busca(char *op, int id);
 
-void lista_inv_reset(char *prim, char *sec);
-void lista_inv_rebuild();
 void lista_inv_start(char *prim, char *sec);
 void lista_inv_end();
 void lista_inv_write();

@@ -2,6 +2,8 @@
 #include <string.h>
 #include "conjunto.h"
 
+/* INICIALIZA CONJUNTO
+ * gera o nó cabeça e o devolve */
 Conjunto *conj_init() {
 	Conjunto *y = (Conjunto *) malloc(sizeof(Conjunto));
 	y->i = NULL;
@@ -9,6 +11,8 @@ Conjunto *conj_init() {
 	return y;
 }
 
+/* DESTRÓI CONJUNTO
+ * desaloca todos os nós */
 void conj_destroy(Conjunto *c) {
 	Conjunto *next;
 
@@ -31,6 +35,10 @@ int conj_size(Conjunto *c) {
 	return n;
 }
 
+/* INSERE CONJUNTO
+ * dado um elemento, seu número de bytes,
+ * e uma função de comparação, insere o elemento
+ * no conjunto na posição correta */
 void conj_insere(Conjunto *c, void *e, int n_bytes, funcao cmp) {
 	Conjunto *novo;
 
@@ -48,6 +56,9 @@ void conj_insere(Conjunto *c, void *e, int n_bytes, funcao cmp) {
 	c->next = novo;
 }
 
+/* INTERSECÇÃO DE CONJUNTO
+ * dados 2 conjuntos e uma função de comparação
+ * devolve a intersecção dos conjuntos */
 Conjunto *conj_interseccao(Conjunto *c1, Conjunto *c2, funcao cmp) {
 	Conjunto *inter = conj_init();
 	int diff;
@@ -70,6 +81,9 @@ Conjunto *conj_interseccao(Conjunto *c1, Conjunto *c2, funcao cmp) {
 	return inter;
 }
 
+/* DIFERENÇA DE CONJUNTO
+ * dados 2 conjuntos e uma função de comparação
+ * devolve a diferença dos conjuntos */
 Conjunto *conj_diferenca(Conjunto *c1, Conjunto *c2, funcao cmp) {
 	Conjunto *difer = conj_init();
 	int diff;

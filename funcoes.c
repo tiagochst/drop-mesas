@@ -4,7 +4,7 @@ int print_menu(int x) {
 	int in, max;
 
 	system("clear");
-	if (x==0) {
+	if (x == 0) {
 		/* menu principal */
 		puts("**************************");
 		puts("* Gerenciar dados sobre: *");
@@ -17,7 +17,7 @@ int print_menu(int x) {
 		puts("**************************");
 
 		max = 4;
-	} else if (x==1) {
+	} else if (x == 1) {
 		/* especies */
 		puts("**************************");
 		puts("* ESPECIES               *");
@@ -31,7 +31,7 @@ int print_menu(int x) {
 		puts("**************************");
 
 		max = 4;
-	} else if (x==2) {
+	} else if (x == 2) {
 		/* individuos */
 		puts("**************************");
 		puts("* INDIVIDUOS             *");
@@ -45,7 +45,7 @@ int print_menu(int x) {
 		puts("**************************");
 
 		max = 4;
-	} else if (x==3) {
+	} else if (x == 3) {
 		/* capturas */
 		puts("**************************");
 		puts("* CAPTURAS               *");
@@ -59,7 +59,7 @@ int print_menu(int x) {
 		puts("**************************");
 
 		max = 4;
-	} else if (x==4) {
+	} else if (x == 4) {
 		/* capturas */
 		puts("***************************************************************");
 		puts("* CONSULTAS                                                   *");
@@ -81,9 +81,9 @@ int print_menu(int x) {
 		return 0;
 	}
 
-	while (scanf(" %d", &in)!=1 || in<0 || in>max) {
+	while (scanf(" %d", &in) != 1 || in < 0 || in > max) {
 		puts("Entrada incorreta. Digite novamente");
-		/*	__fpurge(stdin);*/
+		__fpurge(stdin);
 	}
 	return in;
 }
@@ -123,17 +123,15 @@ void muda_Data(Data *d) {
 void Pause() {
 	char c;
 	puts("Pressione (q) para continuar. . .");
-	while (scanf("%c", &c)==1 && tolower(c)!='q')
-		;
+	while (scanf("%c", &c) == 1 && tolower(c) != 'q');
 }
 
 int Pergunta(char *s) {
 	char c;
 	puts(s);
 	puts("Pressione (s)im ou (n)ao. . .");
-	while (scanf("%c", &c)==1 && tolower(c)!='s' && tolower(c)!='n')
-		;
-	return (tolower(c)=='s') ? (1) : (0);
+	while (scanf("%c", &c) == 1 && tolower(c) != 's' && tolower(c) != 'n');
+	return (tolower(c) == 's') ? (1) : (0);
 }
 
 FILE *open_file(char *s) {
@@ -173,7 +171,7 @@ void muda_n(FILE *fp, int var) {
 	fseek(fp, 0, SEEK_SET);
 	fscanf(fp, " %d", &n);
 	fseek(fp, 0, SEEK_SET);
-	fprintf(fp, "%03d", n+var);
+	fprintf(fp, "%03d", n + var);
 	fflush(fp);
 }
 
@@ -189,14 +187,14 @@ void muda_n_bin(FILE *fp, int var) {
 }
 
 int strcmp_(void *a, void *b) {
-	return strcmp((char*)a, (char*)b);
+	return strcmp((char*) a, (char*) b);
 }
 
 int intcmp_(void *a, void *b) {
-	return *(int*)a - *(int*)b;
+	return *(int*) a - *(int*) b;
 }
 
 void strtoupper(char *s) {
-	for (; *s!='\0'; s++)
-		*s=toupper(*s);
+	for (; *s != '\0'; s++)
+		*s = toupper(*s);
 }
