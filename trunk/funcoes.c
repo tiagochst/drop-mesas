@@ -7,76 +7,13 @@ int print_menu(int x) {
 	if (x == 0) {
 		/* menu principal */
 		puts("**************************");
-		puts("* Gerenciar dados sobre: *");
-		puts("* 1. especies            *");
-		puts("* 2. individuos          *");
-		puts("* 3. captura             *");
-		puts("* 4. consultas           *");
+		puts("* 1. ler dados           *");
+		puts("* 2. efetuar comparacao  *");
 		puts("*                        *");
 		puts("* 0. sair do programa    *");
 		puts("**************************");
 
-		max = 4;
-	} else if (x == 1) {
-		/* especies */
-		puts("**************************");
-		puts("* ESPECIES               *");
-		puts("* efetuar:               *");
-		puts("* 1. insercao            *");
-		puts("* 2. leitura             *");
-		puts("* 3. atualizacao         *");
-		puts("* 4. delecao             *");
-		puts("*                        *");
-		puts("* 0. menu principal      *");
-		puts("**************************");
-
-		max = 4;
-	} else if (x == 2) {
-		/* individuos */
-		puts("**************************");
-		puts("* INDIVIDUOS             *");
-		puts("* efetuar:               *");
-		puts("* 1. insercao            *");
-		puts("* 2. leitura             *");
-		puts("* 3. atualizacao         *");
-		puts("* 4. delecao             *");
-		puts("*                        *");
-		puts("* 0. menu principal      *");
-		puts("**************************");
-
-		max = 4;
-	} else if (x == 3) {
-		/* capturas */
-		puts("**************************");
-		puts("* CAPTURAS               *");
-		puts("* efetuar:               *");
-		puts("* 1. insercao            *");
-		puts("* 2. leitura             *");
-		puts("* 3. atualizacao         *");
-		puts("* 4. delecao             *");
-		puts("*                        *");
-		puts("* 0. menu principal      *");
-		puts("**************************");
-
-		max = 4;
-	} else if (x == 4) {
-		/* capturas */
-		puts("***************************************************************");
-		puts("* CONSULTAS                                                   *");
-		puts("* efetuar:                                                    *");
-		puts("* 1. Dado um individuo, exibir seu historico de monitoramento *");
-		puts("* 2. Dado um individuo, exibir os dados da ultima captura     *");
-		puts("* 3. Dada uma especie e um peso minimo, mostrar dados da      *");
-		puts("*     ultima captura de individuos dessa especie              *");
-		puts("* 4. Dado um individuo, exibir o caminho do arquivo de imagem *");
-		puts("*     de sua especie                                          *");
-		puts("*                                                             *");
-		puts("* 5. buscar especies pela descrição                           *");
-		puts("*                                                             *");
-		puts("* 0. menu principal                                           *");
-		puts("***************************************************************");
-
-		max = 5;
+		max = 2;
 	} else {
 		return 0;
 	}

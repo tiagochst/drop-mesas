@@ -27,28 +27,26 @@ int especie_busca(int id, Especie *K) {
  * - lê os valores da entrada padrao e insere no arquivo
  * de tamanho variável
  * - adiciona a descrição na lista invertida para busca textual */
-void especie_insere() {
+void especie_insere(FILE *file_input) {
+	int n, i;
 	Especie X;
-	system("clear");
 
-	puts("** INSERE ESPECIE **");
-	X = especie_read_(stdin);
+	fscanf(file_input, " %d", &n);
+	for(i=0 ; i<n ; i++) {
+		X = especie_read_(file_input);
 
-	if (indice_busca("especie", X.id) != FAIL) {
-		puts("\nJa ha registro de especie com esse id.");
-		Pause();
-		puts("Insercao falhou.");
-		return;
+		if (indice_busca("especie", X.id) != FAIL) {
+			fprintf(stderr, "ERRO [especie_insere]: Ja ha registro de especie com esse id.\n");
+			return;
+		}
+
+		especie_insere_(X);
+		indice_fail(SIPrimEspec);
+		lista_inv_insere(X.descr, X.id);
+
+		/* Atualiza a quantidade de registros */
+		muda_n(FEspec, +1);
 	}
-
-	especie_insere_(X);
-	indice_fail(SIPrimEspec);
-	lista_inv_insere(X.descr, X.id);
-
-	/* Atualiza a quantidade de registros */
-	muda_n(FEspec, +1);
-
-	puts("Especie inserida corretamente.");
 }
 
 /* ESPÉCIE INSERE 2
@@ -243,20 +241,27 @@ Especie especie_read(FILE* fin, int *_save, int *_sz) {
  * lê de arquivo texto ou teclado um registro de espécie */
 Especie especie_read_(FILE *fin) {
 	Especie X;
-	int print = (fin==stdin)?(1):(0);
+	char linha[500], *tok;
 
-	if (print) printf("ID: ");
-	fscanf(fin, " %d", &X.id);
-	if (print) printf("Caminho da foto: ");
-	fscanf(fin, " %[^\n]", X.camin);
-	if (print) printf("Data: ");
-	X.data = data_le(fin);
-	if (print) printf("Nome cientifico: ");
-	fscanf(fin, " %[^\n]", X.nomec);
-	if (print) printf("Nome popular: ");
-	fscanf(fin, " %[^\n]", X.nomep);
-	if (print) printf("Descricao: ");
-	fscanf(fin, " %[^\n]", X.descr);
+	fscanf(fin," %[^\n]", linha);
+
+	tok = strtok(linha, "|");
+	sscanf(tok, " %d", &X.id);
+
+	tok = strtok(NULL, "|");
+	sscanf(tok, " %s", X.nomec);
+
+	tok = strtok(NULL, "|");
+	sscanf(tok, " %s", X.nomep);
+
+	tok = strtok(NULL, "|");
+	sscanf(tok, " %s", X.camin);
+
+	tok = strtok(NULL, "|");
+	X.data = data_le_str(tok);
+
+	tok = strtok(NULL, "|");
+	sscanf(tok, " %s", X.descr);
 
 	return X;
 }
