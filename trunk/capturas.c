@@ -198,7 +198,7 @@ Captura captura_read_(FILE *fin) {
 	sscanf(tok, " %d", &X.idC);
 	*/
 
-	tok = strtok(NULL, "|");
+	tok = strtok(linha, "|");
 	sscanf(tok, " %d", &X.idI);
 
 	tok = strtok(NULL, "|");
