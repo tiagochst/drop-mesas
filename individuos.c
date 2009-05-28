@@ -238,10 +238,10 @@ Individuo individuo_read_(FILE *fin) {
 
 	fscanf(fin," %[^\n]", linha);
 	
-	tok = strtok(NULL, "|");
+	tok = strtok(linha, "|");
 	sscanf(tok, " %d", &X.idE);
 
-	tok = strtok(linha, "|");
+	tok = strtok(NULL, "|");
 	sscanf(tok, " %d", &X.idI);
 	
 	tok = strtok(NULL, "|");

@@ -20,7 +20,7 @@ int print_menu(int x) {
 
 	while (scanf(" %d", &in) != 1 || in < 0 || in > max) {
 		puts("Entrada incorreta. Digite novamente");
-		__fpurge(stdin);
+		/*__fpurge(stdin);*/
 	}
 	return in;
 }
