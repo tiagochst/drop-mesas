@@ -27,33 +27,29 @@ int individuo_busca(int id, Individuo *K) {
  * - lê os valores da entrada padrao e insere no arquivo
  * de tamanho variável
  * - atualiza o índice secundário */
-void individuo_insere() {
+void individuo_insere(FILE *file_input) {
+	int n, i;
 	Individuo X;
-	system("clear");
 
-	puts("** INSERE INDIVIDUO **");
-	X = individuo_read_(stdin);
+	fscanf(file_input, " %d", &n);
+	for(i=0 ; i<n ; i++) {
+		X = individuo_read_(file_input);
 
-	if (indice_busca("individuo", X.idI) != FAIL) {
-		puts("\nJa ha registro de individuo com esse id.");
-		puts("Insercao falhou.");
-		Pause();
-		return;
+		if (indice_busca("individuo", X.idI) != FAIL) {
+			fprintf(stderr, "ERRO [individuo_insere]: Ja ha registro de individuo com esse id.\n");
+			return;
+		}
+		if (indice_busca("especie", X.idE) == FAIL) {
+			fprintf(stderr, "ERRO [individuo_insere]: A especie associada nao existe.\n");
+			return;
+		}
+
+		individuo_insere_(X);
+		muda_n(FIndiv, +1);
+		indice_fail(SISecIndiv);
+		indice_fail(SIPrimIndiv);
+		indice_sec_insere("individuo", X.idE, X.idI);
 	}
-	if (indice_busca("especie", X.idE) == FAIL) {
-		puts("\nA especie associada nao existe.");
-		puts("Insercao falhou.");
-		Pause();
-		return;
-	}
-
-	individuo_insere_(X);
-	muda_n(FIndiv, +1);
-	indice_fail(SISecIndiv);
-	indice_fail(SIPrimIndiv);
-	indice_sec_insere("individuo", X.idE, X.idI);
-
-	puts("Individuo inserido corretamente.");
 }
 
 /* INDIVÍDUO INSERE 2
@@ -238,14 +234,18 @@ Individuo individuo_read(FILE* fin, int *_save, int *_sz) {
  * lê de arquivo texto ou teclado um registro de indivíduo */
 Individuo individuo_read_(FILE *fin) {
 	Individuo X;
-	int print = (fin == stdin) ? (1) : (0);
+	char linha[500], *tok;
 
-	if (print) printf("ID do Individuo: ");
-	fscanf(fin, " %d", &X.idI);
-	if (print) printf("ID da Especie: ");
-	fscanf(fin, " %d", &X.idE);
-	if (print) printf("Sexo: ");
-	fscanf(fin, " %c", &X.sexo);
+	fscanf(fin," %[^\n]", linha);
+	
+	tok = strtok(NULL, "|");
+	sscanf(tok, " %d", &X.idE);
+
+	tok = strtok(linha, "|");
+	sscanf(tok, " %d", &X.idI);
+	
+	tok = strtok(NULL, "|");
+	sscanf(tok, " %c", &X.sexo);
 
 	return X;
 }

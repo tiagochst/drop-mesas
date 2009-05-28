@@ -10,6 +10,7 @@ typedef struct {
 #define SZ_DATA (8)
 
 Data data_le(FILE *fp);
+Data data_le_str(char *s);
 void data_escreve(FILE *fp, Data X);
 int data_cmp(Data d1, Data d2);
 

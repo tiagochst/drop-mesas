@@ -9,6 +9,12 @@ Data data_le(FILE *fp) {
 	return X;
 }
 
+Data data_le_str(char *s) {
+	Data X;
+	sscanf(s, "%2d%2d%4d", &X.dia, &X.mes, &X.ano);
+	return X;
+}
+
 /* ESCREVE DATA
  * escreve a data X no arquivo fp */
 void data_escreve(FILE *fp, Data X) {
