@@ -237,9 +237,9 @@ Captura captura_read_(FILE *fin) {
 
 Captura captura_read_lab3(FILE *fp) {
 	Captura X;
-	char linha[500], *tok;
+	char *linha, *tok;
 
-	fscanf(fp," %[^\n]", linha);
+	fscanf(fp," %a[^\n]", &linha);
 
 	tok = strtok(linha, "|");
 	sscanf(tok, " %d", &X.idI);
@@ -259,6 +259,7 @@ Captura captura_read_lab3(FILE *fp) {
 	tok = strtok(NULL, "|");
 	sscanf(tok, " %s", X.local);
 
+	free(linha);
 	return X;
 }
 

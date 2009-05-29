@@ -287,9 +287,9 @@ Especie especie_read_(FILE *fin) {
 
 Especie especie_read_lab3(FILE *fin) {
 	Especie X;
-	char linha[500], *tok;
+	char *linha, *tok;
 
-	fscanf(fin," %[^\n]", linha);
+	fscanf(fin," %a[^\n]", &linha);
 
 	tok = strtok(linha, "|");
 	sscanf(tok, " %d", &X.id);
@@ -309,6 +309,7 @@ Especie especie_read_lab3(FILE *fin) {
 	tok = strtok(NULL, "|");
 	sscanf(tok, " %s", X.descr);
 
+	free(linha);
 	return X;
 }
 

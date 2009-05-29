@@ -277,9 +277,9 @@ Individuo individuo_read_(FILE *fin) {
 
 Individuo individuo_read_lab3(FILE *fin) {
 	Individuo X;
-	char linha[500], *tok;
+	char *linha, *tok;
 
-	fscanf(fin," %[^\n]", linha);
+	fscanf(fin," %a[^\n]", &linha);
 
 	tok = strtok(linha, "|");
 	sscanf(tok, " %d", &X.idE);
@@ -290,6 +290,7 @@ Individuo individuo_read_lab3(FILE *fin) {
 	tok = strtok(NULL, "|");
 	sscanf(tok, " %c", &X.sexo);
 
+	free(linha);
 	return X;
 }
 
