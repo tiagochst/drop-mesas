@@ -1,6 +1,6 @@
 #include "definicoes.h"
 
-char *delimiters = " .,;:!?()[]{}<>'\"\t\\/";
+char *delimiters = "_ .,;:!?()[]{}<>'\"\t\\/";
 
 ListaInv_Prim *LIPrim;
 ListaInv_Sec *LISec;

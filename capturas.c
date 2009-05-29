@@ -35,14 +35,40 @@ int captura_busca(int idC, Captura *K) {
 /* CAPTURA INSERE
  * lê os valores da entrada padrao e insere no arquivo
  * de tamanho fixo  */
-void captura_insere(FILE *file_input) {
-	int n, i;
+void captura_insere() {
+	Captura X;
+	system("clear");
+
+	puts("** INSERE CAPTURA **");
+	X = captura_read_(stdin);
+	if (captura_busca(X.idC, NULL) != FAIL) {
+		puts("\nJa ha registro de captura com esse id.");
+		puts("Insercao falhou.");
+		Pause();
+		return;
+	}
+	if (indice_busca("individuo", X.idI) == FAIL) {
+		puts("\nO individuo associado nao existe.");
+		puts("Insercao falhou.");
+		Pause();
+		return;
+	}
+
+	captura_insere_(X);
+	indice_fail(SISecCaptu);
+
+	puts("Captura inserida corretamente.");
+}
+
+void captura_insere_lab3(FILE *fp) {
+	int n,i;
 	Captura X;
 
-	fscanf(file_input, " %d", &n);
-	for(i=0 ; i<n ; i++) {
-		X = captura_read_(file_input);
+	fscanf(fp, " %d", &n);
+	for (i = 0; i < n; i++) {
+		X = captura_read_lab3(fp);
 		X.idC = i;
+
 		if (indice_busca("individuo", X.idI) == FAIL) {
 			fprintf(stderr, "ERRO [captura_insere]: O individuo associado nao existe.\n");
 			return;
@@ -189,14 +215,31 @@ Captura captura_read(FILE *fin) {
  * um único registro de captura */
 Captura captura_read_(FILE *fin) {
 	Captura X;
+	int print = (fin==stdin)?(1):(0);
+
+	if (print) printf("ID da Captura: ");
+	fscanf(fin, " %d", &X.idC);
+	if (print) printf("ID do Individuo: ");
+	fscanf(fin, " %d", &X.idI);
+	if (print) printf("Comprimento: ");
+	fscanf(fin, " %d", &X.comprimento);
+	if (print) printf("Largura: ");
+	fscanf(fin, " %d", &X.largura);
+	if (print) printf("Peso: ");
+	fscanf(fin, " %d", &X.peso);
+	if (print) printf("Data de Captura: ");
+	X.data = data_le(fin);
+	if (print) printf("Local de Captura: ");
+	fscanf(fin, " %[^\n]", X.local);
+
+	return X;
+}
+
+Captura captura_read_lab3(FILE *fp) {
+	Captura X;
 	char linha[500], *tok;
 
-	fscanf(fin," %[^\n]", linha);
-
-	/*
-	tok = strtok(linha, "|");
-	sscanf(tok, " %d", &X.idC);
-	*/
+	fscanf(fp," %[^\n]", linha);
 
 	tok = strtok(linha, "|");
 	sscanf(tok, " %d", &X.idI);
