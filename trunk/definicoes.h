@@ -3,7 +3,7 @@
 
 /** includes **/
 #include <stdio.h>
-/*#include <stdio_ext.h>*/
+#include <stdio_ext.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
@@ -115,7 +115,9 @@ int strcmp_(void *a, void *b);
 int intcmp_(void *a, void *b);
 void strtoupper(char *s);
 
-void captura_insere(FILE *file_input);
+void captura_insere();
+void captura_insere_lab3(FILE *fp);
+Captura captura_read_lab3(FILE *fp);
 void captura_insere_(Captura X);
 void captura_atualiza();
 void captura_le();
@@ -126,7 +128,9 @@ void captura_write(FILE *fout, Captura *X);
 void captura_write_(FILE *fout, Captura X, int print);
 
 int especie_busca(int id, Especie *K);
-void especie_insere(FILE *file_input);
+void especie_insere();
+void especie_insere_lab3(FILE *fp);
+Especie especie_read_lab3(FILE *fin);
 void especie_insere_(Especie X);
 void especie_le();
 void especie_deleta();
@@ -138,7 +142,9 @@ void especie_write(FILE *fout, Especie X, int print);
 int especie_conta_caracteres(Especie X);
 
 int individuo_busca(int id, Individuo *K);
-void individuo_insere(FILE *file_input);
+void individuo_insere();
+void individuo_insere_lab3(FILE *fp);
+Individuo individuo_read_lab3(FILE *fin);
 void individuo_insere_(Individuo X);
 void individuo_le();
 void individuo_deleta();

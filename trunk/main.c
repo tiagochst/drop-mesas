@@ -20,23 +20,9 @@ FILE *FIPrimIndiv;
 FILE *FISecIndiv;
 FILE *FISecCaptu;
 
-int main(int argc, char *argv[]) {
-	int menu, i;
+int main(int argc, char **argv) {
+	int menu, m2, i;
 	FILE *file_input[3];
-
-	if(argc <= 3) {
-	  /*** instrucoes de uso ***/
-	  return 1;
-	}
-
-	for(i=0 ; i<3 ; i++) {
-	  file_input[i] = fopen(argv[i+1], "r");
-
-	  if(file_input[i] == NULL) {
-	    fprintf(stderr, "ERRO [main]: Nao foi possivel abrir um dos arquivos de input.");
-	    return 1;
-	  }
-	}
 
 	FEspec = open_file(SEspec);
 	FIndiv = open_file(SIndiv);
@@ -46,14 +32,61 @@ int main(int argc, char *argv[]) {
 	indice_sec_start(SISecIndiv, SISecCaptu);
 	lista_inv_start(SInvPrim, SInvSec);
 
-	if( (menu = print_menu(0)) ) {
-		if (menu == 1) {
-			especie_insere(file_input[0]);
-			individuo_insere(file_input[1]);
-			captura_insere(file_input[2]);
-		} else if (menu == 2) {
+	if(argc == 1) {
+		m2 = 0;
+		while (1) {
+			if ((m2 == 0) && (!(menu = print_menu(0))))
+				break;
+
+			m2 = print_menu(menu);
+			if (m2 == 0) continue;
+
+			if (menu == 1) {
+				if (m2 == 1) especie_insere();
+				if (m2 == 2) especie_le();
+				if (m2 == 3) especie_atualiza();
+				if (m2 == 4) especie_deleta();
+			}
+			if (menu == 2) {
+				if (m2 == 1) individuo_insere();
+				if (m2 == 2) individuo_le();
+				if (m2 == 3) individuo_atualiza();
+				if (m2 == 4) individuo_deleta();
+			}
+			if (menu == 3) {
+				if (m2 == 1) captura_insere();
+				if (m2 == 2) captura_le();
+				if (m2 == 3) captura_atualiza();
+				if (m2 == 4) captura_deleta();
+			}
+			if (menu == 4) {
+				if (m2 == 1) historico_monitoramento();
+				if (m2 == 2) ultima_captura();
+				if (m2 == 3) ultima_captura_peso();
+				if (m2 == 4) caminho_especie();
+				if (m2 == 5) busca_especie_descricao();
+			}
 		}
 	}
+	else if(argc == 4) {
+		for(i=0 ; i<3 ; i++) {
+			printf("<%s>\n", argv[i+1]);
+
+			file_input[i] = fopen(argv[i+1], "r");
+
+			if(file_input[i] == NULL) {
+				fprintf(stderr, "ERRO [main]: Nao foi possivel abrir um dos arquivos de input.");
+				return 1;
+			}
+		}
+		especie_insere_lab3(file_input[0]);
+		individuo_insere_lab3(file_input[1]);
+		captura_insere_lab3(file_input[2]);
+
+		for(i=0 ; i<3 ; i++)
+			fclose(file_input[i]);
+	}
+	else return 1;
 
 	lista_inv_end();
 	indice_end(SIPrimEspec, SIPrimIndiv);
@@ -62,7 +95,6 @@ int main(int argc, char *argv[]) {
 	fclose(FCaptu);
 	fclose(FEspec);
 	fclose(FIndiv);
-	system("clear");
 
 	return 0;
 }

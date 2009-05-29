@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -ansi -W -Wall -g -ggdb
+CFLAGS = -ansi -W -Wall -pedantic -g -ggdb
 LIBS = -lm
 
 OBJS = main.o capturas.o consultas.o especies.o funcoes.o individuos.o lista_buraco_var.o lista_buraco_fixo.o lista_inv.o indice.o indice_sec.o conjunto.o data.o
@@ -11,6 +11,11 @@ all: $(OBJS)
 
 run: all
 	./$(EXEC)
+
+load: all
+	./$(EXEC) < input_01
+	./$(EXEC) < input_02
+	./$(EXEC) < input_03
 
 $(OBJS): %.o: %.c
 	$(CC) -c $(CFLAGS) $<

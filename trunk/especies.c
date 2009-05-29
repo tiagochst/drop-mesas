@@ -27,26 +27,28 @@ int especie_busca(int id, Especie *K) {
  * - lê os valores da entrada padrao e insere no arquivo
  * de tamanho variável
  * - adiciona a descrição na lista invertida para busca textual */
-void especie_insere(FILE *file_input) {
-	int n, i;
+void especie_insere() {
 	Especie X;
+	system("clear");
 
-	fscanf(file_input, " %d", &n);
-	for(i=0 ; i<n ; i++) {
-		X = especie_read_(file_input);
+	puts("** INSERE ESPECIE **");
+	X = especie_read_(stdin);
 
-		if (indice_busca("especie", X.id) != FAIL) {
-			fprintf(stderr, "ERRO [especie_insere]: Ja ha registro de especie com esse id.\n");
-			return;
-		}
-
-		especie_insere_(X);
-		indice_fail(SIPrimEspec);
-		lista_inv_insere(X.descr, X.id);
-
-		/* Atualiza a quantidade de registros */
-		muda_n(FEspec, +1);
+	if (indice_busca("especie", X.id) != FAIL) {
+		puts("\nJa ha registro de especie com esse id.");
+		Pause();
+		puts("Insercao falhou.");
+		return;
 	}
+
+	especie_insere_(X);
+	indice_fail(SIPrimEspec);
+	lista_inv_insere(X.descr, X.id);
+
+	/* Atualiza a quantidade de registros */
+	muda_n(FEspec, +1);
+
+	puts("Especie inserida corretamente.");
 }
 
 /* ESPÉCIE INSERE 2
@@ -83,6 +85,30 @@ void especie_insere_(Especie X) {
 
 	if (Ssz - sz > SZ_LISTA)
 		buraco_var_insere(FEspec, Ssz - sz - SZ_REG, ftell(FEspec));
+}
+
+void especie_insere_lab3(FILE *fp) {
+	int n, i;
+	Especie X;
+
+	fscanf(fp, " %d", &n);
+	for(i=0 ; i<n ; i++) {
+		X = especie_read_lab3(fp);
+
+		if (indice_busca("especie", X.id) != FAIL) {
+			fprintf(stderr, "ERRO [especie_insere]: Ja ha registro de especie com esse id.\n");
+			return;
+		}
+
+		especie_write(stdout, X, 1);
+
+		especie_insere_(X);
+		indice_fail(SIPrimEspec);
+		lista_inv_insere(X.descr, X.id);
+
+		/* Atualiza a quantidade de registros */
+		muda_n(FEspec, +1);
+	}
 }
 
 /* ESPÉCIE LÊ
@@ -240,6 +266,26 @@ Especie especie_read(FILE* fin, int *_save, int *_sz) {
 /* ESPÉCIE READ 2
  * lê de arquivo texto ou teclado um registro de espécie */
 Especie especie_read_(FILE *fin) {
+	Especie X;
+	int print = (fin==stdin)?(1):(0);
+
+	if (print) printf("ID: ");
+	fscanf(fin, " %d", &X.id);
+	if (print) printf("Caminho da foto: ");
+	fscanf(fin, " %[^\n]", X.camin);
+	if (print) printf("Data: ");
+	X.data = data_le(fin);
+	if (print) printf("Nome cientifico: ");
+	fscanf(fin, " %[^\n]", X.nomec);
+	if (print) printf("Nome popular: ");
+	fscanf(fin, " %[^\n]", X.nomep);
+	if (print) printf("Descricao: ");
+	fscanf(fin, " %[^\n]", X.descr);
+
+	return X;
+}
+
+Especie especie_read_lab3(FILE *fin) {
 	Especie X;
 	char linha[500], *tok;
 
