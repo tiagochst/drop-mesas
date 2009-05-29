@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -ansi -W -Wall -pedantic -g -ggdb
+CFLAGS = -ansi -W -Wall -g -ggdb
 LIBS = -lm
 
 OBJS = main.o capturas.o consultas.o especies.o funcoes.o individuos.o lista_buraco_var.o lista_buraco_fixo.o lista_inv.o indice.o indice_sec.o conjunto.o data.o
