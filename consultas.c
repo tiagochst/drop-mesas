@@ -7,7 +7,12 @@ void historico_monitoramento_lab1(int lab3) {
   int n, id;
   Captura aux;
     
-  if(lab3==-1){
+  if(lab3 == -1){
+    system("clear");
+    
+    puts("** HISTORICO DE MONITORAMENTO **");
+    printf("\n");
+    
     printf("Digite o ID do indivíduo: ");
     scanf(" %d", &id);
   }
@@ -18,9 +23,9 @@ void historico_monitoramento_lab1(int lab3) {
   while(n--){
     aux = captura_read(FCaptu);
     if(aux.idC == -1) n++;
-    else if(aux.idI == id && lab3 == -1) captura_write_(stdout, aux, 1);
+    else if(aux.idI == id) captura_write_(stdout, aux, 1);
   }
-  if(lab3 == -1)  Pause();
+  if(lab3 == -1) Pause();
 
 }
 
@@ -28,9 +33,14 @@ void historico_monitoramento_lab2(int lab3) {
   int i, pos;
   int id;
   Captura aux;
-  system("clear");
+
 
   if(lab3 == -1){
+    system("clear");
+
+    puts("** HISTORICO DE MONITORAMENTO **");
+    printf("\n");
+
     printf("Digite o ID do individuo: ");
     scanf(" %d", &id);
     putchar('\n');
@@ -44,11 +54,11 @@ void historico_monitoramento_lab2(int lab3) {
     for (i = pos; i < N_ISCaptu && ISCaptu[i].idS == id; i++) {
       fseek(FCaptu, ISCaptu[i].idP, SEEK_SET);
       aux = captura_read(FCaptu);
-      if(lab3 == -1) captura_write_(stdout, aux, 1);
+      captura_write_(stdout, aux, 1);
     }
   }
 
-  if (lab3 == -1) Pause();
+  if(lab3 == -1) Pause();
 }
 
 /* Efetua a mesma busca do Historico de Monitoramento,
@@ -58,9 +68,13 @@ void ultima_captura_lab1(int lab3) {
   int n, id,pos;
   Data data;
   Captura aux;
-  system("clear");
-  
+    
   if(lab3 == -1){
+    system("clear");
+    puts("** ULTIMA CAPTURA **");
+    printf("\n");
+
+    
     printf("Digite o ID do individuo: ");
     scanf(" %d", &id);
   }
@@ -87,16 +101,21 @@ void ultima_captura_lab1(int lab3) {
     aux = captura_read(FCaptu);
     captura_write_(stdout, aux, 1);
   }
-  Pause();  
+  if(lab3 == -1) Pause();  
 }
 
 void ultima_captura_lab2(int lab3) {
   int i, id, pos, offset;
   Data data;
   Captura aux;
-  system("clear");
+  
 
   if(lab3 == -1){
+    system("clear");
+    
+    puts("** ULTIMA CAPTURA **");
+    printf("\n");
+
     printf("Digite o ID do individuo: ");
     scanf(" %d", &id);
     putchar('\n');
@@ -129,7 +148,7 @@ void ultima_captura_lab2(int lab3) {
     captura_write_(stdout, aux, 1);
   }
 
-  Pause();
+  if(lab3 == -1) Pause();
 }
 
 /* Obtido o ID da especie e o peso minimo, encontra
@@ -144,6 +163,10 @@ void ultima_captura_peso_lab1(int lab3) {
   
   if(lab3 == -1){
     system("clear");
+        
+    puts("** PESO MINIMO **");
+    printf("\n");
+    
     printf("Digite o ID da especie: ");
     scanf("%d",&idE);
     printf("Digite o peso minimo: ");
@@ -151,6 +174,8 @@ void ultima_captura_peso_lab1(int lab3) {
   }
   else{
     idE = lab3;
+    srand(time(NULL));
+    peso = (rand()%100) + 100;
   }
   
   /* acha os idI */
@@ -198,11 +223,11 @@ void ultima_captura_peso_lab1(int lab3) {
           printf("\n");
         }
       }
-      Pause();  
+      if(lab3 == -1) Pause();  
     }
   }
   
-  if(idI == -1) {
+  if(idI == -1 && lab3 == -1) {
     printf("Nao foi encontrado individuos da especie com o ID fornecido.\n\n");
     Pause();
   }  
@@ -218,6 +243,10 @@ void ultima_captura_peso_lab2(int lab3) {
   
   if(lab3 == -1){
     system("clear");
+        
+    puts("** PESO MINIMO **");
+    printf("\n");
+    
     printf("Digite o ID da especie: ");
     scanf("%d", &idE);
     printf("Digite o peso minimo: ");
@@ -226,6 +255,8 @@ void ultima_captura_peso_lab2(int lab3) {
   }
   else{
     idE = lab3;
+    srand(time(NULL));
+    peso = (rand()%100) + 100;
   }
   
   idI = -1;
@@ -258,7 +289,7 @@ void ultima_captura_peso_lab2(int lab3) {
     }
   }
 
-  Pause();
+  if(lab3 == -1) Pause();
 }
 
 /* Dado o individuo, buscamos a especie que ele pertence
@@ -273,6 +304,10 @@ void caminho_especie_lab1(int lab3) {
 
   if(lab3 == -1){
     system("clear");
+       
+    puts("** CAMINHO DA ESPECIE **");
+    printf("\n");
+    
     printf("Digite o ID do individuo: ");
     scanf(" %d", &idI);
   }
@@ -280,7 +315,7 @@ void caminho_especie_lab1(int lab3) {
 
   if(individuo_busca_lab1(idI, &X) == -1) {
     printf("Nao foi encontrado individuo com o ID fornecido.\n\n");
-    Pause();
+    if(lab3 == -1) Pause();
     return;
   }
   idE = X.idE;
@@ -289,12 +324,12 @@ void caminho_especie_lab1(int lab3) {
 
   if(especie_busca_lab2(idE, &Y) == -1) {
     printf("Inconcistencia nos dados: nao ha especie de ID %d\n\n", idE);
-    Pause();
+    if(lab3 == -1) Pause();
     return;
   }
 
   printf("Caminho do arquivo de imagem: %s\n\n", Y.camin);
-  Pause();
+  if(lab3 == -1) Pause();
   return;
 
 }
@@ -306,6 +341,10 @@ void caminho_especie_lab2(int lab3) {
 
   if(lab3 == -1){
     system("clear");
+        
+    puts("** CAMINHO DA ESPECIE **");
+    printf("\n");
+    
     printf("Digite o ID do individuo: ");
     scanf(" %d", &idI);
     putchar('\n');
@@ -314,7 +353,7 @@ void caminho_especie_lab2(int lab3) {
 
   if (individuo_busca_lab2(idI, &X) == -1) {
     printf("Nao foi encontrado individuo com o ID fornecido.\n\n");
-    Pause();
+    if(lab3 == -1) Pause();
     return;
   }
   idE = X.idE;
@@ -323,12 +362,12 @@ void caminho_especie_lab2(int lab3) {
 
   if (especie_busca_lab2(idE, &Y) == -1) {
     printf("Inconcistencia nos dados: nao ha especie de ID %d\n\n", idE);
-    Pause();
+    if(lab3 == -1) Pause();
     return;
   }
 
   printf("Caminho do arquivo de imagem: %s\n\n", Y.camin);
-  Pause();
+  if(lab3 == -1 ) Pause();
   return;
 }
 
