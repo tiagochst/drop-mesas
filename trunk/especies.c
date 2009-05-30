@@ -5,7 +5,31 @@
  * - ao final da busca, o ponteiro no arquivo estará
  * imediatamente antes do começo do registro dessa captura
  * - utiliza o índice primário implementado */
-int especie_busca(int id, Especie *K) {
+int especie_busca_lab1(int id, Especie *K) {
+  int i,k, n, sz,save;
+  Especie X;
+  
+  fseek(FEspec, 0, SEEK_SET);
+  fscanf(FEspec, " %d", &n);
+  for(i=0,k=-1 ; i<n ; i++) {
+    X = especie_read(FEspec, &save, &sz);
+    
+    if(X.id == -1) i--;
+    if(X.id == id) {
+      k = i;
+      break;
+    }
+  }
+
+  if(k == -1) return -1;
+  if(K != NULL) *K = X;
+  
+  fseek(FEspec, save, SEEK_SET);
+  return sz;
+  
+}
+
+int especie_busca_lab2(int id, Especie *K) {
 	int sz, save;
 	int i = indice_busca("especie", id);
 	Especie X;
@@ -142,7 +166,7 @@ void especie_deleta() {
 	printf("Digite o ID da especie a ser deletada: ");
 	scanf(" %d", &id);
 
-	sz = especie_busca(id, &X);
+	sz = especie_busca_lab2(id, &X);
 	if (sz == -1) {
 		puts("Nao existe especie com este ID!\n");
 		Pause();
@@ -193,7 +217,7 @@ void especie_atualiza() {
 	printf("Digite o ID da especie a ter dados alterados: ");
 	scanf(" %d", &id);
 
-	sz = especie_busca(id, &X);
+	sz = especie_busca_lab2(id, &X);
 	if (sz == -1) {
 		puts("Nao existe especie com este ID!\n");
 		Pause();

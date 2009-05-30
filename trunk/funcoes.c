@@ -1,5 +1,23 @@
 #include "definicoes.h"
 
+int print_menu_lab3(){
+  int in;
+  system("clear");
+  puts("**************************");
+  puts("* Gerenciar dados sobre: *");
+  puts("* 1. ler dados           *");
+  puts("* 2. comparar resultados *");
+  puts("*                        *");
+  puts("* 0. sair do programa    *");
+  puts("**************************");
+
+  while (scanf(" %d", &in) != 1 || in < 0 || in > 2) {
+    puts("Entrada incorreta. Digite novamente");
+    __fpurge(stdin);
+  }
+  return in;
+}
+
 int print_menu(int x) {
 	int in, max;
 

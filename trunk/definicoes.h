@@ -100,6 +100,7 @@ extern int N_ISCaptu;
 
 /** prototipos das funcoes **/
 int print_menu(int x);
+int print_menu_lab3();
 void muda_string(char *s);
 void muda_int(int *i);
 void muda_char(char *x);
@@ -127,7 +128,8 @@ Captura captura_read_(FILE *fin);
 void captura_write(FILE *fout, Captura *X);
 void captura_write_(FILE *fout, Captura X, int print);
 
-int especie_busca(int id, Especie *K);
+int especie_busca_lab1(int id, Especie *K);
+int especie_busca_lab2(int id, Especie *K);
 void especie_insere();
 void especie_insere_lab3(FILE *fp);
 Especie especie_read_lab3(FILE *fin);
@@ -141,7 +143,8 @@ Especie especie_read_(FILE *fin);
 void especie_write(FILE *fout, Especie X, int print);
 int especie_conta_caracteres(Especie X);
 
-int individuo_busca(int id, Individuo *K);
+int individuo_busca_lab1(int id, Individuo *K);
+int individuo_busca_lab2(int id, Individuo *K);
 void individuo_insere();
 void individuo_insere_lab3(FILE *fp);
 Individuo individuo_read_lab3(FILE *fin);
@@ -155,10 +158,14 @@ Individuo individuo_read_(FILE *fin);
 void individuo_write(FILE *fout, Individuo X, int print);
 int individuo_conta_caracteres(Individuo X);
 
-void historico_monitoramento();
-void ultima_captura();
-void ultima_captura_peso();
-void caminho_especie();
+void historico_monitoramento_lab1();
+void historico_monitoramento_lab2();
+void ultima_captura_lab1();
+void ultima_captura_lab2();
+void ultima_captura_peso_lab1();
+void ultima_captura_peso_lab2();
+void caminho_especie_lab1();
+void caminho_especie_lab2();
 void busca_especie_descricao();
 
 void indice_start(char *espec, char *indiv);
