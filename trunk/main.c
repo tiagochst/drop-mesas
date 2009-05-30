@@ -21,9 +21,8 @@ FILE *FISecIndiv;
 FILE *FISecCaptu;
 
 int main(int argc, char **argv) {
-  int menu, m2, i;
-  FILE *file_input[3];
-
+  int menu, m2;
+  
   FEspec = open_file(SEspec);
   FIndiv = open_file(SIndiv);
   FCaptu = open_file_bin(SCaptu);
@@ -60,10 +59,10 @@ int main(int argc, char **argv) {
 	if (m2 == 4) captura_deleta();
       }
       if (menu == 4) {
-	if (m2 == 1) historico_monitoramento_lab2();
-	if (m2 == 2) ultima_captura_lab2();
-	if (m2 == 3) ultima_captura_peso_lab2();
-	if (m2 == 4) caminho_especie_lab2();
+	if (m2 == 1) historico_monitoramento_lab2(-1);
+	if (m2 == 2) ultima_captura_lab2(-1);
+	if (m2 == 3) ultima_captura_peso_lab2(-1);
+	if (m2 == 4) caminho_especie_lab2(-1);
 	if (m2 == 5) busca_especie_descricao();
       }
     }
@@ -71,30 +70,9 @@ int main(int argc, char **argv) {
   else if(argc == 4) {
     while ((m2 = print_menu_lab3())) {
             
-      if(m2 == 1){
-	if (m2 == 0) continue;
-	for(i=0 ; i<3 ; i++) {
-	  
-	  file_input[i] = fopen(argv[i+1], "r");
-	  
-	  if(file_input[i] == NULL) {
-	    fprintf(stderr, "ERRO [main]: Nao foi possivel abrir um dos arquivos de input.");
-	    return 1;
-	  }
-	}
-	especie_insere_lab3(file_input[0]);
-	individuo_insere_lab3(file_input[1]);
-	captura_insere_lab3(file_input[2]);
-	 
-	for(i=0 ; i<3 ; i++)
-	  fclose(file_input[i]);
-
-	printf("Leitura efetuada com sucesso!\n");
-	Pause();
-      }
-      if(m2 == 2){
-	
-      }
+      if(m2 == 1) le_dados(argv);      
+      if(m2 == 2) compara_tempo();
+     
     }
   }
   else return 1;

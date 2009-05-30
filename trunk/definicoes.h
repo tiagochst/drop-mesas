@@ -158,14 +158,14 @@ Individuo individuo_read_(FILE *fin);
 void individuo_write(FILE *fout, Individuo X, int print);
 int individuo_conta_caracteres(Individuo X);
 
-void historico_monitoramento_lab1();
-void historico_monitoramento_lab2();
-void ultima_captura_lab1();
-void ultima_captura_lab2();
-void ultima_captura_peso_lab1();
-void ultima_captura_peso_lab2();
-void caminho_especie_lab1();
-void caminho_especie_lab2();
+void historico_monitoramento_lab1(int lab3);
+void historico_monitoramento_lab2(int lab3);
+void ultima_captura_lab1(int lab3);
+void ultima_captura_lab2(int lab3);
+void ultima_captura_peso_lab1(int lab3);
+void ultima_captura_peso_lab2(int lab3);
+void caminho_especie_lab1(int lab3);
+void caminho_especie_lab2(int lab3);
 void busca_especie_descricao();
 
 void indice_start(char *espec, char *indiv);
@@ -194,5 +194,8 @@ void lista_inv_deleta_(char *s, int id);
 void lista_inv_busca(char *s);
 void lista_inv_deleta(char *s, int id);
 void lista_inv_atualiza(char *velho, char *novo, int id);
+
+void le_dados(char **arg);
+void compara_tempo();
 
 #endif /*_DEFINICOES_H_*/

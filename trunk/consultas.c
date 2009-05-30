@@ -3,40 +3,39 @@
 /* Efetua uma busca no arquivo de Capturas (registro de
  * tamanho fixo) por registros de captura do individuo
  * do ID fornecido pelo usuario */
-void historico_monitoramento_lab1() {
+void historico_monitoramento_lab1(int lab3) {
   int n, id;
   Captura aux;
-  system("clear");
-  
-  puts("** HISTÓRICO DE MONITORAMENTO **");
-  printf("\n");
-  
-  printf("Digite o ID do indivíduo: ");
-  scanf(" %d", &id);
+    
+  if(lab3==-1){
+    printf("Digite o ID do indivíduo: ");
+    scanf(" %d", &id);
+  }
+  else id = lab3;  
   
   fseek(FCaptu, 0, SEEK_SET);
   fread(&n, sizeof(int), 1, FCaptu);
   while(n--){
     aux = captura_read(FCaptu);
     if(aux.idC == -1) n++;
-    else if(aux.idI == id) captura_write_(stdout, aux, 1);
-  }  
-  Pause();
+    else if(aux.idI == id && lab3 == -1) captura_write_(stdout, aux, 1);
+  }
+  if(lab3 == -1)  Pause();
 
 }
 
-void historico_monitoramento_lab2() {
+void historico_monitoramento_lab2(int lab3) {
   int i, pos;
   int id;
   Captura aux;
   system("clear");
 
-  puts("** HISTORICO DE MONITORAMENTO **");
-  printf("\n");
-
-  printf("Digite o ID do individuo: ");
-  scanf(" %d", &id);
-  putchar('\n');
+  if(lab3 == -1){
+    printf("Digite o ID do individuo: ");
+    scanf(" %d", &id);
+    putchar('\n');
+  }
+  else id = lab3;
 
   pos = indice_sec_busca("captura", id);
   if (pos == -1) {
@@ -45,24 +44,27 @@ void historico_monitoramento_lab2() {
     for (i = pos; i < N_ISCaptu && ISCaptu[i].idS == id; i++) {
       fseek(FCaptu, ISCaptu[i].idP, SEEK_SET);
       aux = captura_read(FCaptu);
-      captura_write_(stdout, aux, 1);
+      if(lab3 == -1) captura_write_(stdout, aux, 1);
     }
   }
 
-  Pause();
+  if (lab3 == -1) Pause();
 }
 
 /* Efetua a mesma busca do Historico de Monitoramento,
  * mas para determinar a ultima captura, armazena-se a
  * data da captura mais recente e o registro dessa captura */
-void ultima_captura_lab1() {
+void ultima_captura_lab1(int lab3) {
   int n, id,pos;
   Data data;
   Captura aux;
   system("clear");
   
-  printf("Digite o ID do individuo: ");
-  scanf(" %d", &id);
+  if(lab3 == -1){
+    printf("Digite o ID do individuo: ");
+    scanf(" %d", &id);
+  }
+  else id = lab3;
   
   fseek(FCaptu, 0, SEEK_SET);
   fread(&n, sizeof(int), 1, FCaptu);
@@ -88,15 +90,19 @@ void ultima_captura_lab1() {
   Pause();  
 }
 
-void ultima_captura_lab2() {
+void ultima_captura_lab2(int lab3) {
   int i, id, pos, offset;
   Data data;
   Captura aux;
   system("clear");
 
-  printf("Digite o ID do individuo: ");
-  scanf(" %d", &id);
-  putchar('\n');
+  if(lab3 == -1){
+    printf("Digite o ID do individuo: ");
+    scanf(" %d", &id);
+    putchar('\n');
+  }
+  else id = lab3;
+  
   data.ano = FAIL;
 
   pos = indice_sec_busca("captura", id);
@@ -130,18 +136,23 @@ void ultima_captura_lab2() {
  * os individuos dessa especie, e então o registro
  * da ultima captura desse individuo, e enfim verifica-se
  * se o peso esta dentro do pedido */
-void ultima_captura_peso_lab1() {
+void ultima_captura_peso_lab1(int lab3) {
   int idE, idI,n1,n2, peso;
   Data data;
   Captura C,Cc;
   Individuo X;
   
-  system("clear");
-  printf("Digite o ID da especie: ");
-  scanf("%d",&idE);
-  printf("Digite o peso minimo: ");
-  scanf("%d",&peso);
-
+  if(lab3 == -1){
+    system("clear");
+    printf("Digite o ID da especie: ");
+    scanf("%d",&idE);
+    printf("Digite o peso minimo: ");
+    scanf("%d",&peso);
+  }
+  else{
+    idE = lab3;
+  }
+  
   /* acha os idI */
   idI = -1;
 
@@ -197,21 +208,26 @@ void ultima_captura_peso_lab1() {
   }  
 }
 
-void ultima_captura_peso_lab2() {
+void ultima_captura_peso_lab2(int lab3) {
   int i, j;
   int pos, aux;
   int offset;
   int idE, idI, peso;
   Data data;
   Captura C, Cc;
-
-  system("clear");
-  printf("Digite o ID da especie: ");
-  scanf("%d", &idE);
-  printf("Digite o peso minimo: ");
-  scanf("%d", &peso);
-  putchar('\n');
-
+  
+  if(lab3 == -1){
+    system("clear");
+    printf("Digite o ID da especie: ");
+    scanf("%d", &idE);
+    printf("Digite o peso minimo: ");
+    scanf("%d", &peso);
+    putchar('\n');
+  }
+  else{
+    idE = lab3;
+  }
+  
   idI = -1;
   pos = indice_sec_busca("individuo", idE);/*Pega todos os individuos dessa especie*/
   if (pos == -1) {
@@ -248,15 +264,19 @@ void ultima_captura_peso_lab2() {
 /* Dado o individuo, buscamos a especie que ele pertence
  * e enfim procuramos pelo registro dessa especie, onde
  * esta salvo o caminho da foto */
-void caminho_especie_lab1() {
+void caminho_especie_lab1(int lab3) {
 
   int idI, idE;
   Individuo X;
   Especie Y;
 
-  system("clear");
-  printf("Digite o ID do individuo: ");
-  scanf(" %d", &idI);
+
+  if(lab3 == -1){
+    system("clear");
+    printf("Digite o ID do individuo: ");
+    scanf(" %d", &idI);
+  }
+  else idI = lab3;
 
   if(individuo_busca_lab1(idI, &X) == -1) {
     printf("Nao foi encontrado individuo com o ID fornecido.\n\n");
@@ -279,15 +299,18 @@ void caminho_especie_lab1() {
 
 }
 
-void caminho_especie_lab2() {
+void caminho_especie_lab2(int lab3) {
   int idI, idE;
   Individuo X;
   Especie Y;
 
-  system("clear");
-  printf("Digite o ID do individuo: ");
-  scanf(" %d", &idI);
-  putchar('\n');
+  if(lab3 == -1){
+    system("clear");
+    printf("Digite o ID do individuo: ");
+    scanf(" %d", &idI);
+    putchar('\n');
+  }
+  else idI = lab3;
 
   if (individuo_busca_lab2(idI, &X) == -1) {
     printf("Nao foi encontrado individuo com o ID fornecido.\n\n");
