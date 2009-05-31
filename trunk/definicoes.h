@@ -160,12 +160,16 @@ int individuo_conta_caracteres(Individuo X);
 
 void historico_monitoramento_lab1(int lab3);
 void historico_monitoramento_lab2(int lab3);
+void historico_monitoramento();
 void ultima_captura_lab1(int lab3);
 void ultima_captura_lab2(int lab3);
+void ultima_captura();
 void ultima_captura_peso_lab1(int lab3);
 void ultima_captura_peso_lab2(int lab3);
+void ultima_captura_peso();
 void caminho_especie_lab1(int lab3);
 void caminho_especie_lab2(int lab3);
+void caminho_especie();
 void busca_especie_descricao();
 
 void indice_start(char *espec, char *indiv);
