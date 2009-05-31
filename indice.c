@@ -198,5 +198,4 @@ void indice_fail(char *sfp) {
 	FILE *fp = fopen(sfp, "wb");
 	fwrite(&n, sizeof(int), 1, fp);
 	fwrite(&flag, sizeof(int), 1, fp);
-	
 }

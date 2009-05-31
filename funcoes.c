@@ -2,7 +2,7 @@
 
 int print_menu_lab3(){
   int in;
-  system("clear");
+
   puts("**************************");
   puts("* Gerenciar dados sobre: *");
   puts("* 1. ler dados           *");

@@ -7,16 +7,7 @@ void historico_monitoramento_lab1(int lab3) {
   int n, id, avail_list;
   Captura aux;
 
-  if(lab3 == -1){
-    system("clear");
-
-    puts("** HISTORICO DE MONITORAMENTO **");
-    printf("\n");
-
-    printf("Digite o ID do indivíduo: ");
-    scanf(" %d", &id);
-  }
-  else id = lab3;
+  id = lab3;
 
   fseek(FCaptu, 0, SEEK_SET);
   fread(&n, sizeof(int), 1, FCaptu);
@@ -25,11 +16,9 @@ void historico_monitoramento_lab1(int lab3) {
     aux = captura_read(FCaptu);
     if(aux.idC == -1) n++;
     else if(aux.idI == id) {
-    	if (lab3 == -1)
-				captura_write_(stdout, aux, 1);
+    	/* achou um registro */
     }
   }
-  if(lab3 == -1) Pause();
 }
 
 void historico_monitoramento_lab2(int lab3) {
@@ -37,7 +26,25 @@ void historico_monitoramento_lab2(int lab3) {
   int id;
   Captura aux;
 
-  if(lab3 == -1){
+  id = lab3;
+
+  pos = indice_sec_busca("captura", id);
+  if (pos == -1) {
+    /* nao ha capturas desse individuo */
+  } else {
+    for (i = pos; i < N_ISCaptu && ISCaptu[i].idS == id; i++) {
+      fseek(FCaptu, ISCaptu[i].idP, SEEK_SET);
+      aux = captura_read(FCaptu);
+      /* achou um registro */
+    }
+  }
+}
+
+void historico_monitoramento() {
+  int i, pos;
+  int id;
+  Captura aux;
+
     system("clear");
 
     puts("** HISTORICO DE MONITORAMENTO **");
@@ -46,8 +53,6 @@ void historico_monitoramento_lab2(int lab3) {
     printf("Digite o ID do individuo: ");
     scanf(" %d", &id);
     putchar('\n');
-  }
-  else id = lab3;
 
   pos = indice_sec_busca("captura", id);
   if (pos == -1) {
@@ -56,12 +61,11 @@ void historico_monitoramento_lab2(int lab3) {
     for (i = pos; i < N_ISCaptu && ISCaptu[i].idS == id; i++) {
       fseek(FCaptu, ISCaptu[i].idP, SEEK_SET);
       aux = captura_read(FCaptu);
-      if (lab3 == -1)
 		captura_write_(stdout, aux, 1);
     }
   }
 
-  if(lab3 == -1) Pause();
+  Pause();
 }
 
 /* Efetua a mesma busca do Historico de Monitoramento,
@@ -72,16 +76,7 @@ void ultima_captura_lab1(int lab3) {
   Data data;
   Captura aux;
 
-  if(lab3 == -1){
-    system("clear");
-    puts("** ULTIMA CAPTURA **");
-    printf("\n");
-
-
-    printf("Digite o ID do individuo: ");
-    scanf(" %d", &id);
-  }
-  else id = lab3;
+  id = lab3;
 
   fseek(FCaptu, 0, SEEK_SET);
   fread(&n, sizeof(int), 1, FCaptu);
@@ -96,15 +91,12 @@ void ultima_captura_lab1(int lab3) {
     }
   }
 
-  if(data.ano == FAIL) printf("Nao ha registros de captura desse individuo\n");
+  if(data.ano == FAIL); /* Nao ha registros de captura desse individuo */
   else{
-    printf("O ultimo registro desse individuo data de :");
-    data_escreve(stdout,data);
     fseek(FCaptu, pos, SEEK_SET);
     aux = captura_read(FCaptu);
-    captura_write_(stdout, aux, 1);
+    /* achou um registro */
   }
-  if(lab3 == -1) Pause();
 }
 
 void ultima_captura_lab2(int lab3) {
@@ -112,8 +104,37 @@ void ultima_captura_lab2(int lab3) {
   Data data;
   Captura aux;
 
+  id = lab3;
 
-  if(lab3 == -1){
+  data.ano = FAIL;
+
+  pos = indice_sec_busca("captura", id);
+  if (pos != -1) {
+    for (i = pos; i < N_ISCaptu && ISCaptu[i].idS == id; i++) {
+      fseek(FCaptu, ISCaptu[i].idP, SEEK_SET);
+      aux = captura_read(FCaptu);
+
+      if (data_cmp(aux.data, data) > 0) {
+	offset = ISCaptu[i].idP;
+	data = aux.data;
+      }
+    }
+  }
+
+  if (data.ano == FAIL);
+    /* Nao ha registros de captura desse individuo */
+  else {
+    fseek(FCaptu, offset, SEEK_SET);
+    aux = captura_read(FCaptu);
+    /* achou um registro */
+  }
+}
+
+void ultima_captura() {
+  int i, id, pos, offset;
+  Data data;
+  Captura aux;
+
     system("clear");
 
     puts("** ULTIMA CAPTURA **");
@@ -122,8 +143,6 @@ void ultima_captura_lab2(int lab3) {
     printf("Digite o ID do individuo: ");
     scanf(" %d", &id);
     putchar('\n');
-  }
-  else id = lab3;
 
   data.ano = FAIL;
 
@@ -151,7 +170,7 @@ void ultima_captura_lab2(int lab3) {
     captura_write_(stdout, aux, 1);
   }
 
-  if(lab3 == -1) Pause();
+  Pause();
 }
 
 /* Obtido o ID da especie e o peso minimo, encontra
@@ -164,22 +183,9 @@ void ultima_captura_peso_lab1(int lab3) {
   Captura C,Cc;
   Individuo X;
 
-  if(lab3 == -1){
-    system("clear");
-
-    puts("** PESO MINIMO **");
-    printf("\n");
-
-    printf("Digite o ID da especie: ");
-    scanf("%d",&idE);
-    printf("Digite o peso minimo: ");
-    scanf("%d",&peso);
-  }
-  else{
     idE = lab3;
     srand(time(NULL));
     peso = (rand()%100) + 100;
-  }
 
   /* acha os idI */
   idI = -1;
@@ -196,7 +202,6 @@ void ultima_captura_peso_lab1(int lab3) {
       idI = X.idI;
 
       /* achou um idI */
-      printf("O individuo %d pertence aa especie %d\n", idI, idE);
 
       fseek(FCaptu, 0, SEEK_SET);
       fread(&n2, sizeof(int), 1, FCaptu);
@@ -211,28 +216,19 @@ void ultima_captura_peso_lab1(int lab3) {
         }
       }
 
-      if(data.ano == FAIL) printf("Nao ha registros de captura desse individuo\n");
+      if(data.ano == FAIL); /* Nao ha registros de captura desse individuo */
       else{
-        if(Cc.peso < peso)
-          printf("O peso na ultima captura deste individuo foi abaixo do minimo\n");
+        if(Cc.peso < peso);
+          /* O peso na ultima captura deste individuo foi abaixo do minimo */
         else {
-          printf("ID do Individuo: ");
-          printf("%d\n", Cc.idI);
-          printf("Data de Captura: ");
-          data_escreve(stdout,Cc.data);
-          printf("Local de Captura: ");
-          printf("%s\n", Cc.local);
-
-          printf("\n");
+            /* achou um registro */
         }
       }
-      if(lab3 == -1) Pause();
     }
   }
 
-  if(idI == -1 && lab3 == -1) {
-    printf("Nao foi encontrado individuos da especie com o ID fornecido.\n\n");
-    Pause();
+  if(idI == -1) {
+    /* Nao foi encontrado individuos da especie com o ID fornecido. */
   }
 }
 
@@ -244,7 +240,48 @@ void ultima_captura_peso_lab2(int lab3) {
   Data data;
   Captura C, Cc;
 
-  if(lab3 == -1){
+    idE = lab3;
+    srand(time(NULL));
+    peso = (rand()%100) + 100;
+
+  idI = -1;
+  pos = indice_sec_busca("individuo", idE);/*Pega todos os individuos dessa especie*/
+  if (pos == -1) {
+    /* Nao ha registros dessa espécie! */
+  } else {
+    for (i = pos; i < N_ISIndiv && ISIndiv[i].idS == idE; i++) {
+      data.ano = FAIL;
+      aux = indice_sec_busca("captura", ISIndiv[i].idP); /*Dado o individuo, pegamos todas as capturas*/
+      if (aux != -1) {
+	for (j = aux; j < N_ISCaptu && ISCaptu[j].idS == ISIndiv[i].idP; j++) {
+
+	  fseek(FCaptu, ISCaptu[j].idP, SEEK_SET);
+	  C = captura_read(FCaptu);
+
+	  if (C.idI == ISIndiv[i].idP && data_cmp(C.data, data) > 0) {
+	    offset = ISCaptu[j].idP;
+	    data = C.data;
+	  }
+	}
+	fseek(FCaptu, offset, SEEK_SET);
+	Cc = captura_read(FCaptu);
+
+	if (Cc.peso < peso);
+	  /* O peso na ultima captura deste individuo foi abaixo do minimo */
+	else;
+	  /* achou um registro */
+    }
+  }
+}
+}
+void ultima_captura_peso() {
+  int i, j;
+  int pos, aux;
+  int offset;
+  int idE, idI, peso;
+  Data data;
+  Captura C, Cc;
+
     system("clear");
 
     puts("** PESO MINIMO **");
@@ -255,12 +292,6 @@ void ultima_captura_peso_lab2(int lab3) {
     printf("Digite o peso minimo: ");
     scanf("%d", &peso);
     putchar('\n');
-  }
-  else{
-    idE = lab3;
-    srand(time(NULL));
-    peso = (rand()%100) + 100;
-  }
 
   idI = -1;
   pos = indice_sec_busca("individuo", idE);/*Pega todos os individuos dessa especie*/
@@ -292,49 +323,33 @@ void ultima_captura_peso_lab2(int lab3) {
     }
   }
 
-  if(lab3 == -1) Pause();
+  Pause();
 }
 
 /* Dado o individuo, buscamos a especie que ele pertence
  * e enfim procuramos pelo registro dessa especie, onde
  * esta salvo o caminho da foto */
 void caminho_especie_lab1(int lab3) {
-
   int idI, idE;
   Individuo X;
   Especie Y;
 
-
-  if(lab3 == -1){
-    system("clear");
-
-    puts("** CAMINHO DA ESPECIE **");
-    printf("\n");
-
-    printf("Digite o ID do individuo: ");
-    scanf(" %d", &idI);
-  }
-  else idI = lab3;
+  idI = lab3;
 
   if(individuo_busca_lab1(idI, &X) == -1) {
-    printf("Nao foi encontrado individuo com o ID fornecido.\n\n");
-    if(lab3 == -1) Pause();
+    /* Nao foi encontrado individuo com o ID fornecido */
     return;
   }
   idE = X.idE;
 
-  printf("Individuo %d pertence aa especie de ID %d\n", idI, idE);
+  /* Individuo %d pertence aa especie de ID %d\n", idI, idE */
 
   if(especie_busca_lab2(idE, &Y) == -1) {
-    printf("Inconcistencia nos dados: nao ha especie de ID %d\n\n", idE);
-    if(lab3 == -1) Pause();
+    /* printf("Inconcistencia nos dados: nao ha especie de ID %d\n\n", idE);*/
     return;
   }
 
-  printf("Caminho do arquivo de imagem: %s\n\n", Y.camin);
-  if(lab3 == -1) Pause();
-  return;
-
+  /* printf("Caminho do arquivo de imagem: %s\n\n", Y.camin); */
 }
 
 void caminho_especie_lab2(int lab3) {
@@ -342,7 +357,30 @@ void caminho_especie_lab2(int lab3) {
   Individuo X;
   Especie Y;
 
-  if(lab3 == -1){
+idI = lab3;
+
+  if (individuo_busca_lab2(idI, &X) == -1) {
+    /* printf("Nao foi encontrado individuo com o ID fornecido.\n\n"); */
+    return;
+  }
+  idE = X.idE;
+
+  /* printf("Individuo %d pertence aa especie de ID %d\n", idI, idE);*/
+
+  if (especie_busca_lab2(idE, &Y) == -1) {
+    /* printf("Inconcistencia nos dados: nao ha especie de ID %d\n\n", idE); */
+    return;
+  }
+
+  /* printf("Caminho do arquivo de imagem: %s\n\n", Y.camin); */
+  return;
+}
+
+void caminho_especie() {
+  int idI, idE;
+  Individuo X;
+  Especie Y;
+
     system("clear");
 
     puts("** CAMINHO DA ESPECIE **");
@@ -351,12 +389,10 @@ void caminho_especie_lab2(int lab3) {
     printf("Digite o ID do individuo: ");
     scanf(" %d", &idI);
     putchar('\n');
-  }
-  else idI = lab3;
 
   if (individuo_busca_lab2(idI, &X) == -1) {
     printf("Nao foi encontrado individuo com o ID fornecido.\n\n");
-    if(lab3 == -1) Pause();
+    Pause();
     return;
   }
   idE = X.idE;
@@ -365,12 +401,12 @@ void caminho_especie_lab2(int lab3) {
 
   if (especie_busca_lab2(idE, &Y) == -1) {
     printf("Inconcistencia nos dados: nao ha especie de ID %d\n\n", idE);
-    if(lab3 == -1) Pause();
+    Pause();
     return;
   }
 
   printf("Caminho do arquivo de imagem: %s\n\n", Y.camin);
-  if(lab3 == -1 ) Pause();
+  Pause();
   return;
 }
 
