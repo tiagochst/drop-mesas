@@ -20,7 +20,7 @@ FILE *FIPrimIndiv;
 FILE *FISecIndiv;
 FILE *FISecCaptu;
 
-int main(int argc, char **argv) {
+int main(int argc, char *argv[]) {
   int menu, m2;
 
   FEspec = open_file(SEspec);
@@ -30,6 +30,13 @@ int main(int argc, char **argv) {
   indice_start(SIPrimEspec, SIPrimIndiv);
   indice_sec_start(SISecIndiv, SISecCaptu);
   lista_inv_start(SInvPrim, SInvSec);
+
+	if (argc != 4) {
+		printf("\n"
+				"> para executar as comparações nos tempos das consultas execute\n"
+				"> ./run dados_especies.txt dados_individuos.txt dados_capturas.txt\n"
+				"\n");
+	}
 
   if(argc == 1) {
     m2 = 0;

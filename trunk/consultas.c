@@ -1,4 +1,5 @@
 #include "definicoes.h"
+#include <time.h>
 
 /* Efetua uma busca no arquivo de Capturas (registro de
  * tamanho fixo) por registros de captura do individuo
@@ -268,8 +269,9 @@ void ultima_captura_peso_lab2(int lab3) {
 
 	if (Cc.peso < peso);
 	  /* O peso na ultima captura deste individuo foi abaixo do minimo */
-	else;
+	else {
 	  /* achou um registro */
+	}
     }
   }
 }

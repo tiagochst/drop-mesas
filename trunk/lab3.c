@@ -3,126 +3,86 @@
 #include <time.h>
 #include <sys/timeb.h>
 
-void le_dados(char **arg){
-  int i;
-  FILE *file_input[3];
+void le_dados(char **arg) {
+	int i;
+	FILE *file_input[3];
 
-  for(i=0 ; i<3 ; i++) {
+	for (i = 0; i < 3; i++) {
 
-    file_input[i] = fopen(arg[i+1], "r");
+		file_input[i] = fopen(arg[i + 1], "r");
 
-    if(file_input[i] == NULL) {
-      fprintf(stderr, "ERRO [main]: Nao foi possivel abrir um dos arquivos de input.");
-	    return ;
-    }
-  }
-  especie_insere_lab3(file_input[0]);
-  individuo_insere_lab3(file_input[1]);
-  captura_insere_lab3(file_input[2]);
+		if (file_input[i] == NULL) {
+			fprintf(stderr,
+					"ERRO [main]: Nao foi possivel abrir um dos arquivos de input.");
+			return;
+		}
+	}
+	especie_insere_lab3(file_input[0]);
+	individuo_insere_lab3(file_input[1]);
+	captura_insere_lab3(file_input[2]);
 
-  for(i=0 ; i<3 ; i++)
-    fclose(file_input[i]);
+	for (i = 0; i < 3; i++)
+		fclose(file_input[i]);
 
-  printf("Leitura efetuada com sucesso!\n");
-
+	printf("Leitura efetuada com sucesso!\n");
 }
 
-void compara_tempo(){
-  int i,j;
-  char c;
-  int k,n1,n2;
-  double t1[4],t2[4];
-  struct timeb ini, fim;
+typedef void (*funcao_consulta)(int);
 
+double executa(funcao_consulta F, Indice_Prim *indice, int n_indice, int N,	int M) {
+	int i, j;
+	struct timeb time_start, time_end;
 
-  printf("Digite a quantidade de consultas a realizar:\n");
-  scanf("%d",&k);
+	ftime(&time_start);
 
-  n1 = k/N_IPIndiv;
-  n2 = k/N_IPEspec;
+	for (j = 0; j < N; j++)
+		for (i = 0; i < n_indice; i++)
+			F(indice[i].id);
+	for (i = 0; i < M; i++)
+		F(indice[i].id);
 
-  /* EXECUTA A CONSULTA A */
-  ftime(&ini);
+	ftime(&time_end);
 
-  for(j=0;j<n1;j++)
-    for(i=0;i<N_IPIndiv;i++)
-      historico_monitoramento_lab1(IPIndiv[i].id);
-
-  ftime(&fim);
-  t1[0] = ((double) fim.time + ((double) fim.millitm * 0.001)) -((double) ini.time + ((double) ini.millitm * 0.001));
-
-  ftime(&ini);
-  for(j=0;j<n1;j++)
-    for(i=0;i<N_IPIndiv;i++)
-      historico_monitoramento_lab2(IPIndiv[i].id);
-  ftime(&fim);
-  t2[0] = ((double) fim.time + ((double) fim.millitm * 0.001)) -((double) ini.time + ((double) ini.millitm * 0.001));
-
-
-  /*EXECUTA A CONSULTA B*/
-  ftime(&ini);
-
-  for(j=0;j<n1;j++)
-    for(i=0;i<N_IPIndiv;i++)
-      ultima_captura_lab1(IPIndiv[i].id);
-
-  ftime(&fim);
-  t1[1] = ((double) fim.time + ((double) fim.millitm * 0.001)) -((double) ini.time + ((double) ini.millitm * 0.001));
-
-  ftime(&ini);
-  for(j=0;j<n1;j++)
-    for(i=0;i<N_IPIndiv;i++)
-      ultima_captura_lab2(IPIndiv[i].id);
-  ftime(&fim);
-  t2[1] = ((double) fim.time + ((double) fim.millitm * 0.001)) -((double) ini.time + ((double) ini.millitm * 0.001));
-
-
-
-  /*EXECUTA A CONSULTA C*/
-  ftime(&ini);
-
-  for(j=0;j<n2;j++)
-    for(i=0;i<N_IPEspec;i++)
-      ultima_captura_peso_lab1(IPEspec[i].id);
-
-  ftime(&fim);
-  t1[2] = ((double) fim.time + ((double) fim.millitm * 0.001)) -((double) ini.time + ((double) ini.millitm * 0.001));
-
-  ftime(&ini);
-  for(j=0;j<n2;j++)
-    for(i=0;i<N_IPEspec;i++)
-      ultima_captura_peso_lab2(IPEspec[i].id);
-  ftime(&fim);
-  t2[2] = ((double) fim.time + ((double) fim.millitm * 0.001)) -((double) ini.time + ((double) ini.millitm * 0.001));
-
-
-
-  /*EXECUTA A CONSULTA D*/
-  ftime(&ini);
-
-  for(j=0;j<n1;j++)
-    for(i=0;i<N_IPIndiv;i++)
-      caminho_especie_lab1(IPIndiv[i].id);
-
-  ftime(&fim);
-  t1[3] = ((double) fim.time + ((double) fim.millitm * 0.001)) -((double) ini.time + ((double) ini.millitm * 0.001));
-
-  ftime(&ini);
-  for(j=0;j<n1;j++)
-    for(i=0;i<N_IPIndiv;i++)
-      caminho_especie_lab2(IPIndiv[i].id);
-  ftime(&fim);
-  t2[3] = ((double) fim.time + ((double) fim.millitm * 0.001)) -((double) ini.time + ((double) ini.millitm * 0.001));
-
-
-  system("clear");
-  printf("Consulta Tempo 1(ms) Tempo 2(ms) Reducao\n");
-  for(i=0,c='a';i<4;i++,c++){
-    printf("4.%c %10.2lf %12.2lf %11.2lf%%\n",c,1000*t1[i],1000*t2[i],100*((t1[i]-t2[i])/t1[i]));
-  }
-
-
-  Pause();
-  return;
+	return ((double) time_end.time * 1000.0 + (double) time_end.millitm)
+			- ((double) time_start.time * 1000.0 + (double) time_start.millitm);
 }
 
+void compara_tempo() {
+	int i;
+	char c;
+	int k, n1, n2, m1, m2;
+	double t1[4], t2[4];
+
+	printf("Digite a quantidade de consultas a realizar:\n");
+	scanf(" %d", &k);
+
+	n1 = k / N_IPIndiv;
+	n2 = k / N_IPEspec;
+	m1 = k % N_IPIndiv;
+	m2 = k % N_IPEspec;
+
+	/* EXECUTA A CONSULTA A */
+	t1[0] = executa((funcao_consulta)historico_monitoramento_lab1, IPIndiv, N_IPIndiv, n1, m1);
+	t2[0] = executa((funcao_consulta)historico_monitoramento_lab2, IPIndiv, N_IPIndiv, n1, m1);
+
+	/* EXECUTA A CONSULTA B */
+	t1[1] = executa((funcao_consulta)ultima_captura_lab1, IPIndiv, N_IPIndiv, n1, m1);
+	t2[1] = executa((funcao_consulta)ultima_captura_lab2, IPIndiv, N_IPIndiv, n1, m1);
+
+	/* EXECUTA A CONSULTA C */
+	t1[2] = executa((funcao_consulta)ultima_captura_peso_lab1, IPEspec, N_IPEspec, n2, m2);
+	t2[2] = executa((funcao_consulta)ultima_captura_peso_lab2, IPEspec, N_IPEspec, n2, m2);
+
+	/* EXECUTA A CONSULTA D */
+	t1[3] = executa((funcao_consulta)caminho_especie_lab1, IPIndiv, N_IPIndiv, n1, m1);
+	t2[3] = executa((funcao_consulta)caminho_especie_lab2, IPIndiv, N_IPIndiv, n1, m1);
+
+	printf("Consulta   Tempo Lab1(ms)   Tempo Lab2(ms)   Reducao\n");
+	for (i=0,c='a'; i<4; i++,c++) {
+		printf("4.%c        %-17.0lf%-17.0lf%.2lf%%\n", c, t1[i], t2[i],
+				100.0 * ((t1[i] - t2[i]) / t1[i]));
+	}
+
+	putchar('\n');
+	Pause();
+}
