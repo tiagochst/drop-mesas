@@ -230,7 +230,7 @@ Captura captura_read_(FILE *fin) {
 	if (print) printf("Data de Captura: ");
 	X.data = data_le(fin);
 	if (print) printf("Local de Captura: ");
-	fscanf(fin, " %[^\n]", X.local);
+	fscanf(fin, " %[^\r\n]", X.local);
 
 	return X;
 }
@@ -239,7 +239,7 @@ Captura captura_read_lab3(FILE *fp) {
 	Captura X;
 	char *linha, *tok;
 
-	fscanf(fp," %a[^\n]", &linha);
+	fscanf(fp," %a[^\r\n]", &linha);
 
 	tok = strtok(linha, "|");
 	sscanf(tok, " %d", &X.idI);
