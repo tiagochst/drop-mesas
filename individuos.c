@@ -8,12 +8,12 @@
 int individuo_busca_lab1(int id, Individuo *K) {
   int i,k, n, sz,save;
   Individuo X;
-  
+
   fseek(FIndiv, 0, SEEK_SET);
   fscanf(FIndiv, " %d", &n);
   for(i=0,k=-1 ; i<n ; i++) {
     X = individuo_read(FIndiv, &save, &sz);
-    
+
     if(X.idI == -1) i--;
     if(X.idI == id) {
       k = i;
@@ -23,7 +23,7 @@ int individuo_busca_lab1(int id, Individuo *K) {
 
   if(k == -1) return -1;
   if(K != NULL) *K = X;
-  
+
   fseek(FIndiv, save, SEEK_SET);
   return sz;
 }
@@ -122,6 +122,7 @@ void individuo_insere_lab3(FILE *fp) {
 
     if (indice_busca("individuo", X.idI) != FAIL) {
       fprintf(stderr, "ERRO [individuo_insere]: Ja ha registro de individuo com esse id.\n");
+      fprintf(stderr, "ERRO AQUI: <%d>\n", X.idI);
       return;
     }
     if (indice_busca("especie", X.idE) == FAIL) {

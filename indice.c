@@ -29,7 +29,7 @@ void indice_start(char *espec, char *indiv) {
 			fscanf(FEspec, " %d", &i);
 			while (i--) {
 				X = especie_read(FEspec, &offset, NULL);
-				especie_write(stdout, X, 1);
+
 				if (X.id == -1)
 					i++;
 				else
@@ -59,16 +59,15 @@ void indice_start(char *espec, char *indiv) {
 			fscanf(FIndiv, " %d", &i);
 			while (i--) {
 				Y = individuo_read(FIndiv, &offset, NULL);
-				if (Y.idI == -1) {
+
+				if (Y.idI == -1)
 					i++;
-					continue;
-				} else
+				else
 					indice_insere("individuo", Y.idI, offset);
 			}
 		} else {
 			IPIndiv = (Indice_Prim *) malloc(n * sizeof(Indice_Prim));
 			fread(IPIndiv, sizeof(Indice_Prim), n, FIPrimIndiv);
-
 			N_IPIndiv = n;
 		}
 		fclose(FIPrimIndiv);
@@ -198,4 +197,5 @@ void indice_fail(char *sfp) {
 	FILE *fp = fopen(sfp, "wb");
 	fwrite(&n, sizeof(int), 1, fp);
 	fwrite(&flag, sizeof(int), 1, fp);
+	fclose(fp);
 }
