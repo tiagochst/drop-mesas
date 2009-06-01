@@ -117,9 +117,10 @@ void individuo_insere_lab3(FILE *fp) {
   Individuo X;
 
   fscanf(fp, " %d", &n);
-  for(i=0 ; i<n ; i++) {
+  
+  for(i=0 ; i<n ; i++) {  
     X = individuo_read_lab3(fp);
-
+  
     if (indice_busca("individuo", X.idI) != FAIL) {
       fprintf(stderr, "ERRO [individuo_insere]: Ja ha registro de individuo com esse id.\n");
       fprintf(stderr, "ERRO AQUI: <%d>\n", X.idI);
@@ -129,13 +130,14 @@ void individuo_insere_lab3(FILE *fp) {
       fprintf(stderr, "ERRO [individuo_insere]: A especie associada nao existe.\n");
       return;
     }
-
+    
     individuo_insere_(X);
     muda_n(FIndiv, +1);
     indice_fail(SISecIndiv);
     indice_fail(SIPrimIndiv);
     indice_sec_insere("individuo", X.idE, X.idI);
   }
+ 
 }
 
 /* INDIVÍDUO LÊ

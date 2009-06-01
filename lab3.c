@@ -3,6 +3,16 @@
 #include <time.h>
 #include <sys/timeb.h>
 
+typedef void (*funcao_consulta)(int);
+
+/*LE DADOS
+ char **arg: String dos comandos passados como argumento
+             na execução
+ arg[1] = dados_especies.txt;
+ arg[2] = dados_individuos.txt;
+ arg[3] = dados_capturas.tx;
+ A função abre os arquivos cujos nomes são esses e faz as inserções
+correspondentes*/
 void le_dados(char **arg) {
 	int i;
 	FILE *file_input[3];
@@ -27,8 +37,17 @@ void le_dados(char **arg) {
 	printf("Leitura efetuada com sucesso!\n");
 }
 
-typedef void (*funcao_consulta)(int);
 
+
+/*EXECUTA
+  funcao_consulta f: conterá as funções implementadas para efetuar as consultas 
+  Indice_Prim *indice: ID's que serão pesquisados em "indice"
+  int n_indice: Quantidade de indice
+  int N: A quantidade que terá que ser executada cada consulta
+  int M: A quantidade restante no caso da quantidade de consultas não ser divisivel
+  pela quantidade de especies/individuos
+  
+  A função retorna o tempo para executar essas consultas utilizando F*/
 double executa(funcao_consulta F, Indice_Prim *indice, int n_indice, int N,	int M) {
 	int i, j;
 	struct timeb time_start, time_end;
@@ -47,6 +66,11 @@ double executa(funcao_consulta F, Indice_Prim *indice, int n_indice, int N,	int 
 			- ((double) time_start.time * 1000.0 + (double) time_start.millitm);
 }
 
+/*COMPARA TEMPO
+  Le a quantidade de consultas que deseja realizar e para cada consulta chama
+  executa. Guardamos os resultados obtidos em um vetor e ao final imprimimos a 
+  tabela que compara os tempos obtidos pelas funções do lab1 com os tempos
+  do lab2*/
 void compara_tempo() {
 	int i;
 	char c;
@@ -79,7 +103,7 @@ void compara_tempo() {
 
 	printf("Consulta   Tempo Lab1(ms)   Tempo Lab2(ms)   Reducao\n");
 	for (i=0,c='a'; i<4; i++,c++) {
-		printf("4.%c        %-17.0lf%-17.0lf%.2lf%%\n", c, t1[i], t2[i],
+	  printf("4.%c        %-17.0lf%-17.0lf%.2lf%%\n", c, t1[i], t2[i],
 				100.0 * ((t1[i] - t2[i]) / t1[i]));
 	}
 
