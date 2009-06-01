@@ -303,7 +303,7 @@ Individuo individuo_read_lab3(FILE *fin) {
   Individuo X;
   char *linha, *tok;
 
-  fscanf(fin," %a[^\n]", &linha);
+  fscanf(fin," %a[^\r\n]", &linha);
 
   tok = strtok(linha, "|");
   sscanf(tok, " %d", &X.idE);

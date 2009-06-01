@@ -294,15 +294,15 @@ Especie especie_read_(FILE *fin) {
 	if (print) printf("ID: ");
 	fscanf(fin, " %d", &X.id);
 	if (print) printf("Caminho da foto: ");
-	fscanf(fin, " %[^\n]", X.camin);
+	fscanf(fin, " %[^\r\n]", X.camin);
 	if (print) printf("Data: ");
 	X.data = data_le(fin);
 	if (print) printf("Nome cientifico: ");
-	fscanf(fin, " %[^\n]", X.nomec);
+	fscanf(fin, " %[^\r\n]", X.nomec);
 	if (print) printf("Nome popular: ");
-	fscanf(fin, " %[^\n]", X.nomep);
+	fscanf(fin, " %[^\r\n]", X.nomep);
 	if (print) printf("Descricao: ");
-	fscanf(fin, " %[^\n]", X.descr);
+	fscanf(fin, " %[^\r\n]", X.descr);
 
 	return X;
 }
@@ -311,7 +311,7 @@ Especie especie_read_lab3(FILE *fin) {
 	Especie X;
 	char *linha, *tok;
 
-	fscanf(fin," %a[^\n]", &linha);
+	fscanf(fin," %a[^\r\n]", &linha);
 
 	tok = strtok(linha, "|");
 	sscanf(tok, " %d", &X.id);
