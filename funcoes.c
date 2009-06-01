@@ -21,7 +21,6 @@ int print_menu_lab3(){
 int print_menu(int x) {
 	int in, max;
 
-	system("clear");
 	if (x == 0) {
 		/* menu principal */
 		puts("**************************");
