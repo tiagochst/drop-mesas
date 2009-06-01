@@ -58,6 +58,6 @@ nIndiv = 100
 nCaptu = 100
 
 #geraEspec(nEspec)
-geraIndiv(nIndiv, nEspec)
-#geraCaptu(nCaptu, nIndiv)
+#geraIndiv(nIndiv, nEspec)
+geraCaptu(nCaptu, nIndiv)
 
