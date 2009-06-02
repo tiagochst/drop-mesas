@@ -1,34 +1,41 @@
 #include "definicoes.h"
 
-/* ESPÉCIE BUSCA
+/* ESPÉCIE BUSCA LAB 1
  * - busca espécie de ID 'id', e salva seu registro em K
  * - ao final da busca, o ponteiro no arquivo estará
  * imediatamente antes do começo do registro dessa captura
- * - utiliza o índice primário implementado */
+ * - NAO utiliza o índice primário */
 int especie_busca_lab1(int id, Especie *K) {
-  int i,k, n, sz,save;
-  Especie X;
+	int i, k, n, sz, save;
+	Especie X;
 
-  fseek(FEspec, 0, SEEK_SET);
-  fscanf(FEspec, " %d", &n);
-  for(i=0,k=-1 ; i<n ; i++) {
-    X = especie_read(FEspec, &save, &sz);
+	fseek(FEspec, 0, SEEK_SET);
+	fscanf(FEspec, " %d", &n);
+	for (i = 0, k = -1; i < n; i++) {
+		X = especie_read(FEspec, &save, &sz);
 
-    if(X.id == -1) i--;
-    if(X.id == id) {
-      k = i;
-      break;
-    }
-  }
+		if (X.id == -1)
+			i--;
+		if (X.id == id) {
+			k = i;
+			break;
+		}
+	}
 
-  if(k == -1) return -1;
-  if(K != NULL) *K = X;
+	if (k == -1)
+		return -1;
+	if (K != NULL)
+		*K = X;
 
-  fseek(FEspec, save, SEEK_SET);
-  return sz;
-
+	fseek(FEspec, save, SEEK_SET);
+	return sz;
 }
 
+/* ESPÉCIE BUSCA LAB 2
+ * - busca espécie de ID 'id', e salva seu registro em K
+ * - ao final da busca, o ponteiro no arquivo estará
+ * imediatamente antes do começo do registro dessa captura
+ * - UTILIZA o índice primário */
 int especie_busca_lab2(int id, Especie *K) {
 	int sz, save;
 	int i = indice_busca("especie", id);
@@ -111,12 +118,17 @@ void especie_insere_(Especie X) {
 		buraco_var_insere(FEspec, Ssz - sz - SZ_REG, ftell(FEspec));
 }
 
+/* ESPÉCIE INSERE LAB 3
+ * - lê os valores de um arquivo fp, e insere no arquivo
+ * de tamanho variável
+ * - adiciona a descrição na lista invertida para busca textual
+ * - não contém impressões na saída padrão nem leitura do teclado */
 void especie_insere_lab3(FILE *fp) {
 	int n, i;
 	Especie X;
 
 	fscanf(fp, " %d", &n);
-	for(i=0 ; i<n ; i++) {
+	for (i = 0; i < n; i++) {
 		X = especie_read_lab3(fp);
 
 		if (indice_busca("especie", X.id) != FAIL) {
@@ -266,7 +278,7 @@ Especie especie_read(FILE* fin, int *_save, int *_sz) {
 	fscanf(fin, " %c", &c);
 	if (c == VAZIO) {
 		buraco_var_le(fin, &L);
-		fseek(fin, L.sz - (SZ_LISTA-SZ_REG), SEEK_CUR);
+		fseek(fin, L.sz - (SZ_LISTA - SZ_REG), SEEK_CUR);
 
 		X.id = -1;
 		return X;
@@ -289,7 +301,7 @@ Especie especie_read(FILE* fin, int *_save, int *_sz) {
  * lê de arquivo texto ou teclado um registro de espécie */
 Especie especie_read_(FILE *fin) {
 	Especie X;
-	int print = (fin==stdin)?(1):(0);
+	int print = (fin == stdin) ? (1) : (0);
 
 	if (print) printf("ID: ");
 	fscanf(fin, " %d", &X.id);
@@ -307,11 +319,14 @@ Especie especie_read_(FILE *fin) {
 	return X;
 }
 
+/* ESPÉCIE READ LAB 3
+ * lê um registro de espécie de arquivo texto
+ * com formatação do Lab 3 */
 Especie especie_read_lab3(FILE *fin) {
 	Especie X;
 	char *linha, *tok;
 
-	fscanf(fin," %a[^\r\n]", &linha);
+	fscanf(fin, " %a[^\r\n]", &linha);
 
 	tok = strtok(linha, "|");
 	sscanf(tok, " %d", &X.id);
@@ -370,10 +385,10 @@ int especie_conta_caracteres(Especie X) {
 		X.id /= 10;
 	}
 
-	return ((id+1)
-			+ (strlen(X.camin)+1)
-			+ (SZ_DATA+1)
-			+ (strlen(X.nomec)+1)
-			+ (strlen(X.nomep)+1)
+	return ((id + 1)
+			+ (strlen(X.camin) + 1)
+			+ (SZ_DATA + 1)
+			+ (strlen(X.nomec) + 1)
+			+ (strlen(X.nomep) + 1)
 			+ (strlen(X.descr)));
 }
