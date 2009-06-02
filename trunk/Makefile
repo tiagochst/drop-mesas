@@ -13,11 +13,6 @@ all: $(OBJS)
 run: all
 	./$(EXEC) $(ATB)
 
-load: all
-	./$(EXEC) < input_01
-	./$(EXEC) < input_02
-	./$(EXEC) < input_03
-
 $(OBJS): %.o: %.c
 	$(CC) -c $(CFLAGS) $<
 
