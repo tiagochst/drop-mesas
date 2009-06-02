@@ -257,7 +257,7 @@ Captura captura_read_lab3(FILE *fp) {
 	X.data = data_le_str(tok);
 
 	tok = strtok(NULL, "|");
-	sscanf(tok, " %s", X.local);
+	strcpy(X.local, tok);
 
 	free(linha);
 	return X;

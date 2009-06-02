@@ -332,19 +332,19 @@ Especie especie_read_lab3(FILE *fin) {
 	sscanf(tok, " %d", &X.id);
 
 	tok = strtok(NULL, "|");
-	sscanf(tok, " %s", X.nomec);
+	strcpy(X.nomec, tok);
 
 	tok = strtok(NULL, "|");
-	sscanf(tok, " %s", X.nomep);
+	strcpy(X.nomep, tok);
 
 	tok = strtok(NULL, "|");
-	sscanf(tok, " %s", X.camin);
+	strcpy(X.camin, tok);
 
 	tok = strtok(NULL, "|");
 	X.data = data_le_str(tok);
 
 	tok = strtok(NULL, "|");
-	sscanf(tok, " %s", X.descr);
+	strcpy(X.descr, tok);
 
 	free(linha);
 	return X;
