@@ -2,9 +2,9 @@ CC = gcc
 CFLAGS = -ansi -W -Wall -g -ggdb
 LIBS = -lm
 
-OBJS = main.o capturas.o consultas.o especies.o funcoes.o individuos.o lista_buraco_var.o lista_buraco_fixo.o lista_inv.o indice.o indice_sec.o conjunto.o data.o lab3.o
-ATB = dados_especies.txt dados_individuos.txt dados_capturas.txt
-FILES = individuos.txt especies.txt capturas.dat inv_primario.dat inv_secundario.dat ind_prim_especie.dat ind_prim_individuo.dat ind_sec_individuo.dat ind_sec_captura.dat
+OBJS = main.o
+ATB =
+FILES =
 EXEC = run
 
 all: $(OBJS)
