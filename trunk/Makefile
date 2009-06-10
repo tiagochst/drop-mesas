@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -ansi -W -Wall -g -ggdb
 LIBS = -lm
 
-OBJS = main.o funcoes.o opcao1.o opcao2.o
+OBJS = main.o funcoes.o opcao1.o opcao2.o menu.o
 FILES =
 EXEC = run
 
