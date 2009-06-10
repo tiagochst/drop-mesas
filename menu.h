@@ -11,8 +11,11 @@
 #define BG_BLACK 40
 
 void CLEAR_SCREEN();
-void PRINT_YELLOW();
-void PRINT_BLUE();
 void MENU_NO_COLOR();
 void MENU_WALL_START();
 void MENU_WALL_END();
+void PRINT_YELLOW(char texto[]);
+void PRINT_BLUE(char texto[]);
+void BLINK_RED(char texto[]);
+void PRINT_WALLS(char texto[]);
+void PRINT_WALLS_BLUE(char texto[]);
