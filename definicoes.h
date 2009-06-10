@@ -7,6 +7,7 @@
 #include <string.h>
 #include <ctype.h>
 
+
 /* funcoes.c */
 int print_menu();
 void Pause();
