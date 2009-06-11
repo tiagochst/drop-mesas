@@ -46,7 +46,7 @@ char* muda_ext(char *file, char *nova_ext) {
 FILE* Fopen(char *file, char *modo) {
 	FILE *fp = fopen(file, modo);
 	if (fp == NULL) {
-		fprintf(stderr, "[ERRO - Fopen] Arquivo <%s> não existe.\n", file);
+		fprintf(stderr, "[ERRO - Fopen] Erro ao abrir arquivo <%s>.\n", file);
 	}
 
 	return fp;
@@ -67,6 +67,7 @@ void files_start() {
 	fscanf(fp, " %d", &NFile);
 	FileNames = (char**) malloc(NFile * sizeof(char*));
 	File = (FILE**) malloc(NFile * sizeof(FILE*));
+	FileWords = (Conjunto **) malloc(NFile * sizeof(Conjunto*));
 
 	for (i = 0; i < NFile; i++) {
 		fscanf(fp, " %a[^\n]", &FileNames[i]);
@@ -74,10 +75,29 @@ void files_start() {
 		File[i] = Fopen(FileNames[i], "r");
 		if (File[i] == NULL)
 			exit(1);
+
+		files_start_read(File[i], FileWords[i]);
 	}
 
 	fclose(fp);
 	free(nome_arq);
+}
+
+void files_start_read(FILE *fp, Conjunto *c) {
+	Conjunto *aux, *uniao;
+	char *s;
+
+	c = conj_init();
+	while(fscanf(fp, " %a[^\r\n]", &s) == 1) {
+		aux = strtokenizer(s);
+		uniao = conj_uniao(c, aux, strcmp_);
+
+		conj_destroy(c);
+		conj_destroy(aux);
+		free(s);
+
+		c = uniao;
+	}
 }
 
 void files_end() {
@@ -88,4 +108,32 @@ void files_end() {
 	}
 	free(FileNames);
 	free(File);
+}
+
+void strtoupper(char *s) {
+	for (; *s != '\0'; s++)
+		*s = toupper(*s);
+}
+
+int strcmp_(void *a, void *b) {
+	return strcmp((char*) a, (char*) b);
+}
+
+/* STRING TOKENIZER */
+/* divide a string dada em palavras, montando
+ * e devolvendo um conjunto das palavras */
+Conjunto *strtokenizer(char *s) {
+	Conjunto *c = conj_init();
+	char *tok;
+	char *delimiters = "_ .,;:!?()[]{}<>'\"\t\\/";
+
+	/* separa a string s em tokens */
+	tok = strtok(s, delimiters);
+	while (tok != NULL) {
+		strtoupper(tok);
+		conj_insere(c, (void*) tok, (strlen(tok) + 1) * sizeof(char), strcmp_);
+		tok = strtok(NULL, delimiters);
+	}
+
+	return c;
 }
