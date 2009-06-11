@@ -35,6 +35,13 @@ int conj_size(Conjunto *c) {
 	return n;
 }
 
+int conj_size_freq(Conjunto *c) {
+	int n;
+	for (n = 0, c = c->next; c != NULL; c = c->next)
+		n += c->freq;
+	return n;
+}
+
 /* INSERE CONJUNTO
  * dado um elemento, seu número de bytes,
  * e uma função de comparação, insere o elemento
@@ -45,14 +52,17 @@ void conj_insere(Conjunto *c, void *e, int n_bytes, funcao_cmp cmp) {
 	while (c->next != NULL && cmp(c->next->i, e) < 0)
 		c = c->next;
 
-	if (c->next != NULL && cmp(c->next->i, e) == 0)
+	if (c->next != NULL && cmp(c->next->i, e) == 0) {
+		(c->next->freq)++;
 		return;
+	}
 
 	novo = (Conjunto *) malloc(sizeof(Conjunto));
 	novo->i = malloc(n_bytes);
 	memcpy(novo->i, e, n_bytes);
 	novo->sz = n_bytes;
 	novo->next = c->next;
+	novo->freq = 1;
 	c->next = novo;
 }
 
@@ -81,31 +91,46 @@ Conjunto *conj_interseccao(Conjunto *c1, Conjunto *c2, funcao_cmp cmp) {
 	return inter;
 }
 
-/* DIFERENÇA DE CONJUNTO
+/* UNIÃO DE CONJUNTO
  * dados 2 conjuntos e uma função de comparação
- * devolve a diferença dos conjuntos */
-Conjunto *conj_diferenca(Conjunto *c1, Conjunto *c2, funcao_cmp cmp) {
-	Conjunto *difer = conj_init();
-	int diff;
+ * devolve a união dos conjuntos */
+Conjunto *conj_uniao(Conjunto *c1, Conjunto *c2, funcao_cmp cmp) {
+	Conjunto *uniao = conj_init();
+	int i;
 	c1 = c1->next;
 	c2 = c2->next;
 
-	while (c1!=NULL && c2!=NULL) {
+	while (c1 != NULL) {
+		for (i = 0; i < c1->freq; i++)
+			conj_insere(uniao, c1->i, c1->sz, cmp);
+		c1 = c1->next;
+	}
+	while (c2 != NULL) {
+		for (i = 0; i < c2->freq; i++)
+			conj_insere(uniao, c2->i, c2->sz, cmp);
+		c2 = c2->next;
+	}
+
+	return uniao;
+}
+
+int conj_prod_escalar(Conjunto *c1, Conjunto *c2, funcao_cmp cmp) {
+	int prod = 0, diff;
+	c1 = c1->next;
+	c2 = c2->next;
+
+	while (c1 != NULL && c2 != NULL) {
 		diff = cmp(c1->i, c2->i);
 
 		if (diff == 0) {
+			prod += c1->freq * c2->freq;
 			c1 = c1->next;
 			c2 = c2->next;
-		} else if (diff < 0) {
-			conj_insere(difer, c1->i, c1->sz, cmp);
+		} else if (diff < 0)
 			c1 = c1->next;
-		} else
+		else
 			c2 = c2->next;
-	}
-	while (c1!=NULL) {
-		conj_insere(difer, c1->i, c1->sz, cmp);
-		c1 = c1->next;
 	}
 
-	return difer;
+	return prod;
 }

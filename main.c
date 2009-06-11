@@ -3,6 +3,7 @@
 int NFile;
 char** FileNames;
 FILE** File;
+Conjunto **FileWords;
 
 int main() {
 	int menu;
