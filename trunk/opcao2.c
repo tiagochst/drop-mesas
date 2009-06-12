@@ -27,6 +27,8 @@ void bagOfWords(char *file) {
 		}
 		fprintf(fp, "\n");
 	}
+
+	fclose(fp);
 }
 
 void cosseno(char *file) {
@@ -50,6 +52,8 @@ void cosseno(char *file) {
 		}
 		fprintf(fp, "\n");
 	}
+
+	fclose(fp);
 }
 
 void okapi(char *file) {
@@ -74,7 +78,7 @@ void okapi(char *file) {
 	}
 	tammed = (double) total_sz / (double) NFile;
 
-	matrix = (double*) malloc(NFile * NFile * sizeof(double *));
+	matrix = (double *) malloc(NFile * NFile * sizeof(double));
 	for (i = 0; i < NFile; i++) {
 		for (j = 0; j < NFile; j++) {
 			inter = conj_interseccao(FileWords[i], FileWords[j], strcmp_);
@@ -108,6 +112,11 @@ void okapi(char *file) {
 			fprintf(fp, "%.1lf ", matrix[i*NFile + j]);
 		fprintf(fp, "\n");
 	}
+
+	free(matrix);
+	conj_destroy(colecao);
+
+	fclose(fp);
 }
 
 void normaliza_gauss(double *data, int N) {
@@ -127,9 +136,9 @@ void normaliza_gauss(double *data, int N) {
 	for (i = 0; i < N; i++) {
 		xnorm = (((data[i] - media) / (3.0 * desvio)) + 1.0) / 2.0;
 
-		if(xnorm > 1) {
+		if(xnorm > 1.0) {
 			data[i] = 1.0;
-		} else if(xnorm < 0) {
+		} else if(xnorm < 0.0) {
 			data[i] = 0.0;
 		} else {
 			data[i] = xnorm;
