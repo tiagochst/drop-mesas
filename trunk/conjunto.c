@@ -13,14 +13,14 @@ Conjunto *conj_init() {
 
 /* DESTRÓI CONJUNTO
  * desaloca todos os nós */
-void conj_destroy(Conjunto *c) {
+void conj_destroy(Conjunto *c, funcao_free Ffree) {
 	Conjunto *next;
 
 	next = c->next;
 	free(c);
 	for (c = next; c != NULL; c = next) {
 		next = c->next;
-		free(c->i);
+		Ffree(c->i);
 		free(c);
 	}
 }
@@ -46,20 +46,19 @@ int conj_size_bytes(Conjunto *c) {
  * dado um elemento, seu número de bytes,
  * e uma função de comparação, insere o elemento
  * no conjunto na posição correta */
-void conj_insere(Conjunto *c, void *e, int n_bytes, funcao_cmp cmp) {
+void conj_insere(Conjunto *c, void *e, int n_bytes, funcao_cmp Fcmp, funcao_copy Fcopy) {
 	Conjunto *novo;
 
-	while (c->next != NULL && cmp(c->next->i, e) < 0)
+	while (c->next != NULL && Fcmp(c->next->i, e) < 0)
 		c = c->next;
 
-	if (c->next != NULL && cmp(c->next->i, e) == 0) {
+	if (c->next != NULL && Fcmp(c->next->i, e) == 0) {
 		(c->next->freq)++;
 		return;
 	}
 
 	novo = (Conjunto *) malloc(sizeof(Conjunto));
-	novo->i = malloc(n_bytes);
-	memcpy(novo->i, e, n_bytes);
+	Fcopy(&(novo->i), &e);
 	novo->sz = n_bytes;
 	novo->next = c->next;
 	novo->freq = 1;
@@ -69,17 +68,17 @@ void conj_insere(Conjunto *c, void *e, int n_bytes, funcao_cmp cmp) {
 /* INTERSECÇÃO DE CONJUNTO
  * dados 2 conjuntos e uma função de comparação
  * devolve a intersecção dos conjuntos */
-Conjunto *conj_interseccao(Conjunto *c1, Conjunto *c2, funcao_cmp cmp) {
+Conjunto *conj_interseccao(Conjunto *c1, Conjunto *c2, funcao_cmp Fcmp, funcao_copy Fcopy) {
 	Conjunto *inter = conj_init();
 	int diff;
 	c1 = c1->next;
 	c2 = c2->next;
 
 	while (c1!=NULL && c2!=NULL) {
-		diff = cmp(c1->i, c2->i);
+		diff = Fcmp(c1->i, c2->i);
 
 		if (diff == 0) {
-			conj_insere(inter, c1->i, c1->sz, cmp);
+			conj_insere(inter, c1->i, c1->sz, Fcmp, Fcopy);
 			c1 = c1->next;
 			c2 = c2->next;
 		} else if (diff < 0)
@@ -94,8 +93,8 @@ Conjunto *conj_interseccao(Conjunto *c1, Conjunto *c2, funcao_cmp cmp) {
 /* UNIÃO DE CONJUNTO
  * dados 2 conjuntos e uma função de comparação
  * devolve a união dos conjuntos */
-Conjunto *conj_uniao(Conjunto *c1, Conjunto *c2, funcao_cmp cmp,
-		int ignore_freq) {
+Conjunto *conj_uniao(Conjunto *c1, Conjunto *c2, funcao_cmp Fcmp,
+		funcao_copy Fcopy, int ignore_freq) {
 	Conjunto *uniao = conj_init();
 	int i;
 	c1 = c1->next;
@@ -103,14 +102,14 @@ Conjunto *conj_uniao(Conjunto *c1, Conjunto *c2, funcao_cmp cmp,
 
 	while (c1 != NULL) {
 		for (i = 0; i < c1->freq; i++) {
-			conj_insere(uniao, c1->i, c1->sz, cmp);
+			conj_insere(uniao, c1->i, c1->sz, Fcmp, Fcopy);
 			if (ignore_freq) break;
 		}
 		c1 = c1->next;
 	}
 	while (c2 != NULL) {
 		for (i = 0; i < c2->freq; i++) {
-			conj_insere(uniao, c2->i, c2->sz, cmp);
+			conj_insere(uniao, c2->i, c2->sz, Fcmp, Fcopy);
 			if (ignore_freq) break;
 		}
 		c2 = c2->next;
@@ -119,16 +118,16 @@ Conjunto *conj_uniao(Conjunto *c1, Conjunto *c2, funcao_cmp cmp,
 	return uniao;
 }
 
-int conj_prod_escalar(Conjunto *c1, Conjunto *c2, funcao_cmp cmp) {
+int conj_prod_escalar(Conjunto *c1, Conjunto *c2, funcao_cmp Fcmp, funcao_prod Fprod) {
 	int prod = 0, diff;
 	c1 = c1->next;
 	c2 = c2->next;
 
 	while (c1 != NULL && c2 != NULL) {
-		diff = cmp(c1->i, c2->i);
+		diff = Fcmp(c1->i, c2->i);
 
 		if (diff == 0) {
-			prod += c1->freq * c2->freq;
+			prod += Fprod(c1->i, c2->i);
 			c1 = c1->next;
 			c2 = c2->next;
 		} else if (diff < 0)
