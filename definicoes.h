@@ -16,7 +16,6 @@ extern Conjunto** FileWords;
 
 /* funcoes.c */
 int print_menu();
-void Pause();
 char* muda_ext(char *file, char *nova_ext);
 FILE* Fopen(char *file, char *modo);
 void files_start();

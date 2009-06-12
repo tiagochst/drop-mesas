@@ -23,12 +23,6 @@ int print_menu() {
 	return in;
 }
 
-void Pause() {
-	char c;
-	puts("Pressione (q) para continuar. . .");
-	while (scanf("%c", &c) == 1 && tolower(c) != 'q');
-}
-
 /* supõe que as extensões nova e antiga tenham mesmo tamanho */
 char* muda_ext(char *file, char *nova_ext) {
 	int i, j, len = strlen(file);
@@ -46,7 +40,7 @@ char* muda_ext(char *file, char *nova_ext) {
 FILE* Fopen(char *file, char *modo) {
 	FILE *fp = fopen(file, modo);
 	if (fp == NULL) {
-		fprintf(stderr, "[ERRO - Fopen] Erro ao abrir arquivo <%s>.\n", file);
+		fprintf(stderr, "ERRO [Fopen]: Erro ao abrir arquivo <%s>.\n", file);
 	}
 
 	return fp;
@@ -105,9 +99,11 @@ void files_end() {
 	for (i = 0; i < NFile; i++) {
 		free(FileNames[i]);
 		fclose(File[i]);
+		conj_destroy(FileWords[i]);
 	}
 	free(FileNames);
 	free(File);
+	free(FileWords);
 }
 
 void strtoupper(char *s) {
