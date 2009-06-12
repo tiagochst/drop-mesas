@@ -19,11 +19,11 @@ void bagOfWords(char *file) {
 	fprintf(fp, "%d\n", NFile);
 	for (i = 0; i < NFile; i++) {
 		for (j = 0; j < NFile; j++) {
-			inter = conj_interseccao(FileWords[i], FileWords[j], strcmp_);
+			inter = conj_interseccao(FileWords[i], FileWords[j], Termo_cmp, Termo_copy);
 			val = (double) conj_size(inter) / (double) conj_size(FileWords[i]);
-			conj_destroy(inter);
+			conj_destroy(inter, Termo_free);
 
-			fprintf(fp, "%.1lf ", val);
+			fprintf(fp, "%.2lf ", val);
 		}
 		fprintf(fp, "\n");
 	}
@@ -43,12 +43,12 @@ void cosseno(char *file) {
 	fprintf(fp, "%d\n", NFile);
 	for (i = 0; i < NFile; i++) {
 		for (j = 0; j < NFile; j++) {
-			t1 = conj_prod_escalar(FileWords[i], FileWords[j], strcmp_);
-			t2 = conj_prod_escalar(FileWords[i], FileWords[i], strcmp_);
-			t3 = conj_prod_escalar(FileWords[j], FileWords[j], strcmp_);
+			t1 = conj_prod_escalar(FileWords[i], FileWords[j], Termo_cmp, Termo_prod);
+			t2 = conj_prod_escalar(FileWords[i], FileWords[i], Termo_cmp, Termo_prod);
+			t3 = conj_prod_escalar(FileWords[j], FileWords[j], Termo_cmp, Termo_prod);
 			val = (double) t1 / sqrt((double) (t2 * t3));
 
-			fprintf(fp, "%.1lf ", val);
+			fprintf(fp, "%.2lf ", val);
 		}
 		fprintf(fp, "\n");
 	}
@@ -72,8 +72,8 @@ void okapi(char *file) {
 	colecao = conj_init();
 	for (i = 0; i < NFile; i++) {
 		total_sz += conj_size_bytes(FileWords[i]);
-		uniao = conj_uniao(colecao, FileWords[i], strcmp_, 1);
-		conj_destroy(colecao);
+		uniao = conj_uniao(colecao, FileWords[i], Termo_cmp, Termo_copy, 1);
+		conj_destroy(colecao, Termo_free);
 		colecao = uniao;
 	}
 	tammed = (double) total_sz / (double) NFile;
@@ -81,7 +81,7 @@ void okapi(char *file) {
 	matrix = (double *) malloc(NFile * NFile * sizeof(double));
 	for (i = 0; i < NFile; i++) {
 		for (j = 0; j < NFile; j++) {
-			inter = conj_interseccao(FileWords[i], FileWords[j], strcmp_);
+			inter = conj_interseccao(FileWords[i], FileWords[j], Termo_cmp, Termo_copy);
 
 			val = 0.0;
 			q = colecao->next;
@@ -89,9 +89,9 @@ void okapi(char *file) {
 			d2 = FileWords[j]->next;
 			for (k = inter->next; k != NULL; k = k->next) {
 				/* busca o elemento k->i nos conjuntos */
-				for (; strcmp_(q->i, k->i) != 0; q = q->next);
-				for (; strcmp_(d1->i, k->i) != 0; d1 = d1->next);
-				for (; strcmp_(d2->i, k->i) != 0; d2 = d2->next);
+				for (; Termo_cmp(q->i, k->i) != 0; q = q->next);
+				for (; Termo_cmp(d1->i, k->i) != 0; d1 = d1->next);
+				for (; Termo_cmp(d2->i, k->i) != 0; d2 = d2->next);
 
 				t1 = (3 + d2->freq) / (0.5 + 1.5 * (conj_size_bytes(d2) / tammed) + d2->freq);
 				t2 = (NFile - q->freq + 0.5) / (q->freq + 0.5);
@@ -99,7 +99,7 @@ void okapi(char *file) {
 
 				val += t1 * log10(t2) * t3;
 			}
-			conj_destroy(inter);
+			conj_destroy(inter, Termo_free);
 
 			matrix[i*NFile + j] = val;
 		}
@@ -109,12 +109,12 @@ void okapi(char *file) {
 
 	for (i = 0; i < NFile; i++) {
 		for (j = 0; j < NFile; j++)
-			fprintf(fp, "%.1lf ", matrix[i*NFile + j]);
+			fprintf(fp, "%.2lf ", matrix[i*NFile + j]);
 		fprintf(fp, "\n");
 	}
 
 	free(matrix);
-	conj_destroy(colecao);
+	conj_destroy(colecao, Termo_free);
 
 	fclose(fp);
 }

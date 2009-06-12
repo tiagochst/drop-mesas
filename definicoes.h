@@ -9,6 +9,11 @@
 #include <math.h>
 #include "conjunto.h"
 
+typedef struct {
+	char *s;
+	double peso;
+} Termo;
+
 extern int NFile;
 extern char** FileNames;
 extern FILE** File;
@@ -17,12 +22,18 @@ extern Conjunto** FileWords;
 /* funcoes.c */
 int print_menu();
 char* muda_ext(char *file, char *nova_ext);
+void strtoupper(char *s);
 FILE* Fopen(char *file, char *modo);
 void files_start();
 void files_start_read(FILE *fp, Conjunto **c);
 void files_end();
-int strcmp_(void *a, void *b);
-Conjunto *strtokenizer(char *s);
+
+/* termo.c */
+int Termo_cmp(void *a, void *b);
+double Termo_prod(void *a, void *b);
+void Termo_free(void *a);
+void Termo_copy(void **a, void **b);
+Conjunto *Termo_strtokenizer(char *s);
 
 /* opcao1.c */
 void opcao1();

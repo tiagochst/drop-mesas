@@ -37,6 +37,11 @@ char* muda_ext(char *file, char *nova_ext) {
 	return novo;
 }
 
+void strtoupper(char *s) {
+	for (; *s != '\0'; s++)
+		*s = toupper(*s);
+}
+
 FILE* Fopen(char *file, char *modo) {
 	FILE *fp = fopen(file, modo);
 	if (fp == NULL) {
@@ -83,11 +88,11 @@ void files_start_read(FILE *fp, Conjunto **c) {
 
 	*c = conj_init();
 	while(fscanf(fp, " %a[^\r\n]", &s) == 1) {
-		aux = strtokenizer(s);
-		uniao = conj_uniao(*c, aux, strcmp_, 0);
+		aux = Termo_strtokenizer(s);
+		uniao = conj_uniao(*c, aux, Termo_cmp, Termo_copy, 0);
 
-		conj_destroy(*c);
-		conj_destroy(aux);
+		conj_destroy(*c, Termo_free);
+		conj_destroy(aux, Termo_free);
 		free(s);
 
 		*c = uniao;
@@ -99,37 +104,9 @@ void files_end() {
 	for (i = 0; i < NFile; i++) {
 		free(FileNames[i]);
 		fclose(File[i]);
-		conj_destroy(FileWords[i]);
+		conj_destroy(FileWords[i], Termo_free);
 	}
 	free(FileNames);
 	free(File);
 	free(FileWords);
-}
-
-void strtoupper(char *s) {
-	for (; *s != '\0'; s++)
-		*s = toupper(*s);
-}
-
-int strcmp_(void *a, void *b) {
-	return strcmp((char*) a, (char*) b);
-}
-
-/* STRING TOKENIZER */
-/* divide a string dada em palavras, montando
- * e devolvendo um conjunto das palavras */
-Conjunto *strtokenizer(char *s) {
-	Conjunto *c = conj_init();
-	char *tok;
-	char *delimiters = "_ .,;:!?()[]{}<>'\"\t\\/";
-
-	/* separa a string s em tokens */
-	tok = strtok(s, delimiters);
-	while (tok != NULL) {
-		strtoupper(tok);
-		conj_insere(c, (void*) tok, (strlen(tok) + 1) * sizeof(char), strcmp_);
-		tok = strtok(NULL, delimiters);
-	}
-
-	return c;
 }
