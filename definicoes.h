@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <math.h>
 #include "conjunto.h"
 
 extern int NFile;
@@ -19,7 +20,7 @@ void Pause();
 char* muda_ext(char *file, char *nova_ext);
 FILE* Fopen(char *file, char *modo);
 void files_start();
-void files_start_read(FILE *fp, Conjunto *c);
+void files_start_read(FILE *fp, Conjunto **c);
 void files_end();
 int strcmp_(void *a, void *b);
 Conjunto *strtokenizer(char *s);
