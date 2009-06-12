@@ -33,5 +33,7 @@ void gera_vetor(FILE *fp, char *arq_vet);
 void opcao2();
 void bagOfWords(char *file);
 void cosseno(char *file);
+void okapi(char *file);
+void normaliza_gauss(double *data, int N);
 
 #endif /*DEFINICOES_H_*/

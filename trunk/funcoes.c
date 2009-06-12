@@ -90,7 +90,7 @@ void files_start_read(FILE *fp, Conjunto **c) {
 	*c = conj_init();
 	while(fscanf(fp, " %a[^\r\n]", &s) == 1) {
 		aux = strtokenizer(s);
-		uniao = conj_uniao(*c, aux, strcmp_);
+		uniao = conj_uniao(*c, aux, strcmp_, 0);
 
 		conj_destroy(*c);
 		conj_destroy(aux);

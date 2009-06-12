@@ -35,10 +35,10 @@ int conj_size(Conjunto *c) {
 	return n;
 }
 
-int conj_size_freq(Conjunto *c) {
+int conj_size_bytes(Conjunto *c) {
 	int n;
 	for (n = 0, c = c->next; c != NULL; c = c->next)
-		n += c->freq;
+		n += c->sz * c->freq;
 	return n;
 }
 
@@ -94,20 +94,25 @@ Conjunto *conj_interseccao(Conjunto *c1, Conjunto *c2, funcao_cmp cmp) {
 /* UNIÃO DE CONJUNTO
  * dados 2 conjuntos e uma função de comparação
  * devolve a união dos conjuntos */
-Conjunto *conj_uniao(Conjunto *c1, Conjunto *c2, funcao_cmp cmp) {
+Conjunto *conj_uniao(Conjunto *c1, Conjunto *c2, funcao_cmp cmp,
+		int ignore_freq) {
 	Conjunto *uniao = conj_init();
 	int i;
 	c1 = c1->next;
 	c2 = c2->next;
 
 	while (c1 != NULL) {
-		for (i = 0; i < c1->freq; i++)
+		for (i = 0; i < c1->freq; i++) {
 			conj_insere(uniao, c1->i, c1->sz, cmp);
+			if (ignore_freq) break;
+		}
 		c1 = c1->next;
 	}
 	while (c2 != NULL) {
-		for (i = 0; i < c2->freq; i++)
+		for (i = 0; i < c2->freq; i++) {
 			conj_insere(uniao, c2->i, c2->sz, cmp);
+			if (ignore_freq) break;
+		}
 		c2 = c2->next;
 	}
 
