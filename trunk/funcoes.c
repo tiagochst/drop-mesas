@@ -70,33 +70,33 @@ void files_start() {
 	FileWords = (Conjunto **) malloc(NFile * sizeof(Conjunto*));
 
 	for (i = 0; i < NFile; i++) {
-		fscanf(fp, " %a[^\n]", &FileNames[i]);
+		fscanf(fp, " %a[^\r\n]", &FileNames[i]);
 
 		File[i] = Fopen(FileNames[i], "r");
 		if (File[i] == NULL)
 			exit(1);
 
-		files_start_read(File[i], FileWords[i]);
+		files_start_read(File[i], &FileWords[i]);
 	}
 
 	fclose(fp);
 	free(nome_arq);
 }
 
-void files_start_read(FILE *fp, Conjunto *c) {
+void files_start_read(FILE *fp, Conjunto **c) {
 	Conjunto *aux, *uniao;
 	char *s;
 
-	c = conj_init();
+	*c = conj_init();
 	while(fscanf(fp, " %a[^\r\n]", &s) == 1) {
 		aux = strtokenizer(s);
-		uniao = conj_uniao(c, aux, strcmp_);
+		uniao = conj_uniao(*c, aux, strcmp_);
 
-		conj_destroy(c);
+		conj_destroy(*c);
 		conj_destroy(aux);
 		free(s);
 
-		c = uniao;
+		*c = uniao;
 	}
 }
 

@@ -3,7 +3,7 @@ CFLAGS = -ansi -W -Wall -g -ggdb
 LIBS = -lm
 
 OBJS = main.o funcoes.o opcao1.o opcao2.o menu.o conjunto.o
-FILES =
+FILES = bagOfWords.matrix cosseno.matrix
 EXEC = run
 
 all: $(OBJS)
