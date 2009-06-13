@@ -23,7 +23,7 @@ void bagOfWords(char *file) {
 			val = (double) conj_size(inter) / (double) conj_size(FileWords[i]);
 			conj_destroy(inter, Termo_free);
 
-			fprintf(fp, "%.2lf ", val);
+			fprintf(fp, print_double, val);
 		}
 		fprintf(fp, "\n");
 	}
@@ -33,8 +33,8 @@ void bagOfWords(char *file) {
 
 void cosseno(char *file) {
 	FILE *fp;
-	int i, j, t1, t2, t3;
-	double val;
+	int i, j;
+	double val, t1, t2, t3;
 
 	fp = Fopen(file, "w");
 	if (fp == NULL)
@@ -48,7 +48,7 @@ void cosseno(char *file) {
 			t3 = conj_prod_escalar(FileWords[j], FileWords[j], Termo_cmp, Termo_prod);
 			val = (double) t1 / sqrt((double) (t2 * t3));
 
-			fprintf(fp, "%.2lf ", val);
+			fprintf(fp, print_double, val);
 		}
 		fprintf(fp, "\n");
 	}
@@ -109,7 +109,7 @@ void okapi(char *file) {
 
 	for (i = 0; i < NFile; i++) {
 		for (j = 0; j < NFile; j++)
-			fprintf(fp, "%.2lf ", matrix[i*NFile + j]);
+			fprintf(fp, print_double, matrix[i*NFile + j]);
 		fprintf(fp, "\n");
 	}
 
