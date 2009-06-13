@@ -35,6 +35,12 @@ int conj_size(Conjunto *c) {
 	return n;
 }
 
+int conj_size_freq(Conjunto *c) {
+	int n;
+	for (n = 0, c = c->next; c != NULL; n += c->freq, c = c->next);
+	return n;
+}
+
 int conj_size_bytes(Conjunto *c) {
 	int n;
 	for (n = 0, c = c->next; c != NULL; c = c->next)
@@ -118,8 +124,9 @@ Conjunto *conj_uniao(Conjunto *c1, Conjunto *c2, funcao_cmp Fcmp,
 	return uniao;
 }
 
-int conj_prod_escalar(Conjunto *c1, Conjunto *c2, funcao_cmp Fcmp, funcao_prod Fprod) {
-	int prod = 0, diff;
+double conj_prod_escalar(Conjunto *c1, Conjunto *c2, funcao_cmp Fcmp, funcao_prod Fprod) {
+	double prod = 0;
+	int diff;
 	c1 = c1->next;
 	c2 = c2->next;
 

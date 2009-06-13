@@ -33,7 +33,7 @@ Conjunto *Termo_strtokenizer(char *s) {
 	char *tok;
 	char *delimiters = "_ .,;:!?()[]{}<>'\"\t\\/";
 	Termo t;
-	t.peso = 1.0; /* não calculado ainda */
+	t.peso = 0.0; /* não calculado ainda */
 
 	/* separa a string s em tokens */
 	tok = strtok(s, delimiters);

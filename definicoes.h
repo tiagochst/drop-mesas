@@ -14,6 +14,8 @@ typedef struct {
 	double peso;
 } Termo;
 
+extern const char *print_double;
+
 extern int NFile;
 extern char** FileNames;
 extern FILE** File;
@@ -37,7 +39,7 @@ Conjunto *Termo_strtokenizer(char *s);
 
 /* opcao1.c */
 void opcao1();
-void gera_vetor(FILE *fp, char *arq_vet);
+void tfIdf(int i, char *arq_vet);
 
 /* opcao2.c */
 void opcao2();
