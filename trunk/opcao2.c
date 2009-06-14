@@ -59,7 +59,7 @@ void cosseno(char *file) {
 void okapi(char *file) {
 	FILE *fp;
 	int i, j, total_sz;
-	double tammed, val, t1, t2, t3, *matrix;
+	double tammed, tamd2, val, t1, t2, t3, *matrix;
 	Conjunto *colecao, *inter, *uniao, *k, *d1, *d2, *q;
 
 	fp = Fopen(file, "w");
@@ -87,13 +87,14 @@ void okapi(char *file) {
 			q = colecao->next;
 			d1 = FileWords[i]->next;
 			d2 = FileWords[j]->next;
+			tamd2 = conj_size_bytes(FileWords[j]);
 			for (k = inter->next; k != NULL; k = k->next) {
 				/* busca o elemento k->i nos conjuntos */
 				for (; Termo_cmp(q->i, k->i) != 0; q = q->next);
 				for (; Termo_cmp(d1->i, k->i) != 0; d1 = d1->next);
 				for (; Termo_cmp(d2->i, k->i) != 0; d2 = d2->next);
 
-				t1 = (3 + d2->freq) / (0.5 + 1.5 * (conj_size_bytes(d2) / tammed) + d2->freq);
+				t1 = (3 + d2->freq) / (0.5 + 1.5 * (tamd2 / tammed) + d2->freq);
 				t2 = (NFile - q->freq + 0.5) / (q->freq + 0.5);
 				t3 = d1->freq;
 
