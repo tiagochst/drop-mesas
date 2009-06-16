@@ -58,8 +58,8 @@ void cosseno(char *file) {
 
 void okapi(char *file) {
 	FILE *fp;
-	int i, j, total_sz;
-	double tammed, tamd2, val, t1, t2, t3, *matrix;
+	int i, j, tamd1, tamd2;
+	double tammed, tfd1, tfd2, val, t1, t2, t3, *matrix;
 	Conjunto *colecao, *inter, *uniao, *k, *d1, *d2, *q;
 
 	fp = Fopen(file, "w");
@@ -68,18 +68,29 @@ void okapi(char *file) {
 
 	fprintf(fp, "%d\n", NFile);
 
-	total_sz = 0;
 	colecao = conj_init();
 	for (i = 0; i < NFile; i++) {
-		total_sz += conj_size_bytes(FileWords[i]);
-		uniao = conj_uniao(colecao, FileWords[i], Termo_cmp, Termo_copy, 1);
+		uniao = conj_uniao(colecao, FileWords[i], Termo_cmp, Termo_copy, 0);
 		conj_destroy(colecao, Termo_free);
 		colecao = uniao;
 	}
-	tammed = (double) total_sz / (double) NFile;
+	tammed = (double) conj_size_freq(colecao) / (double) NFile;
+
+	for (k = colecao->next; k != NULL; k = k->next) {
+		((Termo*) k->i)->peso = 0.0;
+	}
+	for (i=0; i<NFile; i++) {
+		tamd1 = conj_size_freq(FileWords[i]);
+		for (d1 = FileWords[i]->next; d1 != NULL ; d1 = d1->next) {
+			for(k = colecao->next ; Termo_cmp((void *) k->i, (void *) d1->i) != 0 ; k = k->next);
+			((Termo*) k->i)->peso += (double) d1->freq / (double) tamd1;
+		}
+	}
 
 	matrix = (double *) malloc(NFile * NFile * sizeof(double));
 	for (i = 0; i < NFile; i++) {
+		tamd1 = conj_size_freq(FileWords[i]);
+
 		for (j = 0; j < NFile; j++) {
 			inter = conj_interseccao(FileWords[i], FileWords[j], Termo_cmp, Termo_copy);
 
@@ -87,25 +98,30 @@ void okapi(char *file) {
 			q = colecao->next;
 			d1 = FileWords[i]->next;
 			d2 = FileWords[j]->next;
-			tamd2 = conj_size_bytes(FileWords[j]);
+			tamd2 = conj_size_freq(FileWords[j]);
 			for (k = inter->next; k != NULL; k = k->next) {
 				/* busca o elemento k->i nos conjuntos */
 				for (; Termo_cmp(q->i, k->i) != 0; q = q->next);
 				for (; Termo_cmp(d1->i, k->i) != 0; d1 = d1->next);
 				for (; Termo_cmp(d2->i, k->i) != 0; d2 = d2->next);
 
-				t1 = (3 + d2->freq) / (0.5 + 1.5 * (tamd2 / tammed) + d2->freq);
-				t2 = (NFile - q->freq + 0.5) / (q->freq + 0.5);
-				t3 = d1->freq;
+				tfd1 = (double) d1->freq / (double) tamd1;
+				tfd2 = (double) d2->freq / (double) tamd2;
+				t1 = (3 + tfd2) / (0.5 + 1.5 * (tamd2 / tammed) + tfd2);
+				t2 = (NFile - ((Termo*) q->i)->peso + 0.5) / (((Termo*) q->i)->peso + 0.5);
+				t3 = tfd1;
 
 				val += t1 * log10(t2) * t3;
 			}
 			conj_destroy(inter, Termo_free);
 
+			fprintf(fp, print_double, val);
 			matrix[i*NFile + j] = val;
 		}
+		fprintf(fp, "\n");
 	}
 
+	fprintf(fp, "** normalizado: **\n");
 	normaliza_gauss(matrix, NFile*NFile);
 
 	for (i = 0; i < NFile; i++) {

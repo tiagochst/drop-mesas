@@ -109,7 +109,6 @@ Conjunto *conj_uniao(Conjunto *c1, Conjunto *c2, funcao_cmp Fcmp,
 	while (c1 != NULL) {
 		for (i = 0; i < c1->freq; i++) {
 			conj_insere(uniao, c1->i, c1->sz, Fcmp, Fcopy);
-			if (ignore_freq) break;
 		}
 		c1 = c1->next;
 	}
@@ -125,7 +124,7 @@ Conjunto *conj_uniao(Conjunto *c1, Conjunto *c2, funcao_cmp Fcmp,
 }
 
 double conj_prod_escalar(Conjunto *c1, Conjunto *c2, funcao_cmp Fcmp, funcao_prod Fprod) {
-	double prod = 0;
+	double prod = 0.0;
 	int diff;
 	c1 = c1->next;
 	c2 = c2->next;
