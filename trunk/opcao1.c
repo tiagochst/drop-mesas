@@ -25,10 +25,6 @@ void colecao_gera() {
 		conj_destroy(colecao_sem_freq, Termo_free);
 		colecao_sem_freq = uniao;
 	}
-
-	/*for (uniao = colecao_sem_freq->next; uniao != NULL; uniao = uniao->next) {
-		printf("%s\n", ((Termo*)uniao->i)->s);
-	}*/
 }
 
 void colecao_destroy() {
@@ -60,13 +56,15 @@ void tfIdf(int k, char *arq_vet) {
 			/* td-idf */
 			tfidf = tf * idf;
 			((Termo*) d->i)->peso = tfidf;
+
+			/* imprimindo vetor no arquivo */
+			fprintf(fp, "%s ", ((Termo*) d->i)->s);
+			fprintf(fp, print_double, tfidf);
+			fprintf(fp, "\n");
 		} else {
 			tfidf = 0.0;
 		}
-
-		fprintf(fp, print_double, tfidf);
 	}
-	fprintf(fp, "\n");
 
 	fclose(fp);
 	free(arq_vet);
