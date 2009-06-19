@@ -1,47 +1,47 @@
 #include "menu.h"
 
-void CLEAR_SCREEN(){
+void clear_screen(){
   printf("\e[H\e[2J"); /* printf() para limpar a tela */
 }
 
-void MENU_NO_COLOR(){
+void menu_no_color(){
   printf("%c[%dm", 0x1B, NO_COLOR);
 }
-void PRINT_YELLOW(char texto[]){
+void print_yellow(char texto[]){
   printf("%c[%d;%dm", 0x1B, BRIGHT,YELLOW);	
   printf("%s",texto);
-  MENU_NO_COLOR();
+  menu_no_color();
 }
 
-void PRINT_BLUE(char texto[]){
+void print_blue(char texto[]){
   printf("%c[%dm", 0x1B,BLUE);	
   printf("%s",texto);
-  MENU_NO_COLOR();
+  menu_no_color();
 }
 
-void MENU_WALL_START(){
-  PRINT_YELLOW("*");
+void menu_wall_start(){
+  print_yellow("*");
  
 }
-void MENU_WALL_END(){
-  PRINT_YELLOW("*\n");
+void menu_wall_end(){
+  print_yellow("*\n");
  }
 
-void BLINK_RED(char texto[]){
+void blink_red(char texto[]){
   printf("%c[%d;%d;%dm", 0x1B,RED,BRIGHT,BLINK_ON);
   printf("%s\n",texto);
-  MENU_NO_COLOR();
+  menu_no_color();
   
 }
 
-void PRINT_WALLS(char texto[]){
-	MENU_WALL_START();
+void print_walls(char texto[]){
+	menu_wall_start();
 	printf("%s",texto);
-      	MENU_WALL_END();
+      	menu_wall_end();
 }
 
-void PRINT_WALLS_BLUE(char texto[]){
-	MENU_WALL_START();
-	PRINT_BLUE(texto);
-      	MENU_WALL_END();
+void print_walls_blue(char texto[]){
+	menu_wall_start();
+	print_blue(texto);
+      	menu_wall_end();
 }
