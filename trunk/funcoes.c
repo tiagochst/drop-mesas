@@ -4,20 +4,20 @@
 int print_menu() {
 	int in;
 
-	CLEAR_SCREEN();
+	clear_screen();
 
-	PRINT_YELLOW("***********************************\n");
-	PRINT_YELLOW("*     Entre com sua opção:        *\n");
-	PRINT_YELLOW("***********************************\n");
-	PRINT_WALLS(" 1. gerar representação vetorial ");
-	PRINT_WALLS(" 2. gerar matriz de distâncias   ");
-	PRINT_WALLS(" 3. consultar                    ");
-	PRINT_YELLOW("*                                 *\n");
-	PRINT_WALLS_BLUE(" 0. sair do programa             ");
-	PRINT_YELLOW("***********************************\n");
+	print_yellow("***********************************\n");
+	print_yellow("*     Entre com sua opção:        *\n");
+	print_yellow("***********************************\n");
+	print_walls(" 1. gerar representação vetorial ");
+	print_walls(" 2. gerar matriz de distâncias   ");
+	print_walls(" 3. consultar                    ");
+	print_yellow("*                                 *\n");
+	print_walls_blue(" 0. sair do programa             ");
+	print_yellow("***********************************\n");
 
 	while (scanf(" %d", &in) != 1 || in < 0 || in > 3) {
-		BLINK_RED("Entrada incorreta. Digite novamente");
+		blink_red("Entrada incorreta. Digite novamente");
 		__fpurge(stdin);
 	}
 	return in;

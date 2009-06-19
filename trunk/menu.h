@@ -10,12 +10,12 @@
 #define BLUE 34
 #define BG_BLACK 40
 
-void CLEAR_SCREEN();
-void MENU_NO_COLOR();
-void MENU_WALL_START();
-void MENU_WALL_END();
-void PRINT_YELLOW(char texto[]);
-void PRINT_BLUE(char texto[]);
-void BLINK_RED(char texto[]);
-void PRINT_WALLS(char texto[]);
-void PRINT_WALLS_BLUE(char texto[]);
+void clear_screen();
+void menu_no_color();
+void menu_wall_start();
+void menu_wall_end();
+void print_yellow(char texto[]);
+void print_blue(char texto[]);
+void blink_red(char texto[]);
+void print_walls(char texto[]);
+void print_walls_blue(char texto[]);
