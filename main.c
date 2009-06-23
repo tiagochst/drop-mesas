@@ -1,5 +1,5 @@
 #include "definicoes.h"
-const char *print_double = "%.4lf ";
+const char *print_double = "%.6lf ";
 
 int NFile;
 char** FileNames;

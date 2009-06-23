@@ -48,6 +48,7 @@ void bagOfWords(char *file);
 void cosseno(char *file);
 void okapi(char *file);
 void normaliza_gauss(double *data, int N);
+void print_matrix(FILE *fp, double *matrix, int N);
 
 /* opcao3.c */
 void opcao3();
