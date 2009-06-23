@@ -1,11 +1,16 @@
 #include "definicoes.h"
 
+
 typedef struct{
   double sim;
   int id;
   int pos;
 }TMedia;
 
+
+/*
+ * Leitura das matrizes de distancia 
+ */
 double **le_matriz(char *file,int *n){
   int i,j;
   FILE *fp;
@@ -21,6 +26,7 @@ double **le_matriz(char *file,int *n){
   fclose(fp);
   return vet;
 }
+
 
 double **calcula_media(double **v1,double **v2,double **v3,int n){
   int i,j;
@@ -39,13 +45,20 @@ double **calcula_media(double **v1,double **v2,double **v3,int n){
 
 }
 
+/*
+ * Compara a matriz das medias 
+ * na linha n (arquivo n) teremos a distancia do
+ * n ao m,quanto menor a distancia mais proximo ele eh 
+ */
 void compara(double **vet,int n){
   int j;
   int id;
   TMedia *mat_media;
 
-  printf("Digite o identificador do arquivo:\n");
-  scanf("%d",&id);
+  do{
+    printf("Digite o identificador do arquivo (Max = %d Min = 0):\n",n-1);
+    scanf("%d",&id);
+  }while(id>=n || id<0);
   
   mat_media = (TMedia *)malloc(n*sizeof(TMedia));
   for(j=0;j<n;j++){    
@@ -53,9 +66,9 @@ void compara(double **vet,int n){
     mat_media[j].id = j;
   }
   printf("\n");
-  qsort(mat_media,n,sizeof(TMedia),comp1);
+  qsort(mat_media,n,sizeof(TMedia),comp1);/*ordenacao por distancia*/
   for(j=0;j<n;j++) mat_media[j].pos = j;
-  qsort(mat_media,n,sizeof(TMedia),comp2);
+  qsort(mat_media,n,sizeof(TMedia),comp2);/*ordenacao por indice do arquivo*/
   
   for(j=0;j<n;j++)
     printf("%d - %s\n",mat_media[j].pos,FileNames[j]);
@@ -76,11 +89,12 @@ void opcao3(){
   vet = calcula_media(v1,v2,v3,n);
   
   compara(vet,n);
-  
-  free(v1);
-  free(v2);
-  free(v3);
-  free(vet);
+
+  limpa_matrix(v1,n);
+  limpa_matrix(v2,n);
+  limpa_matrix(v3,n);
+  limpa_matrix(vet,n);
+ 
   return;
 }
   
@@ -102,3 +116,13 @@ int comp2(const void *a,const void *b){
 
 }
   
+void limpa_matrix(double **v,int n){
+  int i;
+
+  for(i=0;i<n;i++){
+    free(v[i]);
+  }
+  free(v);
+
+  return;
+}
