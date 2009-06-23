@@ -9,7 +9,7 @@ void opcao2() {
 void bagOfWords(char *file) {
 	FILE *fp;
 	int i, j;
-	double val;
+	double val, *matrix;
 	Conjunto *inter;
 
 	fp = Fopen(file, "w");
@@ -17,16 +17,20 @@ void bagOfWords(char *file) {
 		exit(1);
 
 	fprintf(fp, "%d\n", NFile);
+	matrix = (double *) malloc(NFile * NFile * sizeof(double));
 	for (i = 0; i < NFile; i++) {
 		for (j = 0; j < NFile; j++) {
 			inter = conj_interseccao(FileWords[i], FileWords[j], Termo_cmp, Termo_copy);
 			val = (double) conj_size(inter) / (double) conj_size(FileWords[i]);
 			conj_destroy(inter, Termo_free);
 
-			fprintf(fp, print_double, val);
+			matrix[i*NFile + j] = val;
 		}
-		fprintf(fp, "\n");
 	}
+
+	normaliza_gauss(matrix, NFile*NFile);
+	print_matrix(fp, matrix, NFile);
+	free(matrix);
 
 	fclose(fp);
 }
@@ -34,13 +38,14 @@ void bagOfWords(char *file) {
 void cosseno(char *file) {
 	FILE *fp;
 	int i, j;
-	double val, t1, t2, t3;
+	double val, t1, t2, t3, *matrix;
 
 	fp = Fopen(file, "w");
 	if (fp == NULL)
 		exit(1);
 
 	fprintf(fp, "%d\n", NFile);
+	matrix = (double *) malloc(NFile * NFile * sizeof(double));
 	for (i = 0; i < NFile; i++) {
 		for (j = 0; j < NFile; j++) {
 			t1 = conj_prod_escalar(FileWords[i], FileWords[j], Termo_cmp, Termo_prod);
@@ -48,10 +53,13 @@ void cosseno(char *file) {
 			t3 = conj_prod_escalar(FileWords[j], FileWords[j], Termo_cmp, Termo_prod);
 			val = (double) t1 / sqrt((double) (t2 * t3));
 
-			fprintf(fp, print_double, val);
+			matrix[i*NFile + j] = val;
 		}
-		fprintf(fp, "\n");
 	}
+
+	normaliza_gauss(matrix, NFile*NFile);
+	print_matrix(fp, matrix, NFile);
+	free(matrix);
 
 	fclose(fp);
 }
@@ -115,21 +123,12 @@ void okapi(char *file) {
 			}
 			conj_destroy(inter, Termo_free);
 
-			fprintf(fp, print_double, val);
 			matrix[i*NFile + j] = val;
 		}
-		fprintf(fp, "\n");
 	}
 
-	fprintf(fp, "** normalizado: **\n");
 	normaliza_gauss(matrix, NFile*NFile);
-
-	for (i = 0; i < NFile; i++) {
-		for (j = 0; j < NFile; j++)
-			fprintf(fp, print_double, matrix[i*NFile + j]);
-		fprintf(fp, "\n");
-	}
-
+	print_matrix(fp, matrix, NFile);
 	free(matrix);
 	conj_destroy(colecao, Termo_free);
 
@@ -160,5 +159,15 @@ void normaliza_gauss(double *data, int N) {
 		} else {
 			data[i] = xnorm;
 		}
+	}
+}
+
+void print_matrix(FILE *fp, double *matrix, int N) {
+	int i,j;
+
+	for (i = 0; i < N; i++) {
+		for (j = 0; j < N; j++)
+			fprintf(fp, print_double, matrix[i*NFile + j]);
+		fprintf(fp, "\n");
 	}
 }
