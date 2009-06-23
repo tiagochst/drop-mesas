@@ -56,5 +56,6 @@ double **calcula_media(double **v1,double **v2,double **v3,int n);
 void compara(double **vet,int n);
 int comp1(const void *a,const void *b);
 int comp2(const void *a,const void *b);
+void limpa_matrix(double **v,int n);
 
 #endif /*DEFINICOES_H_*/
