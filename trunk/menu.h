@@ -1,4 +1,4 @@
-#include<stdio.h>
+#include <stdio.h>
 
 /*definicao de cores para menu*/
 #define NO_COLOR 0

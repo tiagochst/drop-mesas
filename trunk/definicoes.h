@@ -10,8 +10,8 @@
 #include "conjunto.h"
 
 typedef struct {
-  char *s;
-  double peso;
+	char *s;
+	double peso;
 } Termo;
 
 extern const char *print_double;
@@ -52,11 +52,11 @@ void print_matrix(FILE *fp, double *matrix, int N);
 
 /* opcao3.c */
 void opcao3();
-double **le_matriz(char *file,int *n);
-double **calcula_media(double **v1,double **v2,double **v3,int n);
-void compara(double **vet,int n);
-int comp1(const void *a,const void *b);
-int comp2(const void *a,const void *b);
-void limpa_matrix(double **v,int n);
+double **le_matriz(char *file, int *n);
+double **calcula_media(double **v1, double **v2, double **v3, int n);
+void compara(double **vet, int n);
+int comp1(const void *a, const void *b);
+int comp2(const void *a, const void *b);
+void limpa_matrix(double **v, int n);
 
 #endif /*DEFINICOES_H_*/
